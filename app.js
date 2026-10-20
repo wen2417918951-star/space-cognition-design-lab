@@ -13,6 +13,23 @@
   let cleanupPointerMotion = () => {};
   let cleanupAtlasLayout = () => {};
   let cleanupHero = () => {};
+  // A history entry owns its viewport, including when filters replace its URL.
+  const viewports = new Map();
+  let entrySequence = 0;
+  const newEntryKey = () => Date.now().toString(36)+'-'+(++entrySequence);
+  let entryKey = history.state?.sbdEntry || newEntryKey();
+  history.replaceState({...history.state,sbdEntry:entryKey},'');
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  function navigateHistory(){
+    const active=document.activeElement;
+    viewports.set(entryKey,{y:window.scrollY,href:main.contains(active)?active.closest('a')?.getAttribute('href'):null});
+    const incoming=history.state?.sbdEntry;
+    entryKey=incoming&&incoming!==entryKey?incoming:newEntryKey();
+    history.replaceState({...history.state,sbdEntry:entryKey},'');
+    const restored=viewports.get(entryKey);
+    if(viewports.size>80)viewports.delete(viewports.keys().next().value);
+    render(false,restored);
+  }
   const t = pair => pair[lang === 'zh' ? 0 : 1] || pair[0] || '';
   const esc = text => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function directionIcon(direction='ne') {
@@ -96,6 +113,7 @@
   }
 
   function archiveSource(value,fallback='#/projects'){
+    if(value==='#/'||value==='#/?focus=hero-title')return value;
     if(!/^#\/(?:projects|works)(?:\?[^#]*)?$/.test(value||''))return fallback;
     const [path,query='']=value.split('?');
     const source=new URLSearchParams(query),clean=new URLSearchParams();
@@ -106,6 +124,7 @@
   const archiveItemHref=(type,id,from='')=>`#/${type}/${encodeURIComponent(id)}${from?'?from='+encodeURIComponent(archiveSource(from)):''}`;
   const archiveReturn=(params,fallback,id)=>{
     const from=archiveSource(params.get('from'),fallback);
+    if(from==='#/?focus=hero-title')return from;
     return from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent(id);
   };
 
@@ -123,7 +142,7 @@
       'classroom-eeg':['教室空间体验','Classroom experience']
     };
     const selected=works.slice(0,3);
-    return `<div class="hero-visual hero-carousel" role="region" aria-roledescription="${t(['轮播','carousel'])}" aria-label="${t(['学生作品精选','Selected student work'])}"><div class="hero-carousel-controls"><span class="hero-slide-count" aria-hidden="true">01 / ${String(selected.length).padStart(2,'0')}</span><button class="hero-carousel-button motion-toggle" id="motion" type="button" aria-label="${t(['暂停作品轮播','Pause slideshow'])}" aria-pressed="false">${directionIcon('pause')}</button><button class="hero-carousel-button" id="hero-prev" type="button" aria-label="${t(['上一件作品','Previous work'])}">${directionIcon('left')}</button><button class="hero-carousel-button" id="hero-next" type="button" aria-label="${t(['下一件作品','Next work'])}">${directionIcon('right')}</button></div><div class="hero-slides" aria-live="off">${selected.map((work,index)=>`<div class="hero-slide${index===0?' is-active':''}" data-work="${esc(work.id)}" role="group" aria-roledescription="${t(['幻灯片','slide'])}" aria-label="${index+1} / ${selected.length}" aria-hidden="${index!==0}"${index?' inert':''}><a class="hero-work-link" href="${esc(archiveItemHref('works',work.id,'#/works'))}" aria-label="${esc(t(['查看作品：','View work: '])+t(work.title))}"><img src="assets/home-20261020/${esc(work.id)}.webp" alt="${esc(t(work.coverAlt))}" width="1200" height="750" fetchpriority="${index===0?'high':'low'}" decoding="async"><div class="hero-work-caption"><small>${t(['学生作品','STUDENT WORK'])} / ${esc(work.authors.join(' · '))}</small><span>${esc(t(labels[work.id]||work.title))}${arrow}</span></div></a></div>`).join('')}</div><p class="hero-carousel-status sr-only" role="status" aria-live="polite" aria-atomic="true"></p></div>`;
+    return `<div class="hero-visual hero-carousel" role="region" aria-roledescription="${t(['轮播','carousel'])}" aria-label="${t(['学生作品精选','Selected student work'])}"><div class="hero-carousel-controls"><span class="hero-slide-count" aria-hidden="true">01 / ${String(selected.length).padStart(2,'0')}</span><button class="hero-carousel-button motion-toggle" id="motion" type="button" aria-label="${t(['暂停作品轮播','Pause slideshow'])}" aria-pressed="false">${directionIcon('pause')}</button><button class="hero-carousel-button" id="hero-prev" type="button" aria-label="${t(['上一件作品','Previous work'])}">${directionIcon('left')}</button><button class="hero-carousel-button" id="hero-next" type="button" aria-label="${t(['下一件作品','Next work'])}">${directionIcon('right')}</button></div><div class="hero-slides" aria-live="off">${selected.map((work,index)=>`<div class="hero-slide${index===0?' is-active':''}" data-work="${esc(work.id)}" role="group" aria-roledescription="${t(['幻灯片','slide'])}" aria-label="${index+1} / ${selected.length}" aria-hidden="${index!==0}"${index?' inert':''}><a class="hero-work-link" href="${esc(archiveItemHref('works',work.id,'#/?focus=hero-title'))}" aria-label="${esc(t(['查看作品：','View work: '])+t(work.title))}"><img src="assets/home-20261020/${esc(work.id)}.webp" alt="${esc(t(work.coverAlt))}" width="1200" height="750" fetchpriority="${index===0?'high':'low'}" decoding="async"><div class="hero-work-caption"><small>${t(['学生作品','STUDENT WORK'])} / ${esc(work.authors.join(' · '))}</small><span>${esc(t(labels[work.id]||work.title))}${arrow}</span></div></a></div>`).join('')}</div><p class="hero-carousel-status sr-only" role="status" aria-live="polite" aria-atomic="true"></p></div>`;
   }
 
   function home(){
@@ -140,12 +159,12 @@
       {id:'polar-visual-perception',image:'assets/works/polar-visual-perception/immersive-session.webp',width:2048,height:1152,alt:['参与者在极地沉浸投影中体验场景并进行脑电记录','A participant in an immersive polar scene during EEG recording'],title:['在沉浸环境中研究视觉感知','Visual perception in immersive settings'],label:['虚拟现实 · 脑电','Virtual reality · EEG']},
       {id:'classroom-eeg',image:'assets/works/classroom-eeg/eeg-analysis.webp',width:2400,height:1695,alt:['王彦楷学生作品中的脑电地形图、信号与空间体验分析','EEG topographies, signals and spatial-experience analysis from Wang Yankai’s student work'],title:['从教室空间体验到脑电分析','From classroom experience to EEG analysis'],label:['建筑空间 · 脑电','Architecture · EEG'],contain:true}
     ];
-    return `<section class="home-section home-work-gallery" aria-labelledby="home-work-title"><div class="home-section-heading"><h2 id="home-work-title">${t(['研究与作品','Research & student work'])}</h2>${link('#/projects?collection=works','全部作品','All student work')}</div><nav class="home-research-links" aria-label="${t(['研究方向','Research themes'])}">${themes.map(th=>`<a href="#/research/${th.id}">${esc(t(th.name))}${arrow}</a>`).join('')}</nav><div class="home-work-grid">${selected.map(item=>{const w=works.find(w=>w.id===item.id);return `<article class="home-image-card"><a class="home-card-link" href="${esc(archiveItemHref('works',w.id,'#/projects?collection=works'))}" aria-label="${esc(t(w.title))}"><div class="home-card-media${item.contain?' home-media-contain':''}"><img src="${item.image}" alt="${esc(t(item.alt))}" width="${item.width}" height="${item.height}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(item.label))}</p><h3>${esc(t(item.title))}${arrow}</h3><p class="home-card-credit">${t(['学生作品','Student work'])} / ${esc(w.authors.join(' · '))}</p></div></a></article>`;}).join('')}</div></section>`;
+    return `<section class="home-section home-work-gallery" aria-labelledby="home-work-title"><div class="home-section-heading"><h2 id="home-work-title">${t(['研究与作品','Research & student work'])}</h2>${link('#/projects?collection=works','全部作品','All student work')}</div><nav class="home-research-links" aria-label="${t(['研究方向','Research themes'])}">${themes.map(th=>`<a href="#/research/${th.id}">${esc(t(th.name))}${arrow}</a>`).join('')}</nav><div class="home-work-grid">${selected.map(item=>{const w=works.find(w=>w.id===item.id);return `<article class="home-image-card" id="work-${esc(w.id)}"><a class="home-card-link" href="${esc(archiveItemHref('works',w.id,'#/'))}" aria-label="${esc(t(w.title))}"><div class="home-card-media${item.contain?' home-media-contain':''}"><img src="${item.image}" alt="${esc(t(item.alt))}" width="${item.width}" height="${item.height}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(item.label))}</p><h3>${esc(t(item.title))}${arrow}</h3><p class="home-card-credit">${t(['学生作品','Student work'])} / ${esc(w.authors.join(' · '))}</p></div></a></article>`;}).join('')}</div></section>`;
   }
 
   function homeToolGallery(){
     const selected=['mindscape-i','focus','mindscape-lab','mindscape-studio'].map(id=>projects.find(p=>p.id===id));
-    return `<section class="home-section home-tools" aria-labelledby="home-tools-title"><div class="home-section-heading"><h2 id="home-tools-title">${t(['工具与原型','Tools & prototypes'])}</h2>${link('#/projects','全部项目','All projects')}</div><div class="home-tool-grid">${selected.map(p=>`<article class="home-image-card home-product-card"><a class="home-card-link" href="${esc(archiveItemHref('projects',p.id))}"><div class="home-card-media${p.id==='mindscape-i'?' home-device-media':' home-interface-media'}"><img src="${esc(p.cover)}" alt="${esc(t(p.coverAlt))}" width="${p.coverWidth||1440}" height="${p.coverHeight||960}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(p.type))} · ${esc(t(p.stage))}</p><h3>${esc(t(p.title))}${arrow}</h3><p class="home-card-description">${esc(t(p.subtitle))}</p></div></a>${p.id==='mindscape-lab'?toolAction(p,'home-tool-launch'):''}</article>`).join('')}</div><a class="home-atlas-card" href="#/research/figures"><div class="home-atlas-images" aria-hidden="true">${['M006','M008','M001'].map(id=>`<img src="assets/atlas-preview-${id}.webp" alt="" width="640" height="${id==='M006'?408:id==='M008'?415:248}" loading="lazy" decoding="async">`).join('')}</div><div class="home-atlas-copy"><p class="home-card-kicker">${t(['研究资源 · 外部文献','Research resource · external literature'])}</p><h3>${t(['从图像进入研究。','A visual entry into research.'])}${arrow}</h3><p>${t(['文献图集 · 2,070幅图像，连接图注与原始论文。','Research Figure Atlas · 2,070 figures linked to captions and source papers.'])}</p></div></a></section>`;
+    return `<section class="home-section home-tools" aria-labelledby="home-tools-title"><div class="home-section-heading"><h2 id="home-tools-title">${t(['工具与原型','Tools & prototypes'])}</h2>${link('#/projects','全部项目','All projects')}</div><div class="home-tool-grid">${selected.map(p=>`<article class="home-image-card home-product-card" id="project-${esc(p.id)}"><a class="home-card-link" href="${esc(archiveItemHref('projects',p.id,'#/'))}"><div class="home-card-media${p.id==='mindscape-i'?' home-device-media':' home-interface-media'}"><img src="${esc(p.cover)}" alt="${esc(t(p.coverAlt))}" width="${p.coverWidth||1440}" height="${p.coverHeight||960}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(p.type))} · ${esc(t(p.stage))}</p><h3>${esc(t(p.title))}${arrow}</h3><p class="home-card-description">${esc(t(p.subtitle))}</p></div></a>${p.id==='mindscape-lab'?toolAction(p,'home-tool-launch'):''}</article>`).join('')}</div><a class="home-atlas-card" href="#/research/figures"><div class="home-atlas-images" aria-hidden="true">${['M006','M008','M001'].map(id=>`<img src="assets/atlas-preview-${id}.webp" alt="" width="640" height="${id==='M006'?408:id==='M008'?415:248}" loading="lazy" decoding="async">`).join('')}</div><div class="home-atlas-copy"><p class="home-card-kicker">${t(['研究资源 · 外部文献','Research resource · external literature'])}</p><h3>${t(['从图像进入研究。','A visual entry into research.'])}${arrow}</h3><p>${t(['文献图集 · 2,070幅图像，连接图注与原始论文。','Research Figure Atlas · 2,070 figures linked to captions and source papers.'])}</p></div></a></section>`;
   }
 
   function researchNavigation(active){
@@ -284,7 +303,7 @@
       if(recommended.checked)query.set('recommended','1');
       if(limit>24)query.set('shown',String(limit));
       if(current)query.set('figure',current.id);
-      history.replaceState(null,'',`#/research/figures${query.size?'?'+query:''}`);
+      history.replaceState(history.state,'',`#/research/figures${query.size?'?'+query:''}`);
     };
     const loadImage=()=>{
       document.getElementById('atlas-image-error').hidden=true;image.hidden=false;
@@ -471,10 +490,11 @@
     const p=projects.find(x=>x.id===id);
     if(!p)return missing();
     const back=archiveReturn(params,'#/projects','project-'+id);
+    const fromHome=back.startsWith('#/?');
     const next=projects[(projects.indexOf(p)+1)%projects.length];
     const block=(zh,en,key)=>`<section class="detail-section"><h2>${t([zh,en])}<small>${lang==='zh'?en.toUpperCase():''}</small></h2><p>${esc(t(p[key]))}</p></section>`;
     const toolLink=p.id==='figure-atlas'?'#/research/figures':p.externalUrl;
-    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}"><a href="#/">${t(['探索','Explore'])}</a><span>/</span><a href="${esc(back)}">${t(['项目','Projects'])}</a><span>/</span><span>${esc(t(p.title))}</span></nav><section class="page-heading detail-heading">${eye(`${p.year} / ${t(p.type)}`,`${p.year} / ${t(p.type)}`)}<h1>${esc(t(p.title))}</h1><p>${esc(t(p.subtitle))}</p>${toolLink||p.publicPreviewOnly?`<div class="detail-tool-actions">${toolAction(p)}${['mindscape-studio','focus'].includes(p.id)&&!p.publicPreviewOnly?`<span class="tool-destination">${t(['本机原型 · 新窗口打开','Local prototype · opens in a new window'])}</span>`:p.id==='mindscape-lab'?`<span class="tool-destination">${t(['研究平台原型 · 登录使用 · 首次访问可能需要等待服务唤醒','Research prototype · sign-in required · the service may need time to wake'])}</span>`:''}</div>`:''}</section>${projectFigure(p)}<div class="detail-layout"><aside class="detail-sidebar"><dl><div><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd></div><div><dt>${t(['类型','Type'])}</dt><dd>${esc(t(p.type))}</dd></div><div><dt>${t(['当前阶段','Stage'])}</dt><dd>${esc(t(p.stage))}</dd></div></dl><div class="project-tags">${p.methods.map(m=>`<span>${esc(m.split(' / ')[lang==='zh'?0:1])}</span>`).join('')}</div>${link('mailto:wh-sa@mail.tsinghua.edu.cn', '项目事务联络','Project coordination')}</aside><div>${block('研究问题','Question','question')}${block('怎样展开','Approach','process')}${block('当前进展','Current stage','status')}${block('继续探索','Next questions','next')}</div></div><nav class="detail-next" aria-label="${t(['项目导航','Project navigation'])}"><a href="${esc(back)}"><span aria-hidden="true">${directionIcon('left')}</span>${t(['返回项目','Back to projects'])}</a><div><p class="eyebrow">${t(['下一个项目','NEXT PROJECT'])}</p><a href="${esc(archiveItemHref('projects',next.id,archiveSource(params.get('from'))))}">${esc(t(next.title))}${arrow}</a></div></nav>`;
+    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome?`<a href="#/">${t(['探索','Explore'])}</a><span>/</span>`:''}<a href="${esc(back)}">${t(fromHome?['首页','Home']:['项目','Projects'])}</a><span>/</span><span>${esc(t(p.title))}</span></nav><section class="page-heading detail-heading">${eye(`${p.year} / ${t(p.type)}`,`${p.year} / ${t(p.type)}`)}<h1>${esc(t(p.title))}</h1><p>${esc(t(p.subtitle))}</p>${toolLink||p.publicPreviewOnly?`<div class="detail-tool-actions">${toolAction(p)}${['mindscape-studio','focus'].includes(p.id)&&!p.publicPreviewOnly?`<span class="tool-destination">${t(['本机原型 · 新窗口打开','Local prototype · opens in a new window'])}</span>`:p.id==='mindscape-lab'?`<span class="tool-destination">${t(['研究平台原型 · 登录使用 · 首次访问可能需要等待服务唤醒','Research prototype · sign-in required · the service may need time to wake'])}</span>`:''}</div>`:''}</section>${projectFigure(p)}<div class="detail-layout"><aside class="detail-sidebar"><dl><div><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd></div><div><dt>${t(['类型','Type'])}</dt><dd>${esc(t(p.type))}</dd></div><div><dt>${t(['当前阶段','Stage'])}</dt><dd>${esc(t(p.stage))}</dd></div></dl><div class="project-tags">${p.methods.map(m=>`<span>${esc(m.split(' / ')[lang==='zh'?0:1])}</span>`).join('')}</div>${link('mailto:wh-sa@mail.tsinghua.edu.cn', '项目事务联络','Project coordination')}</aside><div>${block('研究问题','Question','question')}${block('怎样展开','Approach','process')}${block('当前进展','Current stage','status')}${block('继续探索','Next questions','next')}</div></div><nav class="detail-next" aria-label="${t(['项目导航','Project navigation'])}"><a href="${esc(back)}"><span aria-hidden="true">${directionIcon('left')}</span>${t(fromHome?['返回首页','Back to home']:['返回项目','Back to projects'])}</a><div><p class="eyebrow">${t(['下一个项目','NEXT PROJECT'])}</p><a href="${esc(archiveItemHref('projects',next.id,archiveSource(params.get('from'))))}">${esc(t(next.title))}${arrow}</a></div></nav>`;
   }
 
   function about(){
@@ -509,7 +529,7 @@
   };
 
   const paperHref = (p,from='#/publications') => `#/publications/${encodeURIComponent(p.id)}${from!=='#/publications'?'?from='+encodeURIComponent(from):''}`;
-  const paperReturn = params => /^#\/publications(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):'#/publications';
+  const paperReturn = params => params.get('from')==='#/'?'#/':/^#\/publications(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):'#/publications';
   function downloadCitations(items){
     if(!items.length)return;
     const content=items.map(risRecord).join('\r\n');
@@ -539,7 +559,7 @@
 
   function homeSelection(){
     const ordered=[...papers].sort((a,b)=>b.year-a.year).slice(0,3);
-    return `<section class="home-section home-results" aria-labelledby="home-results-title"><div class="home-section-heading"><h2 id="home-results-title">${t(['团队论文','Publications'])}</h2>${link('#/publications','全部论文','All publications')}</div><div class="home-paper-grid">${ordered.map(p=>`<a class="home-result-row" href="${esc(paperHref(p))}"><div><p class="home-result-meta">${p.year} · ${esc(t([p.journal,p.journalEn]))}</p><h3>${esc(p.title)}</h3><p class="home-result-author">${esc(p.authors.join(' · '))}</p></div>${arrow}</a>`).join('')}</div></section>`;
+    return `<section class="home-section home-results" aria-labelledby="home-results-title"><div class="home-section-heading"><h2 id="home-results-title">${t(['团队论文','Publications'])}</h2>${link('#/publications','全部论文','All publications')}</div><div class="home-paper-grid">${ordered.map(p=>`<a class="home-result-row" id="home-paper-${esc(p.id)}" href="${esc(paperHref(p,'#/'))}"><div><p class="home-result-meta">${p.year} · ${esc(t([p.journal,p.journalEn]))}</p><h3>${esc(p.title)}</h3><p class="home-result-author">${esc(p.authors.join(' · '))}</p></div>${arrow}</a>`).join('')}</div></section>`;
   }
 
   function references(){
@@ -563,16 +583,17 @@
     const p=papers.find(x=>x.id===id);
     if(!p)return `<section class="not-found">${eye('PUBLICATION / NOT FOUND','PUBLICATION / NOT FOUND')}<h1>${t(['未找到这篇论文。','Publication not found.'])}</h1><p>${t(['可以返回论文列表，继续按题名、作者或年份查找。','Return to the archive to search by title, author, or year.'])}</p>${link('#/publications','返回论文列表','Back to publications')}</section>`;
     const from=paperReturn(params);
-    const back=from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent(p.id);
+    const fromHome=from==='#/';
+    const back=from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent((fromHome?'home-paper-':'')+p.id);
     const originTheme=themes.find(th=>th.id===new URLSearchParams(from.split('?')[1]||'').get('theme'));
     const related=papers.filter(x=>x.id!==id&&matchesResearchTheme(x,originTheme)&&x.topics.some(topic=>p.topics.includes(topic))).slice(0,3);
-    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}"><a href="#/research">${t(['研究','Research'])}</a><span>/</span><a href="${esc(back)}">${t(['团队论文','Lab publications'])}</a><span>/</span><span>${p.year}</span></nav>
+    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome?`<a href="#/research">${t(['研究','Research'])}</a><span>/</span>`:''}<a href="${esc(back)}">${t(fromHome?['首页','Home']:['团队论文','Lab publications'])}</a><span>/</span><span>${p.year}</span></nav>
       <section class="page-heading paper-detail-heading"><p class="eyebrow section-mark">PUBLICATION / ${p.year}</p><h1>${esc(p.title)}</h1><p class="paper-detail-authors">${esc(p.authors.join(' · '))}</p><div class="paper-detail-journal"><span>${esc(t([p.journal,p.journalEn]))}</span><span>${esc(paperImprint(p))}</span></div><div class="paper-detail-actions"><a class="tool-launch" href="${esc(p.pdfUrl||p.sourceUrl)}" target="_blank" rel="noopener noreferrer">${p.pdfUrl?paperPdfLabel(p):t(['前往来源页面','Open article source'])}${arrow}</a><a class="text-link" href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer">DOI ${arrow}</a></div></section>
-      <div class="paper-detail-grid"><aside class="paper-detail-meta"><p class="eyebrow">${t(['论文信息','PUBLICATION DETAILS'])}</p><dl><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd><dt>${t(['期刊','Journal'])}</dt><dd>${esc(t([p.journal,p.journalEn]))}</dd><dt>${p.publicationStatus==='online-first'?t(['出版状态','Publication status']):t(['卷期与页码','Volume, issue & pages'])}</dt><dd>${p.publicationStatus==='online-first'?`${t(['网络首发','Online first'])} · ${esc(p.publishedDate)}`:`${p.volume?esc(p.volume):''}${p.issue?'('+esc(p.issue)+')':''}${p.volume||p.issue?' · ':''}${esc(p.pages)}`}</dd><dt>DOI</dt><dd><a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer">${esc(p.doi)}</a></dd></dl><div class="paper-detail-topics">${p.topics.map(topic=>`<a href="#/publications?topic=${esc(topic)}">${esc(paperTopicName(topic))} ${directionIcon('right')}</a>`).join('')}</div><a class="paper-return" href="${esc(back)}">${directionIcon('left')} ${t(['返回论文列表','Back to publications'])}</a></aside>
+      <div class="paper-detail-grid"><aside class="paper-detail-meta"><p class="eyebrow">${t(['论文信息','PUBLICATION DETAILS'])}</p><dl><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd><dt>${t(['期刊','Journal'])}</dt><dd>${esc(t([p.journal,p.journalEn]))}</dd><dt>${p.publicationStatus==='online-first'?t(['出版状态','Publication status']):t(['卷期与页码','Volume, issue & pages'])}</dt><dd>${p.publicationStatus==='online-first'?`${t(['网络首发','Online first'])} · ${esc(p.publishedDate)}`:`${p.volume?esc(p.volume):''}${p.issue?'('+esc(p.issue)+')':''}${p.volume||p.issue?' · ':''}${esc(p.pages)}`}</dd><dt>DOI</dt><dd><a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer">${esc(p.doi)}</a></dd></dl><div class="paper-detail-topics">${p.topics.map(topic=>`<a href="#/publications?topic=${esc(topic)}">${esc(paperTopicName(topic))} ${directionIcon('right')}</a>`).join('')}</div><a class="paper-return" href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:['返回论文列表','Back to publications'])}</a></aside>
       <div class="paper-reading"><section class="paper-detail-abstract"><h2>${t([p.language==='en'?'摘要（英文）':'摘要',p.language==='en'?'Abstract':'Abstract · Chinese'])}</h2>${p.abstract?`<p lang="${p.language==='en'?'en':'zh-CN'}">${esc(p.abstract)}</p>`:`<p>${t(['请通过来源页面阅读摘要与全文。','Visit the source page for the abstract and full text.'])}</p>`}</section>
       <section class="paper-citation-block" aria-labelledby="paper-citation-heading"><div><h2 id="paper-citation-heading">${t(['引用这篇论文','Cite this paper'])}</h2><button class="copy-button" id="paper-copy-citation">${t(['复制引用','Copy citation'])}</button></div><textarea id="paper-citation-text" readonly rows="5" aria-label="${t(['论文引用文字','Citation text'])}">${esc(citation(p))}</textarea><div class="paper-citation-actions"><button class="copy-button" id="paper-export-citation">${t(['导出题录 .RIS','Export citation .RIS'])} ${directionIcon('down')}</button><a href="${esc(p.sourceUrl)}" target="_blank" rel="noopener noreferrer">${t(['来源页面','Article source'])} ${directionIcon('ne')}</a></div></section>
       ${related.length?`<section class="paper-related"><p class="eyebrow section-mark">${t(['继续阅读','CONTINUE READING'])}</p><h2>${t(['相关论文','Related publications'])}</h2>${related.map(x=>`<a href="${esc(paperHref(x,from))}"><span>${x.year} / ${esc(t([x.journal,x.journalEn]))}</span><h3>${esc(x.title)} <span aria-hidden="true">${directionIcon('right')}</span></h3></a>`).join('')}</section>`:''}</div></div>
-      <nav class="paper-detail-bottom"><a href="${esc(back)}">${directionIcon('left')} ${t(['返回论文列表','Back to publications'])}</a><a href="#/research/figures">${t(['探索文献图集','Explore the figure atlas'])} ${directionIcon('right')}</a></nav>`;
+      <nav class="paper-detail-bottom"><a href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:['返回论文列表','Back to publications'])}</a><a href="#/research/figures">${t(['探索文献图集','Explore the figure atlas'])} ${directionIcon('right')}</a></nav>`;
   }
 
   function bindPublicationDetail(id){
@@ -595,7 +616,7 @@
       });
       const query=new URLSearchParams();if(direction)query.set('theme',direction.id);if(topic!=='all')query.set('topic',topic);if(search.value.trim())query.set('q',search.value.trim());if(year.value!=='all')query.set('year',year.value);if(author.value!=='all')query.set('author',author.value);
       lastPublications=`#/publications${query.size?'?'+query:''}`;
-      history.replaceState(null,'',lastPublications);
+      history.replaceState(history.state,'',lastPublications);
       document.querySelectorAll('[data-paper-topic]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.paperTopic===topic)));
       document.getElementById('paper-count').textContent=t([`${matching.length} 篇论文`,`${matching.length} PUBLICATION${matching.length===1?'':'S'}`]);
       const themeBack=document.getElementById('paper-theme-back');themeBack.hidden=!direction;
@@ -646,7 +667,7 @@
       const matching=works.filter(w=>(category==='all'||w.category===category)&&(!q||[...w.title,...w.authors,...w.advisors,...(w.course||[]),...(w.summary||[])].join(' ').normalize('NFKC').toLocaleLowerCase().includes(q)));
       document.querySelectorAll('[data-work-category]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.workCategory===category)));
       document.getElementById('work-count').textContent=t([`${matching.length} 件作品`,`${matching.length} DESIGN WORK${matching.length===1?'':'S'}`]);
-      const query=new URLSearchParams();if(category!=='all')query.set('category',category);if(search.value.trim())query.set('q',search.value.trim());lastWorks=`#/works${query.size?'?'+query:''}`;history.replaceState(null,'',lastWorks);
+      const query=new URLSearchParams();if(category!=='all')query.set('category',category);if(search.value.trim())query.set('q',search.value.trim());lastWorks=`#/works${query.size?'?'+query:''}`;history.replaceState(history.state,'',lastWorks);
       document.getElementById('work-results').innerHTML=matching.length?matching.map(w=>workCard(w,2,lastWorks)).join(''):`<div class="empty-state"><h2>${t(['没有匹配的作品','No matching work'])}</h2><button class="solid-button" id="reset-works">${t(['查看全部作品','View all design work'])}${arrow}</button></div>`;
       document.getElementById('reset-works')?.addEventListener('click',()=>{category='all';search.value='';update();search.focus();});
     };
@@ -657,9 +678,10 @@
     const w=works.find(w=>w.id===id);if(!w)return missing();
     const back=archiveReturn(params,'#/projects?collection=works','work-'+id);
     const fromProjects=back.startsWith('#/projects');
+    const fromHome=back.startsWith('#/?');
     const relatedFrom=archiveSource(params.get('from'),'#/projects?collection=works');
     const facts=[['作者','Designers',w.authors.join(' · ')],['指导教师','Advisors',w.advisors.join(' · ')],...(w.year?[['年份','Year',w.year]]:[]),...(w.status?[['作品性质','Work type',t(w.status)]]:[]),['类型','Type',workCategoryName(w.category)],...(w.course?.some(Boolean)?[['课程／项目','Course / project',t(w.course)]]:[]),...(w.location?.some(Boolean)?[['地点','Location',t(w.location)]]:[])];
-    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}"><a href="${esc(back)}">${t(fromProjects?['项目','Projects']:['设计作品','Design work'])}</a><span>/</span><span>${esc(t(w.title))}</span></nav><section class="page-heading detail-heading work-detail-heading">${eye(w.year?'STUDENT WORK / '+w.year:'STUDENT WORK',w.year?'STUDENT WORK / '+w.year:'STUDENT WORK')}<h1>${esc(t(w.title))}</h1><p>${esc(t(w.summary||['','']))}</p><div class="work-heading-bottom"><dl class="work-byline"><div><dt>${t(['作者','Designers'])}</dt><dd>${esc(w.authors.join(' · '))}</dd></div>${w.advisors.length?`<div><dt>${t(['指导教师','Advisors'])}</dt><dd>${esc(w.advisors.join(' · '))}</dd></div>`:''}</dl><button class="work-open-images" data-open-work-gallery type="button">${t(['浏览图像','Browse images'])}<span>${String((w.cover?1:0)+(w.gallery||[]).length).padStart(2,'0')}</span>${arrow}</button></div></section>${w.cover?`<figure class="work-hero"><a class="gallery-image" href="${esc(w.cover)}" data-pswp-width="${w.coverWidth||1600}" data-pswp-height="${w.coverHeight||1000}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t(['查看大图：','View larger image: '])+t(w.coverAlt||w.title))}"><img src="${esc(w.cover)}" alt="${esc(t(w.coverAlt||w.title))}" width="${w.coverWidth||1600}" height="${w.coverHeight||1000}"><span>${(t(['查看大图','View larger'])+directionIcon('ne'))}</span></a></figure>`:''}<div class="detail-layout"><aside class="detail-sidebar"><dl>${facts.map(f=>`<div><dt>${t(f.slice(0,2))}</dt><dd>${esc(f[2])}</dd></div>`).join('')}</dl></aside><div>${(w.sections||[]).map(s=>`<section class="detail-section"><h2>${esc(t(s.heading))}</h2><p>${esc(t(s.text))}</p></section>`).join('')}</div></div><p class="gallery-hint">${t(['点击图片查看大图。','Select an image to view it larger.'])}</p><div class="work-gallery">${(w.gallery||[]).map(g=>`<figure><a class="gallery-image" href="${esc(g.src)}" data-pswp-width="${g.width||1600}" data-pswp-height="${g.height||1000}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t(['查看大图：','View larger image: '])+t(g.alt))}"><img src="${esc(g.preview||g.src)}" alt="${esc(t(g.alt))}" loading="lazy" ${g.width?`width="${g.width}" height="${g.height}"`:''}><span>${(t(['查看大图','View larger'])+directionIcon('ne'))}</span></a>${g.caption?.some(Boolean)?`<figcaption>${esc(t(g.caption))}</figcaption>`:''}</figure>`).join('')}</div><nav class="detail-next"><a href="${esc(back)}">${directionIcon('left')} ${t(fromProjects?['返回项目档案','Back to projects']:['返回作品档案','Back to design work'])}</a></nav><section class="work-related" aria-labelledby="work-related-title"><div class="archive-group-heading"><h2 id="work-related-title">${t(['继续探索','More student work'])}</h2><span>STUDENT WORK / ${String(works.length-1).padStart(2,'0')}</span></div><div class="work-grid">${works.filter(item=>item.id!==id).map(item=>workCard(item,3,relatedFrom)).join('')}</div></section>`;
+    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}"><a href="${esc(back)}">${t(fromHome?['首页','Home']:fromProjects?['项目','Projects']:['设计作品','Design work'])}</a><span>/</span><span>${esc(t(w.title))}</span></nav><section class="page-heading detail-heading work-detail-heading">${eye(w.year?'STUDENT WORK / '+w.year:'STUDENT WORK',w.year?'STUDENT WORK / '+w.year:'STUDENT WORK')}<h1>${esc(t(w.title))}</h1><p>${esc(t(w.summary||['','']))}</p><div class="work-heading-bottom"><dl class="work-byline"><div><dt>${t(['作者','Designers'])}</dt><dd>${esc(w.authors.join(' · '))}</dd></div>${w.advisors.length?`<div><dt>${t(['指导教师','Advisors'])}</dt><dd>${esc(w.advisors.join(' · '))}</dd></div>`:''}</dl><button class="work-open-images" data-open-work-gallery type="button">${t(['浏览图像','Browse images'])}<span>${String((w.cover?1:0)+(w.gallery||[]).length).padStart(2,'0')}</span>${arrow}</button></div></section>${w.cover?`<figure class="work-hero"><a class="gallery-image" href="${esc(w.cover)}" data-pswp-width="${w.coverWidth||1600}" data-pswp-height="${w.coverHeight||1000}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t(['查看大图：','View larger image: '])+t(w.coverAlt||w.title))}"><img src="${esc(w.cover)}" alt="${esc(t(w.coverAlt||w.title))}" width="${w.coverWidth||1600}" height="${w.coverHeight||1000}"><span>${(t(['查看大图','View larger'])+directionIcon('ne'))}</span></a></figure>`:''}<div class="detail-layout"><aside class="detail-sidebar"><dl>${facts.map(f=>`<div><dt>${t(f.slice(0,2))}</dt><dd>${esc(f[2])}</dd></div>`).join('')}</dl></aside><div>${(w.sections||[]).map(s=>`<section class="detail-section"><h2>${esc(t(s.heading))}</h2><p>${esc(t(s.text))}</p></section>`).join('')}</div></div><p class="gallery-hint">${t(['点击图片查看大图。','Select an image to view it larger.'])}</p><div class="work-gallery">${(w.gallery||[]).map(g=>`<figure><a class="gallery-image" href="${esc(g.src)}" data-pswp-width="${g.width||1600}" data-pswp-height="${g.height||1000}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t(['查看大图：','View larger image: '])+t(g.alt))}"><img src="${esc(g.preview||g.src)}" alt="${esc(t(g.alt))}" loading="lazy" ${g.width?`width="${g.width}" height="${g.height}"`:''}><span>${(t(['查看大图','View larger'])+directionIcon('ne'))}</span></a>${g.caption?.some(Boolean)?`<figcaption>${esc(t(g.caption))}</figcaption>`:''}</figure>`).join('')}</div><nav class="detail-next"><a href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:fromProjects?['返回项目档案','Back to projects']:['返回作品档案','Back to design work'])}</a></nav><section class="work-related" aria-labelledby="work-related-title"><div class="archive-group-heading"><h2 id="work-related-title">${t(['继续探索','More student work'])}</h2><span>STUDENT WORK / ${String(works.length-1).padStart(2,'0')}</span></div><div class="work-grid">${works.filter(item=>item.id!==id).map(item=>workCard(item,3,relatedFrom)).join('')}</div></section>`;
   }
 
   function missing(){return `<section class="not-found">${eye('404 / NOT FOUND','404 / NOT FOUND')}<h1>${t(['这条路径还未被探索。','An unexplored path.'])}</h1><p>${t(['没有找到这个页面。你可以返回项目，继续探索。','This page could not be found. Return to the project archive to continue exploring.'])}</p>${link('#/projects','返回项目','Back to projects')}</section>`;}
@@ -676,7 +698,7 @@
     document.querySelector('.brand-lockup').setAttribute('alt',t(['空间·脑·设计实验室','Space, Cognition & Design Lab']));
     document.getElementById('menu').setAttribute('aria-label',t(['打开导航','Open navigation']));
   }
-  function render(keepScroll=false){
+  function render(keepScroll=false,restoredView){
     cleanupAtlasLayout();
     cleanupHero();
     clearTimeout(toastTimer);document.getElementById('toast').classList.remove('visible');
@@ -710,15 +732,30 @@
     if(page==='about')document.getElementById('copy-email').addEventListener('click',copyEmail);
     bindPointerMotion();
     if(keepScroll)window.scrollTo({top:y,behavior:'instant'});
+    else if(restoredView){
+      window.scrollTo({top:restoredView.y,behavior:'instant'});
+      const previous=[...main.querySelectorAll('a')].find(a=>a.getAttribute('href')===restoredView.href);
+      (previous||main).focus({preventScroll:true});
+    }
     else {window.scrollTo({top:0,behavior:'instant'});main.focus({preventScroll:true});}
-    if(page==='publications'&&!parts[1]&&params.get('focus')){
+    if(page==='home'&&params.get('focus')&&!restoredView){
+      const selected=document.getElementById(params.get('focus'));
+      if(selected?.matches('.home-image-card,.home-result-row,#hero-title')){
+        selected.classList.add('home-returned');
+        selected.scrollIntoView({block:selected.id==='hero-title'?'start':'center',behavior:'instant'});
+        const focus=selected.querySelector('a')||selected;
+        if(!focus.matches('a,button'))focus.setAttribute('tabindex','-1');
+        focus.focus({preventScroll:true});
+      }
+    }
+    if(page==='publications'&&!parts[1]&&params.get('focus')&&!restoredView){
       const selected=document.getElementById(params.get('focus'));
       if(selected?.classList.contains('publication-row')){
         selected.classList.add('paper-returned');selected.scrollIntoView({block:'center',behavior:'instant'});
         selected.querySelector('.paper-title-link')?.focus({preventScroll:true});
       }
     }
-    if(['projects','works'].includes(page)&&!parts[1]&&params.get('focus')){
+    if(['projects','works'].includes(page)&&!parts[1]&&params.get('focus')&&!restoredView){
       const selected=document.getElementById(params.get('focus'));
       if(selected?.matches('.project-card,.work-card')){
         selected.classList.add('archive-returned');
@@ -747,7 +784,7 @@
       document.querySelectorAll('[data-collection]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.collection===collection)));
       const query=new URLSearchParams();if(collection!=='all')query.set('collection',collection);if(theme.value!=='all')query.set('theme',theme.value);if(input.value.trim())query.set('q',input.value.trim());
       lastArchive=`#/projects${query.size?'?'+query:''}`;lastWorks=lastArchive;
-      history.replaceState(null,'',lastArchive);
+      history.replaceState(history.state,'',lastArchive);
       const active=[];
       if(collection!=='all')active.push(['collection',t(['类型','Type']),t(archiveCollections.find(c=>c.id===collection).name)]);
       if(theme.value!=='all')active.push(['theme',t(['方向','Theme']),t(themes.find(th=>th.id===theme.value).name)]);
@@ -932,7 +969,7 @@
   document.querySelector('.skip-link').addEventListener('click',e=>{e.preventDefault();main.focus({preventScroll:true});main.scrollIntoView();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
   document.getElementById('citation-dialog-close').addEventListener('click',()=>document.getElementById('citation-dialog').close());
-  window.addEventListener('hashchange',()=>render());
+  window.addEventListener('hashchange',navigateHistory);
   render();
 })();
 
