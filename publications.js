@@ -28,13 +28,6 @@ window.LAB_PUBLICATIONS = {
         "城市与更新",
         "Cities & regeneration"
       ]
-    },
-    {
-      "id": "teaching",
-      "name": [
-        "设计教学",
-        "Design education"
-      ]
     }
   ],
   "items": [
@@ -166,56 +159,6 @@ window.LAB_PUBLICATIONS = {
       "publishedDate": "2025-07-22",
       "abstract": "随着人类大脑活动机制研究的深入，脑科学这项前沿研究的内容方法可以为建筑城市学科的创新探索提供参考。大脑如何形成空间感知的机制是建筑城市学科的一项基础问题，同时基于脑空间感知的情绪与健康、脑机交互等问题也亟待探索。针对上述问题与趋势，脑科学与建筑城市交叉融合可形成城市与建筑空间脑科学研究领域，该领域通过建立“空间－脑－机”研究系统，探索空间认知基础机制发现支撑下的设计理论、技术与应用场景。",
       "pdfUrl": "downloads/papers/upi-2025-spatial-brain-science.pdf"
-    },
-    {
-      "id": "wa-2018-06-019",
-      "title": "城市微更新的理论探索与思辨——“大栅栏微更新”的教学探索(二)",
-      "authors": [
-        "王辉",
-        "程晓青",
-        "尹思谨"
-      ],
-      "year": 2018,
-      "issue": "06",
-      "pages": "110-114+126",
-      "journal": "世界建筑",
-      "journalEn": "World Architecture",
-      "type": "journal",
-      "collection": "faculty",
-      "topics": [
-        "urban",
-        "teaching"
-      ],
-      "doi": "10.16414/j.wa.2018.06.019",
-      "sourceUrl": "https://sjzj.cbpt.cnki.net/portal/journal/portal/client/paper/47c11d19b4a9627e10c3ea6792277227",
-      "abstract": "文章试图针对新时期城市更新发展的特定挑战,从城市微更新的角度出发,通过种种相对概念的思辨,初步建构城市微更新的研究框架。文章首先简要梳理了关于城市更新理论的发展,进而提出了新时期的城市微更新的理论方法,在此基础上从文化、社会、技术、空间四个方面对于城市微更新的特征与内涵进行了归纳。",
-      "language": "zh",
-      "pdfUrl": null
-    },
-    {
-      "id": "wa-2018-04-016",
-      "title": "大城市小生活·小设计大概念——“大栅栏微更新”的教学探索(一)",
-      "authors": [
-        "程晓青",
-        "尹思谨",
-        "王辉"
-      ],
-      "year": 2018,
-      "issue": "04",
-      "pages": "98-103+116",
-      "journal": "世界建筑",
-      "journalEn": "World Architecture",
-      "type": "journal",
-      "collection": "faculty",
-      "topics": [
-        "urban",
-        "teaching"
-      ],
-      "doi": "10.16414/j.wa.2018.04.016",
-      "sourceUrl": "https://sjzj.cbpt.cnki.net/portal/journal/portal/client/paper/12f1664953abe96efc3802289e35ddba",
-      "abstract": "随着中国城镇化的深度发展,既有城市环境的改善与提升日益引起社会关注,本文基于清华大学建筑学院研究生设计课程\"城市微更新\"的教学实践,以北京大栅栏历史文化街区为研究对象,从建筑学和社会学的多元视角出发,发掘居民对生活的真实需求,呈现了在历史保护背景下改善居住环境的设计思辨与大胆探索。",
-      "language": "zh",
-      "pdfUrl": null
     }
   ]
 };
