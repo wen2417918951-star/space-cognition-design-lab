@@ -44,3 +44,6 @@ a:focus-visible>.arrow,a:focus-visible>.ui-icon,.about-practice-links>a:focus-vi
   .menu-button:hover span{background:var(--interaction-accent)}
   .pswp__button:hover{--pswp-icon-color:var(--interaction-accent)}
 }
+
+/* Use the same accent for text selection and pointer interaction. */
+::selection{background:var(--interaction-accent);color:var(--on-interaction-accent)}

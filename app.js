@@ -12,6 +12,7 @@
   let toastTimer;
   let cleanupPointerMotion = () => {};
   let cleanupAtlasLayout = () => {};
+  let cleanupHero = () => {};
   const t = pair => pair[lang === 'zh' ? 0 : 1] || pair[0] || '';
   const esc = text => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function directionIcon(direction='ne') {
@@ -115,13 +116,22 @@
 
   function labSlogan(){return `<section class="slogan-strip" aria-labelledby="lab-slogan"><div>${eye('实验室主张','LAB POSITION')}<p class="slogan-note">${t(['在人的经验与机器能力之间，建立可感知、可检验的联系。','Build perceptible, testable connections between human experience and machine capability.'])}</p></div><div><blockquote id="lab-slogan">${t(['让机器的能力进入人的生活与认知。<br>让人的经验融入机器的计算与理解。','Bring machine capabilities into human life and cognition.<br>Bring human experience into how machines compute and understand.'])}</blockquote></div></section>`;}
 
+  function homeHeroWorks(){
+    const labels={
+      'polar-visual-perception':['极地拟态环境','Polar environments'],
+      'exhibition-perception':['展陈空间感知','Exhibition perception'],
+      'classroom-eeg':['教室空间体验','Classroom experience']
+    };
+    const selected=works.slice(0,3);
+    return `<div class="hero-visual hero-carousel" role="region" aria-roledescription="${t(['轮播','carousel'])}" aria-label="${t(['学生作品精选','Selected student work'])}"><div class="hero-carousel-controls"><span class="hero-slide-count" aria-hidden="true">01 / ${String(selected.length).padStart(2,'0')}</span><button class="hero-carousel-button motion-toggle" id="motion" type="button" aria-label="${t(['暂停作品轮播','Pause slideshow'])}" aria-pressed="false">${directionIcon('pause')}</button><button class="hero-carousel-button" id="hero-prev" type="button" aria-label="${t(['上一件作品','Previous work'])}">${directionIcon('left')}</button><button class="hero-carousel-button" id="hero-next" type="button" aria-label="${t(['下一件作品','Next work'])}">${directionIcon('right')}</button></div><div class="hero-slides" aria-live="off">${selected.map((work,index)=>`<div class="hero-slide${index===0?' is-active':''}" data-work="${esc(work.id)}" role="group" aria-roledescription="${t(['幻灯片','slide'])}" aria-label="${index+1} / ${selected.length}" aria-hidden="${index!==0}"${index?' inert':''}><a class="hero-work-link" href="${esc(archiveItemHref('works',work.id,'#/works'))}" aria-label="${esc(t(['查看作品：','View work: '])+t(work.title))}"><img src="${esc(work.cover)}" alt="${esc(t(work.coverAlt))}" width="${work.coverWidth}" height="${work.coverHeight}" fetchpriority="${index===0?'high':'low'}" decoding="async"><div class="hero-work-caption"><small>${t(['学生作品','STUDENT WORK'])} / ${esc(work.authors.join(' · '))}</small><span>${esc(t(labels[work.id]||work.title))}${arrow}</span></div></a></div>`).join('')}</div><p class="hero-carousel-status sr-only" role="status" aria-live="polite" aria-atomic="true"></p></div>`;
+  }
+
   function home(){
     const selected=['figure-atlas','mindscape-lab','mindscape-studio'].map(id=>projects.find(p=>p.id===id));
-    return `<section class="hero" aria-labelledby="hero-title"><div class="hero-copy"><p class="eyebrow hero-index"><span class="status-dot"></span>${t(['空间 · 脑认知 · 设计','SPACE, COGNITION & DESIGN'])}</p><h1 id="hero-title">${t(['<span class="hero-line">理解空间，</span><span class="hero-line">从理解<span class="accent">人</span>开始。</span>','<span class="hero-line">Understand space.</span><span class="hero-line">Begin with</span><span class="hero-line accent">people.</span>'])}</h1><p class="hero-en">${t(['UNDERSTAND SPACE.<br>BEGIN WITH PEOPLE.','空间 · 脑认知 · 设计'])}</p><p class="hero-desc">${t(['连接空间研究、脑认知与设计实践，<br>探索人与环境之间的关系。','Connecting spatial research, cognition, and design to investigate the relationship between people and their environments.'])}</p><div class="hero-actions">${link('#/research','走进我们的研究','Explore our research')}${link('#/research/figures','文献图集','Figure atlas')}</div></div><div class="hero-visual hero-video" data-mode="space"><video class="hero-video-media" id="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/hero/spatial-observation-poster.webp?v=20261019-hero-video-5" aria-label="${t(['展陈空间中的光线、尺度与路径观察影像','A silent study of light, scale, and movement through an exhibition space'])}"><source src="assets/hero/spatial-observation-hero.mp4?v=20261019-hero-video-5" type="video/mp4"></video><img class="hero-video-fallback" src="assets/hero/spatial-observation-poster.webp?v=20261019-hero-video-5" alt="${t(['展陈空间中的光线与尺度','Light and scale in an exhibition space'])}" width="960" height="540"><div class="hero-video-shade" aria-hidden="true"></div><div class="visual-bottom"><p class="visual-caption" id="visual-caption">${t(['光线、路径与尺度，如何改变我们对空间的判断？','How do light, paths, and scale shape spatial judgment?'])}<small>EXHIBITION PERCEPTION / STUDY 01</small></p><button class="motion-toggle" id="motion" type="button" aria-label="${t(['暂停影像','Pause video'])}" aria-pressed="false">${directionIcon('pause')}</button></div></div></section>
+    return `<section class="hero" aria-labelledby="hero-title"><div class="hero-copy"><p class="eyebrow hero-index"><span class="status-dot"></span>${t(['空间 · 脑认知 · 设计','SPACE, COGNITION & DESIGN'])}</p><h1 id="hero-title">${t(['<span class="hero-line">理解空间，</span><span class="hero-line">从理解<span class="accent">人</span>开始。</span>','<span class="hero-line">Understand space.</span><span class="hero-line">Begin with</span><span class="hero-line accent">people.</span>'])}</h1><p class="hero-en">${t(['UNDERSTAND SPACE.<br>BEGIN WITH PEOPLE.','空间 · 脑认知 · 设计'])}</p><p class="hero-desc">${t(['连接空间研究、脑认知与设计实践，<br>探索人与环境之间的关系。','Connecting spatial research, cognition, and design to investigate the relationship between people and their environments.'])}</p><div class="hero-actions">${link('#/research','走进我们的研究','Explore our research')}${link('#/research/figures','文献图集','Figure atlas')}</div></div>${homeHeroWorks()}</section>
     ${homeIndex(selected)}
     <section class="home-student-works" aria-labelledby="student-works-title"><div class="section-header"><div>${eye('学生作品','STUDENT WORKS')}<h2 id="student-works-title">${t(['从具体作品，看见研究怎样展开。','See how research unfolds through student work.'])}<small>SELECTED DESIGN ARCHIVE</small></h2></div>${link('#/projects?collection=works','查看学生作品','Explore student work')}</div><div class="work-grid">${works.slice(0,3).map(w=>workCard(w,3)).join('')}</div></section>
     ${homePublications()}
-    ${labSlogan()}
     <section aria-labelledby="themes-title"><div class="section-header"><div>${eye('研究方向','RESEARCH THEMES')}<h2 id="themes-title">${t(['三个视角，一个共同的问题。','Three perspectives. One shared question.'])}</h2></div></div><div class="themes-grid">${themes.map(th=>`<a class="theme-card" href="#/research/${th.id}"><div class="theme-top"><span>${th.n} / RESEARCH</span>${arrow}</div>${themeSymbol(th.id)}<h3>${esc(t(th.name))}<small>${esc(lang==='zh'?th.name[1]:th.name[0])}</small></h3><p>${esc(t(th.text))}</p></a>`).join('')}</div></section>
     <section class="projects-section home-feature" aria-labelledby="projects-title"><div class="section-header"><div>${eye('研究与实践','RESEARCH & PRACTICE')}<h2 id="projects-title">${t(['研究资源与工具','Research resources & tools'])}<small>SELECTED WORK</small></h2></div>${link('#/projects','进入项目','Explore projects')}</div><div class="project-grid">${selected.map(p=>projectCard(p)).join('')}</div></section>
     <section class="intro-section"><div>${eye('关于实验室','THE LAB')}<h2>${t(['<span>让机器的能力进入人的生活与认知。</span><span>让人的经验融入机器的计算与理解。</span>','<span>Bring machine capabilities into human life and cognition.</span><span>Bring human experience into how machines compute and understand.</span>'])}</h2></div><div><p>${t(['空间·脑·设计实验室关注建筑与城市环境中的感知、认知与行为。我们将空间观察、脑认知研究与设计实验联系起来，通过数字环境、研究工具与交互原型，探索人与空间之间的关系。','Space, Cognition & Design Lab investigates perception, cognition, and behavior in architectural and urban environments. We connect spatial observation, cognition research, and design experiments through digital environments, research tools, and interactive prototypes.'])}</p>${link('#/about','了解实验室','About the Lab')}</div></section>`;
@@ -671,6 +681,7 @@
   }
   function render(keepScroll=false){
     cleanupAtlasLayout();
+    cleanupHero();
     clearTimeout(toastTimer);document.getElementById('toast').classList.remove('visible');
     document.getElementById('citation-dialog').close();
     const {parts,params}=routeInfo();const page=parts[0]||'home';
@@ -838,31 +849,53 @@
     cleanupPointerMotion=()=>{controller.abort();resetAll();};
   }
   function bindHero(){
-    const visual=document.querySelector('.hero-visual');
-    const video=document.getElementById('hero-video');
-    const toggle=document.getElementById('motion');
-    if(!visual||!video||!toggle)return;
-    const updateButton=paused=>{
-      visual.classList.toggle('paused',paused);
-      toggle.innerHTML=directionIcon(paused?'play':'pause');
-      toggle.setAttribute('aria-pressed',String(paused));
-      toggle.setAttribute('aria-label',paused?t(['播放影像','Play video']):t(['暂停影像','Pause video']));
-    };
+    const visual=document.querySelector('.hero-carousel');
+    if(!visual)return;
+    const slides=[...visual.querySelectorAll('.hero-slide')];
+    const toggle=visual.querySelector('#motion');
+    const counter=visual.querySelector('.hero-slide-count');
+    const live=visual.querySelector('.hero-carousel-status');
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
-    let userPaused=false;
-    const tryPlay=()=>{
-      if(reduced.matches||userPaused)return;
-      const play=video.play();
-      if(play?.catch)play.catch(()=>{});
+    const controller=new AbortController();
+    const options={signal:controller.signal};
+    let index=0,timer,userPaused=reduced.matches,hovered=false,inView=true,pointerPause=null;
+    const schedule=()=>{
+      clearTimeout(timer);
+      const rotating=!userPaused&&!hovered&&inView&&!document.hidden;
+      visual.dataset.rotating=String(rotating);
+      if(rotating&&slides.length>1)timer=setTimeout(()=>{show(index+1);schedule();},6000);
     };
-    video.addEventListener('canplay',tryPlay);
-    if(reduced.matches){userPaused=true;video.pause();updateButton(true);}
-    else {updateButton(false);tryPlay();}
-    toggle.addEventListener('click',()=>{
-      if(video.paused){userPaused=false;video.play().then(()=>updateButton(false)).catch(()=>updateButton(true));}
-      else {userPaused=true;video.pause();updateButton(true);}
-    });
-    reduced.addEventListener?.('change',event=>{if(event.matches){userPaused=true;video.pause();updateButton(true);}else{userPaused=false;video.play().then(()=>updateButton(false)).catch(()=>{});}});
+    const update=()=>{
+      toggle.innerHTML=directionIcon(userPaused?'play':'pause');
+      toggle.setAttribute('aria-pressed',String(userPaused));
+      toggle.setAttribute('aria-label',userPaused?t(['播放作品轮播','Play slideshow']):t(['暂停作品轮播','Pause slideshow']));
+      schedule();
+    };
+    const show=(next,announce=false)=>{
+      index=(next+slides.length)%slides.length;
+      slides.forEach((slide,i)=>{
+        const active=i===index;
+        slide.classList.toggle('is-active',active);
+        slide.setAttribute('aria-hidden',String(!active));
+        slide.inert=!active;
+      });
+      counter.textContent=String(index+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+      if(announce)live.textContent=t(['作品 ','Work '])+(index+1)+' / '+slides.length+' · '+slides[index].querySelector('.hero-work-caption>span').textContent;
+    };
+    toggle.addEventListener('pointerdown',()=>{pointerPause=!userPaused;},options);
+    toggle.addEventListener('pointercancel',()=>{pointerPause=null;},options);
+    toggle.addEventListener('click',()=>{userPaused=pointerPause??!userPaused;pointerPause=null;update();},options);
+    visual.querySelector('#hero-prev').addEventListener('click',()=>{userPaused=true;show(index-1,true);update();},options);
+    visual.querySelector('#hero-next').addEventListener('click',()=>{userPaused=true;show(index+1,true);update();},options);
+    visual.addEventListener('mouseenter',()=>{hovered=true;schedule();},options);
+    visual.addEventListener('mouseleave',()=>{hovered=false;schedule();},options);
+    visual.addEventListener('focusin',()=>{userPaused=true;update();},options);
+    document.addEventListener('visibilitychange',schedule,options);
+    reduced.addEventListener('change',event=>{if(event.matches){userPaused=true;update();}},options);
+    const observer=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;schedule();},{threshold:.05});
+    observer.observe(visual);
+    update();
+    cleanupHero=()=>{clearTimeout(timer);observer.disconnect();controller.abort();};
   }
   function closeMenu(){document.getElementById('navigation').classList.remove('open');document.getElementById('menu').setAttribute('aria-expanded','false');document.getElementById('menu').setAttribute('aria-label',t(['打开导航','Open navigation']));}
   function jumpToAboutSection(params){
