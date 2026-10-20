@@ -75,7 +75,7 @@
   .home-about .home-position{font-size:17px;line-height:1.85;margin-top:18px;letter-spacing:-.3px}
   .home-about-copy{font-size:12px;line-height:1.95;margin-bottom:10px}
 }
-@media(max-width:360px){html[lang="en"] .home-hero h1{font-size:34px}}
+@media(max-width:360px){html[lang="zh-CN"] .home-hero h1{font-size:36px}html[lang="en"] .home-hero h1{font-size:34px}}
 
 /* Existing student-work covers, with quiet crossfades and explicit controls. */
 .hero-carousel{isolation:isolate;background:#262626}
