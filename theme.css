@@ -1,0 +1,120 @@
+/* Neutral interface palette: black, white and gray.
+   Content photographs, screenshots and scientific figures keep their source colors. */
+:root{
+  color-scheme:dark;
+  --paper:#101010;
+  --ink:#f2f2f2;
+  --muted:#b0b0b0;
+  --line:#444444;
+  --accent:#f2f2f2;
+  --on-accent:#000;
+  --feature:#202020;
+  --surface:#1a1a1a;
+}
+::selection{background:var(--accent);color:var(--on-accent)}
+.brand img{filter:invert(1)}
+.site-header{border-bottom-color:var(--line)}
+.main-nav a:after{background:var(--accent)}
+.menu-button span{background:var(--ink)}
+.hero,.topic-strip,.page-heading,.research-row,.method-strip,.detail-next{border-color:var(--line)}
+.hero-visual{background:#262626;border-color:#545454}
+.hero-tabs button{border-color:#848484;background:#262626ed;color:#f2f2f2}
+.hero-tabs button[aria-pressed=true]{background:#f2f2f2;color:#262626;border-color:#f2f2f2}
+.hero-visual[data-mode=cognition] .route-path{stroke:var(--accent)}
+.hero-visual[data-mode=design] .route-path{stroke:var(--accent)}
+.visual-caption{color:#f1f1f1}
+.visual-caption small,.visual-note{color:#cdcdcd}
+.motion-toggle{color:#f1f1f1;border-color:#aaaaaa}
+.themes-grid{border-color:#5c5c5c}
+.theme-card{color:#f6f6f6}
+.theme-card:nth-child(1){background:#303030}
+.theme-card:nth-child(2){background:#292929}
+.theme-card:nth-child(3){background:#333333}
+.theme-card+.theme-card{border-color:#101010}
+.theme-card .theme-symbol{opacity:.8}
+.theme-card h3 small,.theme-card p{color:#f3f3f3}
+.theme-card .theme-top{color:#f6f6f6}
+.theme-card:hover{box-shadow:inset 0 0 0 2px #ffffff4d}
+.project-art{color:#f2f2f2;background:#272727}
+.project-art[data-art=focus]{color:#313131;background:#b8b8b8}
+.project-art[data-art=field]{color:#f2f2f2;background:#3e3e3e}
+.project-art[data-art=signal]{color:#f2f2f2;background:#313131}
+.art-button{background:#f2f2f2;color:#101010;border-color:#f2f2f2}
+.project-card:hover .art-button{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.project-tags span{border-color:#5c5c5c;color:var(--muted)}
+.archive-portals{border-color:#5c5c5c}
+.design-portal{background:#303030;color:#f2f2f2;border-color:#101010}
+.design-portal p:not(.eyebrow){color:#dedede}
+.design-portal .section-mark:before{background:var(--accent)}
+.design-portal .portal-link{border-color:#dedede}
+.portal-work-preview img{border-color:#a0a0a0}
+.publications-portal{background:#222222}
+.publications-portal .text-link{border-color:#b2b2b2}
+.paper-preview>a{border-color:#585858}
+.manifesto{border-color:var(--line)}
+.site-footer{background:#111111;color:#f2f2f2;border-top:1px solid #626262}
+.footer-top .eyebrow{color:#cbcbcb}
+.footer-top .mail-link,.footer-bottom,.footer-affiliation>span{color:#cfcfcf}
+.footer-bottom{border-color:#616161}
+.pswp__sbd-caption{position:absolute;left:16px;right:16px;bottom:16px;text-align:center;color:#f2f2f2;background:#101010d9;border:1px solid #717171;padding:9px 12px;font-size:12px;line-height:1.6}
+.footer-title:hover>span:last-child{color:var(--accent)}
+.filter[aria-pressed=true]{background:#f0f0f0;color:#101010;border-color:#f0f0f0}
+.filter:hover{border-color:#8d8d8d}
+.filter[aria-pressed=true]:hover{border-color:#f0f0f0}
+.search-box input{color:var(--ink);caret-color:var(--accent)}
+.search-box input::placeholder{color:#a2a2a2;opacity:1}
+.search-box:focus-within{outline-color:var(--accent)}
+.archive-select select{background:#101010;color:#f2f2f2}
+.archive-select>span{color:#b0b0b0}
+.export-button:disabled{opacity:.6}
+.publication-year,.publication-controls{border-color:#717171}
+.publication-actions>a,.publication-actions>button{border-color:#717171}
+.paper-topic-tags>span{border-color:#5c5c5c;color:#cacaca}
+.paper-abstract p,.detail-section p{color:#c8c8c8}
+.paper-abstract p{border-color:#7f7f7f}
+.solid-button{background:#f2f2f2;color:#101010;border-color:#f2f2f2}
+.solid-button:hover,.tool-launch:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.toast,.skip-link{background:#f2f2f2;color:#101010}
+.work-cover{background:#2e2e2e}
+.work-cover>.arrow{background:#f2f2f2;color:#101010}
+.gallery-image>span{background:#101010e8;color:#f2f2f2;border-color:#777777}
+.work-hero .gallery-image,.work-hero img{background:#222222}
+.work-gallery img{background:#f8f8f8}
+.works-coming{border-color:#6d6d6d}
+.works-coming-art{background:#303030;color:#f2f2f2;border-color:#6d6d6d}
+.about-graphic{background:#303030;color:#f2f2f2}
+.about-graphic svg g[stroke]{stroke:#cfcfcf}
+.about-graphic svg text{fill:#eaeaea}
+.about-facts{border-color:var(--line)}
+.reference-intro{margin:48px 4.4% 70px;display:grid;grid-template-columns:1fr 1fr;border:1px solid #5c5c5c;background:#202020;color:#f2f2f2}.reference-intro>div{padding:38px}.reference-intro h2{font-size:clamp(25px,3vw,43px);font-weight:500;line-height:1.35;margin:20px 0}.reference-intro p:not(.eyebrow){color:#dedede;line-height:2;font-size:14px}.reference-launch{min-height:290px;padding:35px;display:flex;align-items:flex-end;justify-content:space-between;background:var(--feature);color:#f2f2f2;font-family:var(--micro);font-size:13px}.reference-launch strong{font:400 44px var(--sans)}.reference-launch:hover{background:#454545}.reference-categories{margin:0 4.4% 80px}.reference-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}.reference-category-grid>div{padding:22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:150px}.reference-category-grid span{font-family:var(--micro);font-size:10px;color:var(--muted)}.reference-category-grid h3{font-size:17px;font-weight:500;margin:17px 0}.reference-category-grid b{font-family:var(--micro);font-size:20px;color:var(--accent)}.collection-switch{margin:0 4.4% 26px;display:flex;gap:8px;border-bottom:1px solid var(--line);padding-bottom:0}.collection-switch a{padding:12px 16px;border:1px solid transparent;font-size:12px}.collection-switch a.active,.collection-switch a:hover{border-color:#717171;background:#222222}
+.home-student-works{margin:68px 0 86px}.home-student-works .section-header{margin-bottom:28px}.home-student-works .work-grid{margin:0 4.4%}.home-student-works .work-cover{aspect-ratio:1.5}.home-student-works .work-card h2{font-size:20px}
+.slogan-strip{margin:0 4.4% 78px;padding:36px 38px;display:grid;grid-template-columns:1fr 2fr;gap:10%;align-items:end;background:var(--feature);color:#f2f2f2;border:1px solid #5c5c5c}.slogan-strip .section-mark:before{background:var(--accent)}.slogan-note{max-width:250px;color:#d3d3d3;font-size:12px;line-height:1.9;margin:22px 0 0}.slogan-strip blockquote{font-size:clamp(24px,3vw,43px);font-weight:500;line-height:1.5;letter-spacing:-1px;margin:0}.slogan-strip blockquote br{display:block}.about-intro+.slogan-strip{margin-top:0}
+.contact-block{background:#202020;border-color:#737373;color:#f2f2f2}
+.contact-actions span{color:#cacaca}
+/* Maintain readable labels and visible interaction states on neutral surfaces. */
+.topic-strip b,.research-row .theme-n,.method-step .eyebrow,.atlas-card-meta b,.reference-category-grid b{color:var(--ink)}
+.research-heading-tools a:hover,.paper-preview>a:hover h3,.export-button:not(:disabled):hover,.publication-row h3 a:hover,.publication-actions>a:hover,.publication-actions>button:hover,.research-paper-preview>a:hover h3,.atlas-card-source:hover,.atlas-viewer-links a:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:.3em}
+.research-heading-tools a:hover,.export-button:not(:disabled):hover,.publication-actions>a:hover,.publication-actions>button:hover,.atlas-card-source:hover,.atlas-viewer-links a:hover{border-color:var(--accent)}
+@media(max-width:1050px){.main-nav.open{background:#101010;border-color:#717171;box-shadow:0 20px 30px #0006}}
+@media(max-width:760px){.theme-card+.theme-card{border-top-color:#101010}.design-portal{border-bottom-color:#101010}}
+
+/* Approved solid brain, authored Resource Han Rounded Chinese outlines and Mindscape Latin lettering. */
+.site-header .brand { gap:0; }
+.site-header .brand picture { display:block; line-height:0; }
+.site-header .brand .brand-lockup {
+  display:block;
+  width:330px;
+  height:auto;
+  aspect-ratio:644 / 124;
+  object-fit:contain;
+  filter:invert(1);
+}
+@media(max-width:760px){
+  .home-student-works{margin:46px 0 58px}.home-student-works .work-grid{margin:0 6%}.home-student-works .work-cover{aspect-ratio:1.25}
+  .slogan-strip{margin:0 6% 54px;padding:26px 24px;display:block}.slogan-note{font-size:11px;margin:17px 0 30px;max-width:280px}.slogan-strip blockquote{font-size:25px;line-height:1.65;letter-spacing:-.7px}
+  .reference-intro{margin:35px 6% 55px;grid-template-columns:1fr}.reference-intro>div{padding:26px}.reference-launch{min-height:180px;padding:25px}.reference-categories{margin:0 6% 55px}.reference-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.reference-category-grid>div{padding:16px;min-height:130px}.reference-category-grid h3{font-size:14px}.collection-switch{margin:0 6% 20px;overflow:auto;white-space:nowrap}
+  .site-header .brand .brand-lockup { width:min(248px,64vw); }
+}
+@media(max-width:760px){
+  .site-header .brand .brand-lockup { aspect-ratio:644 / 108; }
+}

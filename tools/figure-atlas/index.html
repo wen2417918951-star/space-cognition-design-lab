@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>文献图集 — 空间·脑·设计实验室</title>
+<script>
+const params = new URLSearchParams(location.search);
+const legacy = new URLSearchParams(location.hash.slice(1));
+if (legacy.get('figure')) params.set('figure', legacy.get('figure'));
+const clean = new URLSearchParams();
+for (const key of ['q','category','recommended','shown','figure']) if (params.has(key)) clean.set(key,params.get(key));
+const target = new URL('../../',location.href);
+target.hash = '/research/figures' + (clean.size ? '?' + clean : '');
+location.replace(target.href);
+</script></head><body><a href="../../#/research/figures">打开文献图集 / Open the Research Figure Atlas</a></body></html>

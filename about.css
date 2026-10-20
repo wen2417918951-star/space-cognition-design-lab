@@ -1,0 +1,67 @@
+/* About: research identity, people, practice, and contact in reading order. */
+.about-heading{padding-bottom:24px}
+.about-heading>p:not(.eyebrow){font-size:15px;line-height:1.9;color:var(--muted);max-width:700px;margin:22px 0 0}
+.about-index{display:flex;flex-wrap:wrap;gap:8px 30px;margin-top:22px}
+.about-index a{display:inline-flex;align-items:center;justify-content:space-between;gap:22px;min-height:44px;font-size:12px;color:var(--muted)}
+.about-index a span{color:var(--accent)}
+.about-index a:hover{color:var(--ink)}
+.about-intro{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:9%;align-items:center;margin-top:38px;margin-bottom:48px}
+.about-copy .about-affiliation{font-size:12px;line-height:1.7;margin:0 0 14px}
+.about-affiliation a{display:inline-flex;align-items:center;gap:12px;min-height:28px}
+.about-affiliation a:hover{color:var(--ink)}
+.about-copy h2{font-size:clamp(26px,2.8vw,40px);margin:0 0 20px;font-weight:500}
+.about-copy p{font-size:14px;line-height:1.95;max-width:680px;margin-bottom:16px}
+.about-graphic{width:min(100%,340px);aspect-ratio:1.2;justify-self:end}
+.about-graphic .eyebrow{left:18px;bottom:14px;font-size:8px}
+.about-facts{gap:9%;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);padding:32px 0}
+.about-team-links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 26px}
+.lab-team .about-team-links .text-link{margin:0;min-height:44px}
+.about-team-links .team-email{min-height:44px;display:inline-flex;align-items:center}
+.lab-team+.slogan-strip{margin-top:12px;margin-bottom:48px}
+.about-practice-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin:22px 0 12px}
+.about-practice-links>a{border-top:1px solid var(--line);display:block;padding:18px 0;min-width:0}
+.about-practice-name{display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--micro);font-size:17px;line-height:1.5;color:var(--ink)}
+.about-practice-name .arrow{color:var(--muted)}
+.about-practice-description{display:block;font-size:12px;line-height:1.8;color:var(--muted);margin-top:8px;max-width:30em}
+.about-practice-links>a:hover .about-practice-name .arrow{color:var(--accent)}
+.about-practice .text-link{min-height:44px}
+#team,#practice,#contact{scroll-margin-top:20px}
+.about-facts:focus-visible,.contact-block:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
+.contact-block{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)}
+.contact-block>div{min-width:0}
+.contact-block .copy-button{min-width:72px;min-height:44px;padding:10px 12px;border:1px solid var(--line);font-size:12px}
+.contact-block .copy-button:hover{border-color:var(--ink)}
+.contact-copy-fallback{margin-top:22px}
+.contact-copy-fallback label{display:block;font-size:12px;margin-bottom:8px}
+.contact-copy-fallback input{width:100%;min-width:0;min-height:44px;border:1px solid var(--line);border-radius:0;background:var(--paper);color:var(--ink);padding:10px 12px;font:14px var(--micro);box-sizing:border-box}
+.contact-copy-fallback #contact-copy-note{font-size:12px;line-height:1.7;color:var(--muted);margin:10px 0 0}
+@media(max-width:760px){
+ .about-heading{padding-bottom:18px}
+ .about-heading>p:not(.eyebrow){font-size:13px;line-height:1.9;margin:18px 0 0}
+ .about-index{gap:6px 20px;margin-top:16px}
+ .about-index a{font-size:11px;gap:14px}
+ .about-intro{margin-top:24px;margin-bottom:28px;gap:24px}
+ .about-copy .about-affiliation{font-size:11px;margin-bottom:10px}
+ .about-copy h2{font-size:26px;line-height:1.5;margin-bottom:16px}
+ .about-copy p{font-size:13px;line-height:1.9;margin-bottom:14px}
+ .about-graphic{width:100%;max-width:none;aspect-ratio:2.05;align-self:stretch}
+ .about-graphic svg{height:98%;width:75%}
+ .about-graphic .eyebrow{font-size:7px;bottom:11px;left:14px}
+ .about-facts{padding:26px 0}
+ .about-facts h2{font-size:21px;margin-bottom:20px}
+ .about-facts p{font-size:13px;line-height:1.9}
+ .about-team-links{gap:4px 24px}
+ .about-team-links .team-email{font-size:11px;flex-basis:100%}
+ .lab-team+.slogan-strip{margin-top:8px;margin-bottom:30px}
+ .about-practice-links{gap:0 20px;margin-top:20px}
+ .about-practice-name{font-size:14px;gap:8px;flex-wrap:wrap}
+ .about-practice-name .arrow{font-size:14px}
+ .about-practice-description{font-size:11px;line-height:1.8}
+ .contact-actions{margin-top:16px}
+ .contact-email{font-size:13px}
+}
+@media(max-width:360px){
+ .about-index{gap:4px 15px}
+ .about-index a{gap:9px}
+ .about-practice-links{grid-template-columns:minmax(0,1fr)}
+}

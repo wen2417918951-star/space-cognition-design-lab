@@ -1,0 +1,1 @@
+Image rights remain with the respective authors and publishers. This site provides small previews with captions, DOI, source links and the recorded license. Consult the original source and applicable license before reuse. Inclusion does not grant additional rights.

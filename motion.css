@@ -1,0 +1,55 @@
+/* Motion follows the content: spatial observation, image previews, clear links. */
+:root{--motion-ease:cubic-bezier(.2,0,.2,1)}
+.city-probe{opacity:0;transition:opacity 100ms linear}
+.cover-preview-cue{display:none;pointer-events:none}
+
+/* Keep the reading surface and the original pointer steady. */
+.hero-visual .city-art,.project-card:hover .project-art svg,
+.theme-card:hover .theme-symbol,.atlas-card-image:hover img,.work-card a:hover img{transform:none}
+.hero-visual::before,.hero-visual::after{content:none}
+
+@media(min-width:761px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .city-building{transition:transform 180ms var(--motion-ease)}
+  .building-roof polygon{transition:fill 140ms linear,stroke 140ms linear}
+  .city-building.is-observed{transform:translateY(-5px)}
+  .city-building.is-observed .building-roof polygon{fill:var(--accent);stroke:var(--ink);stroke-width:1.3}
+  .hero-visual.is-exploring:not(.paused) .city-probe{opacity:.9}
+  .hero-visual.paused .city-building{transform:none;transition:none}
+  .hero-visual.paused .city-probe{opacity:0}
+
+  .cover-preview-cue{
+    display:block;position:absolute;left:0;top:0;z-index:5;
+    padding:9px 13px;background:var(--paper);color:var(--ink);
+    border:1px solid var(--accent);font:500 11px/1.4 var(--sans);
+    white-space:nowrap;opacity:0;visibility:hidden;
+    transform:translate3d(var(--preview-x,12px),var(--preview-y,12px),0);
+    transition:opacity 120ms linear,visibility 120ms linear;
+  }
+  .is-previewing>.cover-preview-cue{opacity:1;visibility:visible}
+  .is-previewing>.arrow,.is-previewing>.atlas-card-open,
+  .is-previewing>.art-button{opacity:0}
+  .work-cover img,.project-art svg,.project-art>img,.atlas-card-image img{
+    transition:transform 280ms var(--motion-ease);
+  }
+  .work-card a:hover .work-cover.is-previewing img,.project-art.is-previewing svg,
+  .project-art.is-previewing>img,.atlas-card-image.is-previewing img{transform:scale(1.025)}
+
+  .theme-card::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:var(--accent);transform:scaleX(0);transform-origin:left;
+    transition:transform 220ms var(--motion-ease);pointer-events:none;
+  }
+  .theme-card:hover::after,.theme-card:focus-visible::after{transform:scaleX(1)}
+  .theme-card .theme-symbol{transition:transform 220ms var(--motion-ease)}
+  .theme-card:hover .theme-symbol{transform:translateY(-3px)}
+  .main-nav a:after,.arrow{transition:transform 180ms var(--motion-ease)}
+  .project-card-overview:hover h3,.work-card>a:hover h2,.work-card>a:hover h3{
+    text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:.25em;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .city-building,.city-art,.work-cover img,.project-art svg,.project-art>img,
+  .atlas-card-image img,.atlas-preview:hover img,.theme-card .theme-symbol{transform:none!important}
+  .city-probe,.cover-preview-cue{display:none!important}
+}
