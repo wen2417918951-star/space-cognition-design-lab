@@ -1,0 +1,46 @@
+/* Vector controls never depend on a device's emoji font. */
+:root{--interaction-accent:#ec008c;--interaction-text:#f00090;--on-interaction-accent:#000}
+.ui-icon{display:inline-block;width:1em;height:1em;flex-shrink:0;vertical-align:-.13em;margin-inline:.18em;pointer-events:none}
+.arrow>.ui-icon,.art-button>.ui-icon,.paper-read-arrow>.ui-icon,.motion-toggle>.ui-icon{margin:0;vertical-align:middle}
+.cover-preview-cue .ui-icon{vertical-align:-.15em}
+.research-row h2 a>.arrow{font-size:21px}
+.research-row h2 a>.arrow .ui-icon{width:1em;height:1em}
+
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline-color:var(--interaction-accent)}
+.search-box:focus-within{outline-color:var(--interaction-accent)}
+.main-nav a:focus-visible:after,.home-index>a:focus-visible:after,.theme-card:focus-visible:after{background:var(--interaction-accent)}
+a:focus-visible>.arrow,a:focus-visible>.ui-icon,.about-practice-links>a:focus-visible .arrow{color:var(--interaction-accent)}
+
+/* The color marks an interaction; the reading surfaces retain the neutral palette. */
+@media(hover:hover){
+  .text-link:hover,.lang-button:hover,.main-nav a:hover,.footer-title:hover,
+  .footer-top .mail-link:hover,.footer-bottom>a:hover,.team-email:hover,
+  .tool-overview:hover,.export-button:not(:disabled):hover,
+  .publication-row h3 a:hover,.publication-actions>a:hover,.publication-actions>button:hover,
+  .paper-return:hover,.paper-detail-bottom>a:hover,.paper-citation-actions>a:hover,
+  .atlas-viewer-links a:hover,.atlas-note>a:hover,.atlas-provenance a:hover,
+  .about-index a:hover,.about-affiliation a:hover,.research-section-nav a:hover,
+  .research-theme-nav a:hover,.paper-theme-back:hover{
+    color:var(--interaction-text);border-color:var(--interaction-accent);text-decoration-color:var(--interaction-accent);
+  }
+  .main-nav a:hover:after,.home-index>a:hover:after,.theme-card:hover:after{background:var(--interaction-accent)}
+  .home-index>a:hover .arrow,.theme-card:hover .arrow,
+  .project-card-overview:hover .arrow,.work-card>a:hover .arrow,
+  .archive-tool-shortcuts>a:hover>.ui-icon,.research-tool-links a:hover .arrow,
+  .about-practice-links>a:hover .about-practice-name .arrow,.footer-title:hover>span:last-child,
+  .research-row h2 a:hover .arrow{color:var(--interaction-accent)}
+  .home-index>a:hover strong,.home-paper-grid a:hover h3,
+  .project-card-overview:hover h3,.work-card>a:hover h2,.work-card>a:hover h3,
+  .archive-tool-shortcuts>a:hover strong,.paper-related>a:hover h3{ text-decoration-color:var(--interaction-accent) }
+  .archive-tool-shortcuts>a:hover,.research-tool-links a:hover,.work-open-images:hover,
+  .project-remove-filter:hover,.paper-filter-summary button:hover,.paper-detail-topics a:hover,
+  .atlas-active-filters button:hover,.atlas-empty-actions button:hover,.contact-block .copy-button:hover{border-color:var(--interaction-accent)}
+  .solid-button:hover,.tool-launch:hover,.filter[aria-pressed=true]:hover{
+    background:var(--interaction-accent);border-color:var(--interaction-accent);color:var(--on-interaction-accent);
+  }
+  .project-card:hover .art-button{background:var(--interaction-accent);border-color:var(--interaction-accent);color:var(--on-interaction-accent)}
+  .is-previewing>.cover-preview-cue{color:var(--interaction-text);border-color:var(--interaction-accent)}
+  .gallery-image:hover>span{border-color:var(--interaction-accent)}
+  .menu-button:hover span{background:var(--interaction-accent)}
+  .pswp__button:hover{--pswp-icon-color:var(--interaction-accent)}
+}
