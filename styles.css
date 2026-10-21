@@ -182,3 +182,28 @@
 
 /* Keep the collection introduction readable as editorial copy. */
 .atlas-heading > p{max-width:52em}
+
+/* The complete review board keeps each student's original narrative visible in one scrollable image. */
+.complete-board{margin:58px 4.4% 0;border-top:1px solid var(--ink);padding-top:24px}
+.complete-board-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:22px}
+.complete-board-head .eyebrow{margin:0 0 11px;color:var(--accent)}
+.complete-board-head h2{font-size:clamp(24px,2.6vw,38px);font-weight:500;line-height:1.35;margin:0;letter-spacing:-.6px}
+.complete-board-head h2 small{font-family:var(--micro);font-size:10px;letter-spacing:.5px;color:var(--muted);margin-left:14px;vertical-align:middle}
+.complete-board-head p{max-width:650px;font-size:12px;line-height:1.8;color:var(--muted);margin:12px 0 4px}
+.complete-board-source{display:block;font-family:var(--micro);font-size:9px;line-height:1.6;color:var(--muted)}
+.complete-board-index{font-family:var(--micro);font-size:10px;letter-spacing:.7px;color:var(--muted);white-space:nowrap}
+.complete-board-figure{margin:0}
+.complete-board-figure .gallery-image{background:#e2dfd8;border:1px solid var(--line);cursor:zoom-in}
+.complete-board-figure img{display:block;width:100%;height:auto}
+.complete-board-figure .gallery-image>span{right:16px;bottom:16px}
+@media(max-width:760px){
+  .complete-board{margin:44px 6% 0;padding-top:20px}
+  .complete-board-head{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:17px}
+  .complete-board-head .eyebrow{margin-bottom:8px}
+  .complete-board-head h2{font-size:27px;line-height:1.45}
+  .complete-board-head h2 small{display:block;margin:7px 0 0;font-size:9px}
+  .complete-board-head p{font-size:11px;line-height:1.9;margin:10px 0 3px}
+  .complete-board-source{font-size:8px}
+  .complete-board-index{font-size:9px}
+  .complete-board-figure .gallery-image>span{right:10px;bottom:10px}
+}

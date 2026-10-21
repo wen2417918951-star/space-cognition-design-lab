@@ -66,6 +66,19 @@ window.LAB_WORKS = {
       ],
       "coverWidth": 1910,
       "coverHeight": 882,
+      "completeBoard": {
+        "src": "assets/works/polar-visual-perception/complete-board.jpg",
+        "preview": "assets/works/polar-visual-perception/complete-board-sm.webp",
+        "width": 1600,
+        "height": 8292,
+        "previewWidth": 900,
+        "previewHeight": 4664,
+        "pages": 9,
+        "source": [
+          "原始评图材料（PPT 导出页面）",
+          "Original review material (exported PPT pages)"
+        ]
+      },
       "status": [
         "学生设计与研究作品",
         "Student design & research"
@@ -210,6 +223,19 @@ window.LAB_WORKS = {
       ],
       "coverWidth": 2400,
       "coverHeight": 1350,
+      "completeBoard": {
+        "src": "assets/works/exhibition-perception/complete-board.jpg",
+        "preview": "assets/works/exhibition-perception/complete-board-sm.webp",
+        "width": 1600,
+        "height": 16608,
+        "previewWidth": 900,
+        "previewHeight": 9342,
+        "pages": 18,
+        "source": [
+          "原始评图材料（PDF 导出页面）",
+          "Original review material (exported PDF pages)"
+        ]
+      },
       "status": [
         "学生设计与研究作品",
         "Student design & research"
@@ -368,6 +394,19 @@ window.LAB_WORKS = {
       ],
       "coverWidth": 2400,
       "coverHeight": 1695,
+      "completeBoard": {
+        "src": "assets/works/classroom-eeg/complete-board.jpg",
+        "preview": "assets/works/classroom-eeg/complete-board-sm.webp",
+        "width": 1600,
+        "height": 22152,
+        "previewWidth": 900,
+        "previewHeight": 12461,
+        "pages": 24,
+        "source": [
+          "原始评图材料（PPT 导出页面）",
+          "Original review material (exported PPT pages)"
+        ]
+      },
       "status": [
         "学生设计与研究作品",
         "Student design & research"
