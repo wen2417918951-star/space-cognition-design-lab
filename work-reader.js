@@ -1,157 +1,167 @@
-/* Original review pages, read in source order. No image lightbox is attached. */
+/* Source pages stay intact; StPageFlip supplies the paper fold and its shadows. */
 (() => {
   'use strict';
   const positions = new Map();
-  const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const copy = language => pair => pair[language === 'en' ? 1 : 0] || pair[0];
-  const arrow = direction => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="${direction < 0 ? 'M20 12H4m6-6-6 6 6 6' : 'M4 12h16m-6-6 6 6-6 6'}"/></svg>`;
-  const expandIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></svg>';
-  function position(id, count) {
-    let index = positions.get(id);
-    if (index === undefined) {
-      try { index = Number(sessionStorage.getItem('sbd-book-' + id)); } catch {}
-    }
-    return Math.max(0, Math.min(count - 1, Number.isInteger(index) ? index : 0));
+  const text = language => pair => pair[language === 'en' ? 1 : 0] || pair[0];
+  const esc = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const icon = path => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
+  const icons = {prev:icon('M19 12H5m6-6-6 6 6 6'),next:icon('M5 12h14m-6-6 6 6-6 6'),expand:icon('M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5'),single:icon('M5 4h14v16H5Z'),spread:icon('M12 5v15M3 4h6l3 1 3-1h6v15h-6l-3 1-3-1H3Z')};
+  const clamp = (index,count) => Math.max(0,Math.min(count-1,Number.isInteger(index)?index:0));
+  function position(id,count) {
+    let index=positions.get(id);
+    if(index===undefined)try{index=Number(sessionStorage.getItem('sbd-book-'+id));}catch{}
+    return clamp(index,count);
   }
-  function render(work, language) {
-    const book = work.completeBoard, pages = book?.images;
-    if (!pages?.length) return '';
-    const t = copy(language), index = position(work.id, pages.length), page = pages[index];
-    const prev = t(['上一页','Previous page']), next = t(['下一页','Next page']);
+  function render(work,language) {
+    const pages=work.completeBoard?.images;if(!pages?.length)return '';
+    const t=text(language),index=position(work.id,pages.length),page=pages[index];
     return `<section class="work-book" aria-labelledby="work-book-title">
-      <div class="work-book-heading"><div><p class="eyebrow">${t(['作品评图册','PROJECT REVIEW'])}</p><h2 id="work-book-title">${t(['完整评图册','Complete review book'])}</h2></div><p>${String(pages.length).padStart(2,'0')} ${t(['页 · 按原始顺序','PAGES · ORIGINAL ORDER'])}</p></div>
-      <div class="book-reader" data-work-reader="${escape(work.id)}" role="region" aria-label="${t(['评图册阅读器','Review book reader'])}" tabindex="0">
-        <div class="book-topbar"><span>${t(['左右翻阅，了解完整过程','Turn the pages to follow the project'])}</span><button type="button" class="book-expand" data-book-expand aria-expanded="false">${expandIcon}<span>${t(['全屏阅读','Full screen'])}</span></button></div>
+      <div class="work-book-heading"><div><p class="eyebrow">PROJECT REVIEW</p><h2 id="work-book-title">${t(['完整评图册','Complete review book'])}</h2></div><p>${String(pages.length).padStart(2,'0')} ${t(['页 · 按原始顺序','PAGES · ORIGINAL ORDER'])}</p></div>
+      <div class="book-reader" data-work-reader="${esc(work.id)}" role="region" aria-label="${t(['评图册阅读器','Review book reader'])}" tabindex="0">
+        <div class="book-topbar"><span class="book-instruction">${t(['拖动纸角，或点击左右边缘翻页','Drag a corner or click the edges to turn'])}</span><div class="book-tools"><div class="book-modes" role="group" aria-label="${t(['阅读布局','Reading layout'])}"><button type="button" data-book-mode="single" aria-pressed="true" title="${t(['单页','Single page'])}" aria-label="${t(['单页','Single page'])}">${icons.single}</button><button type="button" data-book-mode="spread" aria-pressed="false" title="${t(['双页','Two pages'])}" aria-label="${t(['双页','Two pages'])}">${icons.spread}</button></div><button type="button" class="book-expand" data-book-expand aria-expanded="false">${icons.expand}<span>${t(['全屏阅读','Full screen'])}</span></button></div></div>
         <div class="book-stage">
-          <button type="button" class="book-arrow" data-book-step="-1" aria-label="${prev}" ${index===0?'disabled':''}>${arrow(-1)}</button>
-          <figure class="book-sheet" style="--page-ratio:${page.width}/${page.height}">
-            <img data-book-image src="${escape(page.src)}" width="${page.width}" height="${page.height}" alt="${escape(t(work.title))} — ${t([`第 ${index+1} 页`,`Page ${index+1}`])}" decoding="async" draggable="false">
-            <div class="book-message" data-book-message hidden><span></span><button type="button" data-book-retry hidden>${t(['重新加载','Retry'])}</button></div>
-          </figure>
-          <button type="button" class="book-arrow" data-book-step="1" aria-label="${next}" ${index===pages.length-1?'disabled':''}>${arrow(1)}</button>
+          <button type="button" class="book-arrow" data-book-step="-1" aria-label="${t(['上一页','Previous page'])}" ${index===0?'disabled':''}>${icons.prev}</button>
+          <div class="book-viewport" style="--volume-ratio:${page.width/page.height}"><div class="book-sheet" data-book-host><img class="book-fallback" src="${esc(page.src)}" alt="${esc(t(work.title))}" width="${page.width}" height="${page.height}" draggable="false"></div></div>
+          <button type="button" class="book-arrow" data-book-step="1" aria-label="${t(['下一页','Next page'])}" ${index===pages.length-1?'disabled':''}>${icons.next}</button>
         </div>
-        <div class="book-controls">
-          <span class="book-instruction">${t(['← → 翻页','← → TURN PAGES'])}</span>
-          <div class="book-pagination"><button type="button" class="book-mobile-arrow" data-book-step="-1" aria-label="${prev}" ${index===0?'disabled':''}>${arrow(-1)}</button><label class="book-page-picker"><span class="book-sr-only">${t(['跳转到页','Go to page'])}</span><select data-book-page>${pages.map((_,i)=>`<option value="${i}" ${i===index?'selected':''}>${String(i+1).padStart(2,'0')}</option>`).join('')}</select></label><span class="book-page-total">/ ${String(pages.length).padStart(2,'0')}</span><button type="button" class="book-mobile-arrow" data-book-step="1" aria-label="${next}" ${index===pages.length-1?'disabled':''}>${arrow(1)}</button></div>
-          <span class="book-source">${escape(t(book.source))}</span>
-        </div>
+        <div class="book-controls"><span class="book-reading-hint">${t(['← → 翻页','← → TURN PAGES'])}</span><div class="book-pagination"><button type="button" class="book-mobile-arrow" data-book-step="-1" aria-label="${t(['上一页','Previous page'])}">${icons.prev}</button><label class="book-page-picker"><span class="book-sr-only">${t(['跳转到页','Go to page'])}</span><select data-book-page>${pages.map((_,i)=>`<option value="${i}" ${i===index?'selected':''}>${String(i+1).padStart(2,'0')}</option>`).join('')}</select></label><span class="book-page-total">/ ${String(pages.length).padStart(2,'0')}</span><span class="book-spread-range" data-book-range hidden></span><button type="button" class="book-mobile-arrow" data-book-step="1" aria-label="${t(['下一页','Next page'])}">${icons.next}</button></div><span class="book-source">${esc(t(work.completeBoard.source))}</span></div>
+        <div class="book-progress" aria-hidden="true"><span data-book-progress></span></div>
         <span class="book-sr-only" data-book-announcement role="status" aria-live="polite"></span>
       </div>
     </section>`;
   }
-  function mount(root, work, language) {
-    const reader = root.querySelector('[data-work-reader]');
-    if (!reader || !work?.completeBoard?.images?.length) return () => {};
-    const t = copy(language), pages = work.completeBoard.images;
-    const controller = new AbortController(), options = {signal:controller.signal};
-    const listen = (node, event, handler, extra={}) => node.addEventListener(event,handler,{...options,...extra});
-    const image = reader.querySelector('[data-book-image]'), sheet = reader.querySelector('.book-sheet');
-    const picker = reader.querySelector('[data-book-page]'), message = reader.querySelector('[data-book-message]');
-    const retry = reader.querySelector('[data-book-retry]'), expand = reader.querySelector('[data-book-expand]');
-    const announcement = reader.querySelector('[data-book-announcement]');
-    let index = position(work.id,pages.length), expanded = false, generation = 0, pending;
-    let touch, savedFocus, disposed = false;
-    const status = (text, failed=false) => {
-      message.hidden = !text;
-      message.querySelector('span').textContent = text;
-      retry.hidden = !failed;
-      reader.classList.toggle('is-loading',!!text && !failed);
-      reader.setAttribute('aria-busy',String(!!text && !failed));
-    };
-    const loaded = () => {status('');};
-    const failed = () => {status(t(['本页未能加载，请重试。','This page could not load. Please retry.']),true);};
-    listen(image,'load',loaded);
-    listen(image,'error',failed);
-    if (image.complete) { if (!image.naturalWidth) failed(); } else status(t(['正在加载本页…','Loading page…']));
-    const preload = () => {
-      for (const adjacent of [index-1,index+1]) {
-        if (pages[adjacent]) {const next = new Image(); next.src = pages[adjacent].src;}
-      }
-    };
-    function show(target, force=false) {
-      const next = Math.max(0,Math.min(pages.length-1,target));
-      if (!force && next===index) return;
-      const direction = next>=index ? 1 : -1;
-      index = next;
-      positions.set(work.id,index);
-      try {sessionStorage.setItem('sbd-book-'+work.id,String(index));} catch {}
-      picker.value = String(index);
-      for (const button of reader.querySelectorAll('[data-book-step]')) button.disabled = Number(button.dataset.bookStep)<0 ? index===0 : index===pages.length-1;
-      const token = ++generation, page = pages[index];
-      image.hidden = true;
-      status(t(['正在加载本页…','Loading page…']));
-      // Commit only the most recently requested page, including after rapid navigation.
-      pending = new Image();
-      pending.onload = () => {
-        if (disposed || token!==generation) return;
-        image.src = page.src; image.width = page.width; image.height = page.height;
-        image.alt = t(work.title)+' — '+t([`第 ${index+1} 页`,`Page ${index+1}`]);
-        image.hidden = false;
-        sheet.style.setProperty('--page-ratio',page.width+'/'+page.height);
-        status('');
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) image.animate([{opacity:.4,transform:`translateX(${direction*10}px)`},{opacity:1,transform:'translateX(0)'}],{duration:180,easing:'ease-out'});
-        announcement.textContent = t([`第 ${index+1} 页，共 ${pages.length} 页`,`Page ${index+1} of ${pages.length}`]);
-        preload();
-      };
-      pending.onerror = () => {if (!disposed && token===generation) failed();};
-      pending.src = page.src;
+  function mount(root,work,language) {
+    const reader=root.querySelector('[data-work-reader]');if(!reader||!work?.completeBoard?.images?.length)return()=>{};
+    const t=text(language),pages=work.completeBoard.images,ratio=pages[0].width/pages[0].height;
+    const viewport=reader.querySelector('.book-viewport'),picker=reader.querySelector('[data-book-page]'),expand=reader.querySelector('[data-book-expand]');
+    const announcement=reader.querySelector('[data-book-announcement]'),range=reader.querySelector('[data-book-range]');
+    const controller=new AbortController(),listen=(node,type,callback,options={})=>node.addEventListener(type,callback,{signal:controller.signal,...options});
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+    let index=position(work.id,pages.length),preferred='single',spread=false,expanded=false,disposed=false;
+    let flip=null,host=reader.querySelector('[data-book-host]'),resizeFrame=0,previousSize='',savedFocus,intersecting=true;
+    function save() {positions.set(work.id,index);try{sessionStorage.setItem('sbd-book-'+work.id,String(index));}catch{}}
+    function sync() {
+      if(disposed)return;
+      const end=Math.min(pages.length-1,index+(spread?1:0));
+      picker.value=String(index);save();
+      for(const button of reader.querySelectorAll('[data-book-step]'))button.disabled=Number(button.dataset.bookStep)<0?index===0:end===pages.length-1;
+      range.hidden=!spread;range.textContent=`${String(index+1).padStart(2,'0')}–${String(end+1).padStart(2,'0')}`;
+      reader.querySelector('[data-book-progress]').style.width=((end+1)/pages.length*100)+'%';
+      announcement.textContent=t([spread?`第 ${index+1} 至 ${end+1} 页，共 ${pages.length} 页`:`第 ${index+1} 页，共 ${pages.length} 页`,spread?`Pages ${index+1}–${end+1} of ${pages.length}`:`Page ${index+1} of ${pages.length}`]);
+      reader.dataset.bookPage=String(index);reader.dataset.bookState=flip?.getState()||'read';
     }
-    listen(retry,'click',()=>show(index,true));
-    reader.querySelectorAll('[data-book-step]').forEach(button => listen(button,'click',()=>{
-      const step = Number(button.dataset.bookStep);
-      show(index+step);
-      if (button.disabled) reader.querySelector(`[data-book-step="${-step}"]`)?.focus({preventScroll:true});
+    function destroyFlip() {
+      if(!flip)return;
+      const old=flip;flip=null;
+      old.getRender().stop();old.destroy();
+      if(window.__sbdPageFlip===old)window.__sbdPageFlip=null;
+    }
+    function leaf(page,i) {
+      const element=document.createElement('div');element.className='review-leaf';element.dataset.reviewPage=String(i);element.dataset.density='soft';
+      element.innerHTML=`<img src="${esc(page.src)}" alt="${esc(t(work.title))} — ${t([`第 ${i+1} 页`,`Page ${i+1}`])}" width="${page.width}" height="${page.height}" decoding="async" draggable="false"><div class="book-leaf-error" hidden><span>${t(['本页未能加载','This page could not load'])}</span><button type="button" data-book-retry="${i}">${t(['重新加载','Retry'])}</button></div>`;
+      return element;
+    }
+    function layout(force=false) {
+      if(disposed||!window.St?.PageFlip)return;
+      const allowSpread=reader.clientWidth>=800;
+      const newSpread=preferred==='spread'&&allowSpread;
+      reader.querySelector('.book-instruction').textContent=reduced.matches?t(['使用两侧箭头或页码翻页','Use the arrows or page selector to turn']):t(['拖动纸角，或点击左右边缘翻页','Drag a corner or click the edges to turn']);
+      reader.classList.toggle('is-spread',newSpread);
+      reader.querySelector('[data-book-mode="spread"]').disabled=!allowSpread;
+      viewport.style.setProperty('--volume-ratio',String(ratio*(newSpread?2:1)));
+      const rect=viewport.getBoundingClientRect();
+      const pageWidth=Math.floor(Math.min((rect.width-12)/(newSpread?2:1),(rect.height-12)*ratio));
+      const pageHeight=pageWidth/ratio;
+      if(pageWidth<30||pageHeight<20)return;
+      const size=[pageWidth,newSpread,reduced.matches].join('|');
+      if(!force&&size===previousSize){if(flip)flip.getRender().suspended=!intersecting;return;}
+      previousSize=size;spread=newSpread;
+      if(flip)index=clamp(flip.getCurrentPageIndex(),pages.length);
+      destroyFlip();host.remove();
+      host=document.createElement('div');host.className='book-sheet';host.dataset.bookHost='';
+      host.style.width=(pageWidth*(spread?2:1))+'px';host.style.height=pageHeight+'px';
+      const elements=pages.map(leaf);host.append(...elements);viewport.append(host);
+      const instance=new St.PageFlip(host,{width:pageWidth,height:pageHeight,size:'fixed',autoSize:false,usePortrait:!spread,startPage:index,showCover:false,drawShadow:true,maxShadowOpacity:.32,flippingTime:720,swipeDistance:30,mobileScrollSupport:true,useMouseEvents:!reduced.matches,showPageCorners:!reduced.matches,disableFlipByClick:false,clickEventForward:true});
+      flip=instance;window.__sbdPageFlip=instance;
+      instance.on('flip',event=>{if(disposed||flip!==instance)return;index=clamp(event.data,pages.length);sync();});
+      instance.on('changeState',event=>{if(flip===instance){reader.dataset.bookState=event.data;reader.classList.toggle('is-turning',event.data==='flipping'||event.data==='user_fold');}});
+      instance.loadFromHTML(elements);
+      instance.getRender().suspended=!intersecting;
+      reader.dataset.bookEngine='stpageflip';
+      reader.querySelectorAll('[data-book-mode]').forEach(button=>button.setAttribute('aria-pressed',String((button.dataset.bookMode==='spread')===spread)));
+      index=clamp(instance.getCurrentPageIndex(),pages.length);sync();
+    }
+    function requestLayout(force=false) {if(disposed)return;cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>layout(force));}
+    function go(target,animate=true) {
+      if(!flip||disposed)return;
+      target=clamp(target,pages.length);
+      const render=flip.getRender();render.suspended=false;render.finishAnimation();
+      const current=flip.getCurrentPageIndex();
+      if(spread)target-=target%2;
+      if(target===current)return;
+      if(animate&&!reduced.matches&&Math.abs(target-current)===(spread?2:1))flip.flip(target,'bottom');
+      else flip.turnToPage(target);
+      sync();
+    }
+    reader.querySelectorAll('[data-book-step]').forEach(button=>listen(button,'click',()=>{
+      const step=Number(button.dataset.bookStep);
+      if(flip)flip.getRender().finishAnimation();
+      go(index+step*(spread?2:1));
+      if(button.disabled)reader.focus({preventScroll:true});
     }));
-    listen(picker,'change',()=>show(Number(picker.value)));
+    listen(picker,'change',()=>go(Number(picker.value),false));
+    reader.querySelectorAll('[data-book-mode]').forEach(button=>listen(button,'click',()=>{preferred=button.dataset.bookMode;requestLayout(true);}));
+    listen(viewport,'error',event=>{
+      const image=event.target;if(image.tagName!=='IMG')return;
+      const error=image.closest('.review-leaf')?.querySelector('.book-leaf-error');if(error)error.hidden=false;
+    },{capture:true});
+    listen(viewport,'load',event=>{
+      const image=event.target;if(image.tagName!=='IMG')return;
+      const error=image.closest('.review-leaf')?.querySelector('.book-leaf-error');if(error)error.hidden=true;
+    },{capture:true});
+    for(const type of ['mousedown','touchstart'])listen(viewport,type,event=>{if(event.target.closest('[data-book-retry]'))event.stopPropagation();},{capture:true});
+    listen(viewport,'click',event=>{
+      const button=event.target.closest('[data-book-retry]');if(!button)return;
+      event.stopPropagation();
+      const i=Number(button.dataset.bookRetry);
+      viewport.querySelectorAll(`[data-review-page="${i}"]`).forEach(element=>{element.querySelector('.book-leaf-error').hidden=true;element.querySelector('img').src=pages[i].src+'?retry='+Date.now();});
+    });
     function collapse(restore=true) {
-      if (!expanded) return;
-      expanded = false;
-      reader.classList.remove('is-expanded'); document.body.classList.remove('work-reader-open');
-      reader.setAttribute('role','region'); reader.removeAttribute('aria-modal');
-      expand.setAttribute('aria-expanded','false'); expand.querySelector('span').textContent = t(['全屏阅读','Full screen']);
-      if (document.fullscreenElement===reader) document.exitFullscreen?.().catch(()=>{});
-      if (restore && savedFocus?.isConnected) savedFocus.focus({preventScroll:true});
+      if(!expanded)return;expanded=false;
+      reader.classList.remove('is-expanded');document.body.classList.remove('work-reader-open');
+      reader.setAttribute('role','region');reader.removeAttribute('aria-modal');expand.setAttribute('aria-expanded','false');expand.querySelector('span').textContent=t(['全屏阅读','Full screen']);
+      if(document.fullscreenElement===reader)document.exitFullscreen?.().catch(()=>{});
+      requestLayout();if(restore&&savedFocus?.isConnected)savedFocus.focus({preventScroll:true});
     }
     listen(expand,'click',()=>{
-      if (expanded) {collapse(); return;}
-      savedFocus = document.activeElement; expanded = true;
-      reader.classList.add('is-expanded'); document.body.classList.add('work-reader-open');
-      reader.setAttribute('role','dialog'); reader.setAttribute('aria-modal','true');
-      expand.setAttribute('aria-expanded','true'); expand.querySelector('span').textContent = t(['退出全屏','Exit full screen']);
-      expand.focus({preventScroll:true});
-      // The CSS reader also works when a browser does not support element fullscreen.
-      reader.requestFullscreen?.().catch(()=>{});
+      if(expanded){collapse();return;}
+      savedFocus=document.activeElement;expanded=true;
+      reader.classList.add('is-expanded');document.body.classList.add('work-reader-open');
+      reader.setAttribute('role','dialog');reader.setAttribute('aria-modal','true');expand.setAttribute('aria-expanded','true');expand.querySelector('span').textContent=t(['退出全屏','Exit full screen']);
+      expand.focus({preventScroll:true});requestLayout();reader.requestFullscreen?.().catch(()=>{});
     });
-    listen(document,'fullscreenchange',()=>{if (!document.fullscreenElement && expanded) collapse();});
+    listen(document,'fullscreenchange',()=>{if(!document.fullscreenElement&&expanded)collapse();else requestLayout();});
     listen(document,'keydown',event=>{
-      if (event.key==='Escape' && expanded) {event.preventDefault();collapse();return;}
-      if (expanded && event.key==='Tab') {
-        const focusable = [...reader.querySelectorAll('button:not(:disabled),select')].filter(el=>el.getClientRects().length && !el.hidden);
+      if(event.key==='Escape'&&expanded){event.preventDefault();collapse();return;}
+      if(event.key==='Tab'&&expanded){
+        const focusable=[...reader.querySelectorAll('button:not(:disabled),select')].filter(el=>el.getClientRects().length&&!el.closest('[hidden]'));
         const first=focusable[0],last=focusable.at(-1);
-        if (event.shiftKey && (document.activeElement===first || !reader.contains(document.activeElement))) {event.preventDefault();last.focus();}
-        else if (!event.shiftKey && document.activeElement===last) {event.preventDefault();first.focus();}
+        if(event.shiftKey&&(document.activeElement===first||!reader.contains(document.activeElement))){event.preventDefault();last.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
       }
-      if (event.altKey||event.ctrlKey||event.metaKey||event.shiftKey||event.target.closest('input,select,textarea,[contenteditable=true]')) return;
-      const rect = reader.getBoundingClientRect();
-      if (!expanded && !reader.contains(document.activeElement) && (rect.top<0 || rect.bottom>innerHeight)) return;
-      if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
-      event.preventDefault();
-      show(event.key==='Home'?0:event.key==='End'?pages.length-1:index+(event.key==='ArrowLeft'?-1:1));
+      if(event.altKey||event.ctrlKey||event.metaKey||event.shiftKey||event.target.closest('input,select,textarea,[contenteditable=true]'))return;
+      const rect=reader.getBoundingClientRect();
+      if(!expanded&&!reader.contains(document.activeElement)&&(rect.top<0||rect.bottom>innerHeight))return;
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      event.preventDefault();flip?.getRender().finishAnimation();
+      go(event.key==='Home'?0:event.key==='End'?pages.length-1:index+(event.key==='ArrowLeft'?-1:1)*(spread?2:1),!['Home','End'].includes(event.key));
     });
-    listen(sheet,'touchstart',event=>{
-      const point=event.touches[0];touch=event.touches.length===1?{x:point.clientX,y:point.clientY}:null;
-    },{passive:true});
-    listen(sheet,'touchmove',event=>{if(event.touches.length!==1)touch=null;},{passive:true});
-    listen(sheet,'touchcancel',()=>{touch=null;},{passive:true});
-    listen(sheet,'touchend',event=>{
-      const start=touch;touch=null;if(!start||event.touches.length)return;
-      const point=event.changedTouches[0],dx=point.clientX-start.x,dy=point.clientY-start.y;
-      if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.5) show(index+(dx<0?1:-1));
-    },{passive:true});
-    const readButton = root.querySelector('[data-read-work-book]');
-    if (readButton) listen(readButton,'click',()=>{reader.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});reader.focus({preventScroll:true});});
-    preload();
-    return () => {disposed=true;++generation;collapse(false);controller.abort();if(pending){pending.onload=null;pending.onerror=null;}};
+    listen(reduced,'change',()=>requestLayout(true));
+    const observer=new ResizeObserver(()=>requestLayout());observer.observe(viewport);
+    const visibility=new IntersectionObserver(entries=>{intersecting=entries[0].isIntersecting;if(flip)flip.getRender().suspended=!intersecting;},{rootMargin:'160px'});visibility.observe(reader);
+    const readButton=root.querySelector('[data-read-work-book]');if(readButton)listen(readButton,'click',()=>{reader.scrollIntoView({block:'center',behavior:reduced.matches?'instant':'smooth'});reader.focus({preventScroll:true});});
+    layout();
+    return()=>{disposed=true;cancelAnimationFrame(resizeFrame);observer.disconnect();visibility.disconnect();collapse(false);controller.abort();destroyFlip();};
   }
-  window.LAB_WORK_READER = {render,mount};
+  window.LAB_WORK_READER={render,mount};
 })();

@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261021-review-book-1
+Version: 20261021-paper-flip-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -13,3 +13,6 @@ Photographic hero captions retain light text when hovered, with a magenta arrow 
 Focus and Studio currently provide prototype introductions and previews. Mindscape Lab links to its existing online research platform.
 
 This repository contains only public website files. Image, publication, font and bundled-library rights remain with their respective owners; bundled license notices are retained.
+
+
+Student review books now use a locally hosted MIT-licensed StPageFlip 2.0.7 reader with draggable paper folds, dynamic shadows, large single-page reading and optional desktop spreads. Original pages and page order remain unchanged. Keyboard, touch, full-screen and session reading positions are retained. Local lifecycle, final-spread and portrait-drag adjustments are documented in vendor/page-flip/NOTICE.md.
