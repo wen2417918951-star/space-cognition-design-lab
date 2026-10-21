@@ -33,7 +33,11 @@ window.LAB_WORKS = {
   "items": [
     {
       "id": "polar-visual-perception",
-      "themes": ["space", "cognition", "design"],
+      "themes": [
+        "space",
+        "cognition",
+        "design"
+      ],
       "title": [
         "基于EEG与虚拟现实的极地拟态环境视感知机制研究",
         ""
@@ -77,6 +81,53 @@ window.LAB_WORKS = {
         "source": [
           "原始评图材料（PPT 导出页面）",
           "Original review material (exported PPT pages)"
+        ],
+        "images": [
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-01.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-02.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-03.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-04.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-05.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-06.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-07.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-08.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/polar-visual-perception/pages/page-09.webp",
+            "width": 1600,
+            "height": 900
+          }
         ]
       },
       "status": [
@@ -110,7 +161,7 @@ window.LAB_WORKS = {
             ""
           ],
           "text": [
-            "作品展示了沉浸投影、脑电设备、双主机配置及交互蓝图。网页选取场景和搭建过程，保留其作为学生实验探索的语境。",
+            "作品展示了沉浸投影、脑电设备、双主机配置及交互蓝图。评图册完整呈现场景和搭建过程，保留其作为学生实验探索的语境。",
             ""
           ]
         }
@@ -190,7 +241,11 @@ window.LAB_WORKS = {
     },
     {
       "id": "exhibition-perception",
-      "themes": ["space", "cognition", "design"],
+      "themes": [
+        "space",
+        "cognition",
+        "design"
+      ],
       "title": [
         "基于脑响应的室内展陈空间感知规律研究",
         ""
@@ -234,6 +289,98 @@ window.LAB_WORKS = {
         "source": [
           "原始评图材料（PDF 导出页面）",
           "Original review material (exported PDF pages)"
+        ],
+        "images": [
+          {
+            "src": "assets/works/exhibition-perception/pages/page-01.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-02.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-03.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-04.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-05.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-06.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-07.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-08.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-09.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-10.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-11.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-12.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-13.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-14.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-15.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-16.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-17.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/exhibition-perception/pages/page-18.webp",
+            "width": 1600,
+            "height": 900
+          }
         ]
       },
       "status": [
@@ -267,7 +414,7 @@ window.LAB_WORKS = {
             ""
           ],
           "text": [
-            "使用问卷、脑电与行为记录组织分析，比较不同空间中的行进、停留和体验评价。图集呈现场景设计、平面及作品中的分析过程。",
+            "使用问卷、脑电与行为记录组织分析，比较不同空间中的行进、停留和体验评价。评图册呈现场景设计、平面及作品中的分析过程。",
             ""
           ]
         }
@@ -361,7 +508,11 @@ window.LAB_WORKS = {
     },
     {
       "id": "classroom-eeg",
-      "themes": ["space", "cognition", "design"],
+      "themes": [
+        "space",
+        "cognition",
+        "design"
+      ],
       "title": [
         "基于脑电的建筑学教室空间沉浸式体验评估研究",
         ""
@@ -405,6 +556,128 @@ window.LAB_WORKS = {
         "source": [
           "原始评图材料（PPT 导出页面）",
           "Original review material (exported PPT pages)"
+        ],
+        "images": [
+          {
+            "src": "assets/works/classroom-eeg/pages/page-01.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-02.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-03.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-04.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-05.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-06.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-07.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-08.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-09.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-10.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-11.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-12.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-13.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-14.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-15.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-16.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-17.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-18.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-19.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-20.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-21.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-22.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-23.webp",
+            "width": 1600,
+            "height": 900
+          },
+          {
+            "src": "assets/works/classroom-eeg/pages/page-24.webp",
+            "width": 1600,
+            "height": 900
+          }
         ]
       },
       "status": [
@@ -438,7 +711,7 @@ window.LAB_WORKS = {
             ""
           ],
           "text": [
-            "作品将空间布局、行为与主观评价放在一起比较。汇报同时指出样本量、光环境、空间细节及实验流程仍有改进空间；图集保留这些探索的过程。",
+            "作品将空间布局、行为与主观评价放在一起比较。汇报同时指出样本量、光环境、空间细节及实验流程仍有改进空间；评图册保留这些探索的过程。",
             ""
           ]
         }
@@ -518,3 +791,4 @@ window.LAB_WORKS = {
     }
   ]
 };
+
