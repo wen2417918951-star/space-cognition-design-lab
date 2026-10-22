@@ -23,8 +23,9 @@
  .research-row h2 a span{font-size:16px}
  .research-theme-heading h1{font-size:clamp(31px,8.5vw,48px);letter-spacing:-1px;line-height:1.4}
  .research-theme-heading h1 small{font-size:10px;margin-top:12px;letter-spacing:.1px}
- .research-theme-nav{margin:0 6%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px;padding:12px 0}
- .research-theme-nav a{font-size:11px;line-height:1.7}
+ .research-theme-nav{margin:0 6%;display:flex;gap:0;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding:12px 0 13px;scrollbar-width:none}
+ .research-theme-nav::-webkit-scrollbar{display:none}
+ .research-theme-nav a{font-size:11px;line-height:1.7;flex:0 0 auto;padding-right:22px}
  .research-theme-intro{margin:0 6%;display:block;padding:25px 0 28px}
  .research-theme-intro>.project-tags,.research-theme-intro .project-tags{margin-top:12px;margin-bottom:24px}
  .research-theme-intro h2{font-size:24px;line-height:1.55;margin-bottom:16px}

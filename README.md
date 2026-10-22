@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261022-research-detail-visual-1
+Version: 20261022-theme-nav-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -20,4 +20,7 @@ Student review books now use a locally hosted MIT-licensed StPageFlip 2.0.7 read
 Research themes use a three-card entry: space and experience, cognition and action, and design and prototypes. The entry page keeps the research question and route to each theme visible without repeating the lab name.
 
 Research theme cards use existing local previews from student work and research tools as visual anchors, with low-contrast space, cognition and design symbols, while keeping the research question and route text primary.
+
+
+Mobile theme navigation keeps the four peer routes on one horizontal tab row, with overflow contained inside the navigation when needed.
 
