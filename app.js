@@ -741,6 +741,10 @@
     const navPage=page==='works'?'projects':page==='publications'?'research':page;
     document.querySelectorAll('[data-nav]').forEach(a=>{if(a.dataset.nav===navPage)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     translateShell();
+    if(page==='research'&&parts[1]&&window.matchMedia('(max-width: 760px)').matches){
+      const activeTheme=main.querySelector('.research-theme-nav a[aria-current="page"]');
+      activeTheme?.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});
+    }
     closeMenu();
     const titles={home:t(['探索','Explore']),research:isAtlas?t(['文献图集','Research Figure Atlas']):t(themes.find(th=>th.id===parts[1])?.name||['研究','Research']),projects:parts[1]?t(projects.find(p=>p.id===parts[1])?.title||['项目','Project']):t(['项目','Projects']),works:parts[1]?t(works.find(w=>w.id===parts[1])?.title||['设计作品','Design work']):t(['设计作品','Design work']),publications:parts[1]?(papers.find(p=>p.id===parts[1])?.title||t(['论文','Publication'])):params.get('collection')==='references'?t(['文献图集','Research Figure Atlas']):t(['论文','Publications']),about:t(['关于','About'])};
     document.title=`${titles[page]||'404'} — ${t(['空间·脑·设计实验室','Space, Cognition & Design Lab'])}`;

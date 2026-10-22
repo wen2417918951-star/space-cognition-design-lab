@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261022-theme-nav-1
+Version: 20261022-theme-nav-2
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -24,3 +24,4 @@ Research theme cards use existing local previews from student work and research 
 
 Mobile theme navigation keeps the four peer routes on one horizontal tab row, with overflow contained inside the navigation when needed.
 
+Mobile research theme detail pages keep the active theme tab in view when the horizontal tab row opens, including the English narrow-screen layout.
