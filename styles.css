@@ -187,7 +187,9 @@
 .research-page-heading:not(.research-theme-heading) h1 small{display:block;margin:12px 0 0;font-size:11px;letter-spacing:.13em;color:var(--muted)}
 .research-page-heading:not(.research-theme-heading)>p:last-child{max-width:620px;margin-top:22px}
 .research-list-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 4.4%;border:1px solid var(--ink)}
-.research-list-cards .research-row{display:flex;flex-direction:column;min-width:0;min-height:430px;border:0;padding:29px 30px 31px}
+.research-list-cards .research-row{display:flex;flex-direction:column;min-width:0;min-height:430px;border:0;padding:29px 30px 31px;position:relative;overflow:hidden}
+.research-list-cards .research-row>.theme-symbol{position:absolute;top:111px;right:24px;width:82px;height:82px;opacity:.16;pointer-events:none}
+.research-list-cards .research-row>div:first-of-type{padding-right:88px}
 .research-list-cards .research-row+.research-row{border-left:1px solid var(--ink)}
 .research-list-cards .research-row .theme-n{font-size:11px;line-height:1.4;color:var(--muted)}
 .research-list-cards .research-row>div:first-of-type{margin-top:42px}
@@ -205,6 +207,8 @@
  .research-page-heading:not(.research-theme-heading) h1 small{margin-top:10px;font-size:10px;letter-spacing:.1em}
  .research-list-cards{display:block;border:1px solid var(--ink);margin:0 6%}
  .research-list-cards .research-row{min-height:0;padding:25px 22px 27px}
+ .research-list-cards .research-row>.theme-symbol{top:104px;right:18px;width:68px;height:68px;opacity:.14}
+ .research-list-cards .research-row>div:first-of-type{padding-right:75px}
  .research-list-cards .research-row+.research-row{border-left:0;border-top:1px solid var(--ink)}
  .research-list-cards .research-row>div:first-of-type{margin-top:24px}
  .research-list-cards .research-row>div:last-child{margin-top:29px;padding-top:20px}
