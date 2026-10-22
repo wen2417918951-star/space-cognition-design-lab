@@ -182,3 +182,32 @@
 
 /* Keep the collection introduction readable as editorial copy. */
 .atlas-heading > p{max-width:52em}
+
+/* Research themes: make the three paths read as one clear editorial set. */
+.research-page-heading:not(.research-theme-heading) h1 small{display:block;margin:12px 0 0;font-size:11px;letter-spacing:.13em;color:var(--muted)}
+.research-page-heading:not(.research-theme-heading)>p:last-child{max-width:620px;margin-top:22px}
+.research-list-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 4.4%;border:1px solid var(--ink)}
+.research-list-cards .research-row{display:flex;flex-direction:column;min-width:0;min-height:430px;border:0;padding:29px 30px 31px}
+.research-list-cards .research-row+.research-row{border-left:1px solid var(--ink)}
+.research-list-cards .research-row .theme-n{font-size:11px;line-height:1.4;color:var(--muted)}
+.research-list-cards .research-row>div:first-of-type{margin-top:42px}
+.research-list-cards .research-row h2{font-size:clamp(23px,2.15vw,32px);line-height:1.35;margin:0 0 8px;letter-spacing:-.8px}
+.research-list-cards .research-row .en-label{font-size:10px;letter-spacing:.03em;color:var(--muted)}
+.research-list-cards .research-row .project-tags{margin-top:20px;gap:0;display:flex;align-items:center}
+.research-list-cards .research-row .project-tags span{font-size:9px;padding:0;border:0;color:var(--muted);line-height:1.7}
+.research-list-cards .research-row .project-tags span+span:before{content:' / ';padding:0 7px;color:var(--line)}
+.research-list-cards .research-row>div:last-child{margin-top:auto;padding-top:25px;border-top:1px solid var(--line)}
+.research-list-cards .research-row h3{font-size:17px;line-height:1.55;margin:0 0 12px}
+.research-list-cards .research-row p{font-size:11px;line-height:1.9;margin:0 0 18px}
+.research-list-cards .research-row .text-link{font-size:10px;gap:20px;padding:8px 0}
+@media(max-width:1050px) and (min-width:761px){.research-list-cards .research-row{padding-left:22px;padding-right:22px}.research-list-cards .research-row>div:first-of-type{margin-top:32px}.research-list-cards .research-row h2{font-size:22px}.research-list-cards .research-row h3{font-size:15px}}
+@media(max-width:760px){
+ .research-page-heading:not(.research-theme-heading) h1 small{margin-top:10px;font-size:10px;letter-spacing:.1em}
+ .research-list-cards{display:block;border:1px solid var(--ink);margin:0 6%}
+ .research-list-cards .research-row{min-height:0;padding:25px 22px 27px}
+ .research-list-cards .research-row+.research-row{border-left:0;border-top:1px solid var(--ink)}
+ .research-list-cards .research-row>div:first-of-type{margin-top:24px}
+ .research-list-cards .research-row>div:last-child{margin-top:29px;padding-top:20px}
+ .research-list-cards .research-row h2{font-size:25px}
+ .research-list-cards .research-row h3{font-size:17px}
+}

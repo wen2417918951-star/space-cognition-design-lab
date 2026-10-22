@@ -20,12 +20,12 @@ window.LAB_CONTENT = {
         "From architecture to everyday settings: how space is perceived, used, and remembered."
       ],
       "tags": [
-        "空间感知 / Spatial perception",
-        "空间体验 / Spatial experience"
+        "感知线索 / Perceptual cues",
+        "停留与使用 / Staying & use"
       ],
       "question": [
-        "怎样的空间，让人愿意停留？",
-        "What makes a place worth staying in?"
+        "空间如何影响停留与使用？",
+        "How does space shape staying and use?"
       ],
       "approach": [
         "从真实场景出发，将环境审计、行为观察与访谈联系起来，研究物理环境与主观体验之间的关系。",
@@ -36,11 +36,11 @@ window.LAB_CONTENT = {
       "id": "cognition",
       "n": "02",
       "name": [
-        "脑认知与行为",
-        "Cognition & behavior"
+        "认知与行动",
+        "Cognition & action"
       ],
       "short": [
-        "脑认知",
+        "认知",
         "Cognition"
       ],
       "paperTopics": [
@@ -52,11 +52,11 @@ window.LAB_CONTENT = {
       ],
       "tags": [
         "注意与记忆 / Attention & memory",
-        "空间任务 / Spatial tasks"
+        "任务与行动 / Tasks & action"
       ],
       "question": [
-        "环境线索，怎样帮助我们行动？",
-        "How can environmental cues support action?"
+        "环境线索如何支持注意与行动？",
+        "How can environmental cues support attention and action?"
       ],
       "approach": [
         "把空间问题转化为具体任务，在受控情境中比较线索与提示，结合行为记录和主观反馈解释结果。",
@@ -67,8 +67,8 @@ window.LAB_CONTENT = {
       "id": "design",
       "n": "03",
       "name": [
-        "交互与设计实践",
-        "Interaction & design"
+        "设计与原型",
+        "Design & prototypes"
       ],
       "short": [
         "设计",
@@ -83,12 +83,12 @@ window.LAB_CONTENT = {
         "Bring research questions into prototypes, connecting evidence and design through tangible tools."
       ],
       "tags": [
-        "数字空间 / Digital spaces",
-        "认知支持 / Cognitive support"
+        "数字情境 / Digital settings",
+        "工具与反馈 / Tools & feedback"
       ],
       "question": [
-        "研究，怎样成为可用的设计？",
-        "How does research become usable design?"
+        "如何把研究转成可用的设计？",
+        "How can research become usable design?"
       ],
       "approach": [
         "以具体的日常需求组织交互流程，制作可操作原型，再通过研究和使用反馈修订设计判断。",

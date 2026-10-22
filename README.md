@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261021-paper-flip-1
+Version: 20261022-research-themes-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -16,3 +16,6 @@ This repository contains only public website files. Image, publication, font and
 
 
 Student review books now use a locally hosted MIT-licensed StPageFlip 2.0.7 reader with draggable paper folds, dynamic shadows, large single-page reading and optional desktop spreads. Original pages and page order remain unchanged. Keyboard, touch, full-screen and session reading positions are retained. Local lifecycle, final-spread and portrait-drag adjustments are documented in vendor/page-flip/NOTICE.md.
+
+Research themes use a three-card entry: space and experience, cognition and action, and design and prototypes. The entry page keeps the research question and route to each theme visible without repeating the lab name.
+
