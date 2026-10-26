@@ -5,7 +5,7 @@
   const text = language => pair => pair[language === 'en' ? 1 : 0] || pair[0];
   const esc = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icon = path => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
-  const icons = {prev:icon('M19 12H5m6-6-6 6 6 6'),next:icon('M5 12h14m-6-6 6 6-6 6'),expand:icon('M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5'),single:icon('M5 4h14v16H5Z'),spread:icon('M12 5v15M3 4h6l3 1 3-1h6v15h-6l-3 1-3-1H3Z')};
+  const icons = {prev:icon('M19 12H5m6-6-6 6 6 6'),next:icon('M5 12h14m-6-6 6 6-6 6'),zoom:icon('M21 21l-5-5M10 6v8M6 10h8M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z'),expand:icon('M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5'),single:icon('M5 4h14v16H5Z'),spread:icon('M12 5v15M3 4h6l3 1 3-1h6v15h-6l-3 1-3-1H3Z')};
   const clamp = (index,count) => Math.max(0,Math.min(count-1,Number.isInteger(index)?index:0));
   function position(id,count) {
     let index=positions.get(id);
@@ -18,7 +18,7 @@
     return `<section class="work-book" aria-labelledby="work-book-title">
       <div class="work-book-heading"><div><p class="eyebrow">PROJECT REVIEW</p><h2 id="work-book-title">${t(['完整评图册','Complete review book'])}</h2></div><p>${String(pages.length).padStart(2,'0')} ${t(['页 · 按原始顺序','PAGES · ORIGINAL ORDER'])}</p></div>
       <div class="book-reader" data-work-reader="${esc(work.id)}" role="region" aria-label="${t(['评图册阅读器','Review book reader'])}" tabindex="0">
-        <div class="book-topbar"><span class="book-instruction">${t(['拖动纸角，或点击左右边缘翻页','Drag a corner or click the edges to turn'])}</span><div class="book-tools"><div class="book-modes" role="group" aria-label="${t(['阅读布局','Reading layout'])}"><button type="button" data-book-mode="single" aria-pressed="true" title="${t(['单页','Single page'])}" aria-label="${t(['单页','Single page'])}">${icons.single}</button><button type="button" data-book-mode="spread" aria-pressed="false" title="${t(['双页','Two pages'])}" aria-label="${t(['双页','Two pages'])}">${icons.spread}</button></div><button type="button" class="book-expand" data-book-expand aria-expanded="false">${icons.expand}<span>${t(['全屏阅读','Full screen'])}</span></button></div></div>
+        <div class="book-topbar"><span class="book-instruction">${t(['拖动纸角，或点击左右边缘翻页','Drag a corner or click the edges to turn'])}</span><div class="book-tools"><div class="book-modes" role="group" aria-label="${t(['阅读布局','Reading layout'])}"><button type="button" data-book-mode="single" aria-pressed="true" title="${t(['单页','Single page'])}" aria-label="${t(['单页','Single page'])}">${icons.single}</button><button type="button" data-book-mode="spread" aria-pressed="false" title="${t(['双页','Two pages'])}" aria-label="${t(['双页','Two pages'])}">${icons.spread}</button></div><button type="button" class="book-zoom" data-book-zoom aria-haspopup="dialog">${icons.zoom}<span>${t(['放大细看','Zoom in'])}</span></button><button type="button" class="book-expand" data-book-expand aria-expanded="false" aria-label="${t(['全屏阅读','Full screen'])}">${icons.expand}<span>${t(['全屏阅读','Full screen'])}</span></button></div></div>
         <div class="book-stage">
           <button type="button" class="book-arrow" data-book-step="-1" aria-label="${t(['上一页','Previous page'])}" ${index===0?'disabled':''}>${icons.prev}</button>
           <div class="book-viewport" style="--volume-ratio:${page.width/page.height}"><div class="book-sheet" data-book-host><img class="book-fallback" src="${esc(page.src)}" alt="${esc(t(work.title))}" width="${page.width}" height="${page.height}" draggable="false"></div></div>
@@ -110,6 +110,7 @@
       if(button.disabled)reader.focus({preventScroll:true});
     }));
     listen(picker,'change',()=>go(Number(picker.value),false));
+    listen(reader,'sbd:book-page',event=>go(Number(event.detail.index),false));
     reader.querySelectorAll('[data-book-mode]').forEach(button=>listen(button,'click',()=>{preferred=button.dataset.bookMode;requestLayout(true);}));
     listen(viewport,'error',event=>{
       const image=event.target;if(image.tagName!=='IMG')return;
@@ -129,7 +130,7 @@
     function collapse(restore=true) {
       if(!expanded)return;expanded=false;
       reader.classList.remove('is-expanded');document.body.classList.remove('work-reader-open');
-      reader.setAttribute('role','region');reader.removeAttribute('aria-modal');expand.setAttribute('aria-expanded','false');expand.querySelector('span').textContent=t(['全屏阅读','Full screen']);
+      reader.setAttribute('role','region');reader.removeAttribute('aria-modal');expand.setAttribute('aria-expanded','false');expand.setAttribute('aria-label',t(['全屏阅读','Full screen']));expand.querySelector('span').textContent=t(['全屏阅读','Full screen']);
       if(document.fullscreenElement===reader)document.exitFullscreen?.().catch(()=>{});
       requestLayout();if(restore&&savedFocus?.isConnected)savedFocus.focus({preventScroll:true});
     }
@@ -137,11 +138,12 @@
       if(expanded){collapse();return;}
       savedFocus=document.activeElement;expanded=true;
       reader.classList.add('is-expanded');document.body.classList.add('work-reader-open');
-      reader.setAttribute('role','dialog');reader.setAttribute('aria-modal','true');expand.setAttribute('aria-expanded','true');expand.querySelector('span').textContent=t(['退出全屏','Exit full screen']);
+      reader.setAttribute('role','dialog');reader.setAttribute('aria-modal','true');expand.setAttribute('aria-expanded','true');expand.setAttribute('aria-label',t(['退出全屏','Exit full screen']));expand.querySelector('span').textContent=t(['退出全屏','Exit full screen']);
       expand.focus({preventScroll:true});requestLayout();reader.requestFullscreen?.().catch(()=>{});
     });
     listen(document,'fullscreenchange',()=>{if(!document.fullscreenElement&&expanded)collapse();else requestLayout();});
     listen(document,'keydown',event=>{
+      if(reader.dataset.bookZoomOpen==='true')return;
       if(event.key==='Escape'&&expanded){event.preventDefault();collapse();return;}
       if(event.key==='Tab'&&expanded){
         const focusable=[...reader.querySelectorAll('button:not(:disabled),select')].filter(el=>el.getClientRects().length&&!el.closest('[hidden]'));

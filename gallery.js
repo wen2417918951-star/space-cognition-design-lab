@@ -2,6 +2,7 @@ import PhotoSwipeLightbox from './vendor/photoswipe/photoswipe-lightbox.esm.min.
 
 let lightbox;
 let lastGalleryKey = '';
+let lastGalleryElement;
 const isChinese = () => document.documentElement.lang.startsWith('zh');
 const text = (zh,en) => isChinese() ? zh : en;
 // Chromium may swallow the first click after a slide swipe (PhotoSwipe #2145).
@@ -42,44 +43,60 @@ window.addEventListener('keydown', closeFromEscape);
 document.addEventListener('keydown', closeFromEscape);
 
 function mount() {
+  const bookReader=document.querySelector('[data-work-reader]');
+  const book=window.LAB_WORKS?.items.find(work=>work.id===bookReader?.dataset.workReader);
+  const bookMode=!!book?.completeBoard?.images?.length;
   const interfaceFigure = document.querySelector('[data-project-interface]');
   const interfaceMode = !!interfaceFigure;
-  const gallery = interfaceFigure || document.querySelector('.work-gallery')?.closest('main') || document.querySelector('.work-hero');
-  const key = gallery ? document.documentElement.lang+'|'+[...gallery.querySelectorAll('a.gallery-image')].map(a => a.getAttribute('href')).join('|') : '';
-  if (!gallery) { lightbox?.destroy(); lightbox = null; window.__sbdLightbox = null; lastGalleryKey = ''; return; }
-  if (key === lastGalleryKey) return;
+  const gallery = (bookMode&&bookReader) || interfaceFigure || document.querySelector('.work-gallery')?.closest('main') || document.querySelector('.work-hero');
+  const key = gallery ? document.documentElement.lang+'|'+(bookMode?'book:'+book.id:[...gallery.querySelectorAll('a.gallery-image')].map(a => a.getAttribute('href')).join('|')) : '';
+  if (!gallery) { lightbox?.destroy(); lightbox = null; window.__sbdLightbox = null; lastGalleryKey = ''; lastGalleryElement=null; return; }
+  if (key === lastGalleryKey&&gallery===lastGalleryElement) return;
   lightbox?.destroy();
-  lastGalleryKey = key;
-  lightbox = new PhotoSwipeLightbox({
-    gallery,
-    children: 'a.gallery-image',
+  lastGalleryKey = key;lastGalleryElement=gallery;
+  const mountedLightbox = lightbox = new PhotoSwipeLightbox({
+    ...(bookMode?{dataSource:book.completeBoard.images.map((page,index)=>({src:page.src,width:page.width,height:page.height,alt:text(book.title[0],book.title[1])+text(` — 第 ${index+1} 页`,` — Page ${index+1}`)})),appendToEl:bookReader,secondaryZoomLevel:1,pinchToClose:false,closeOnVerticalDrag:false,imageClickAction:'zoom'}:{gallery,children:'a.gallery-image'}),
     pswpModule: () => import('./vendor/photoswipe/photoswipe.esm.min.js'),
-    bgOpacity: .96,
+    bgOpacity: bookMode?1:.96,
     showHideAnimationType: 'none',
     escKey: true,
     trapFocus: true,
     returnFocus: true,
     counter: !interfaceMode,
-    closeTitle: text('关闭图像','Close image viewer'),
+    loop: !bookMode,
+    closeTitle: bookMode?text('返回评图册','Back to review book'):text('关闭图像','Close image viewer'),
     zoomTitle: text('放大或缩小','Zoom in or out'),
-    arrowPrevTitle: text('上一张','Previous image'),
-    arrowNextTitle: text('下一张','Next image'),
+    arrowPrevTitle: bookMode?text('上一页','Previous page'):text('上一张','Previous image'),
+    arrowNextTitle: bookMode?text('下一页','Next page'):text('下一张','Next image'),
     errorMsg: text('图像暂时无法加载，请关闭后重试。','The image could not load. Close the viewer and try again.'),
-    paddingFn: viewport => ({top:viewport.y<500?44:60,bottom:interfaceMode?(viewport.y<500?70:100):(viewport.y<500?100:160),left:viewport.x<760?12:60,right:viewport.x<760?12:60}),
+    paddingFn: viewport => ({top:viewport.y<500?44:60,bottom:bookMode?60:interfaceMode?(viewport.y<500?70:100):(viewport.y<500?100:160),left:viewport.x<760?12:60,right:viewport.x<760?12:60}),
   });
   window.__sbdLightbox = lightbox;
-  lightbox.addFilter('preventPointerEvent',(prevent,event)=>event.target.closest?.('.pswp__work-thumbs')?false:prevent);
-  lightbox.on('beforeOpen', () => {
+  mountedLightbox.addFilter('preventPointerEvent',(prevent,event)=>event.target.closest?.('.pswp__work-thumbs')?false:prevent);
+  mountedLightbox.on('beforeOpen', () => {
+    if(bookMode)document.body.classList.add('book-detail-open');
     const zoomDuration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 220;
-    Object.assign(lightbox.pswp.options,{showAnimationDuration:0,hideAnimationDuration:0,zoomAnimationDuration:zoomDuration});
+    Object.assign(mountedLightbox.pswp.options,{showAnimationDuration:0,hideAnimationDuration:0,zoomAnimationDuration:zoomDuration});
   });
-  lightbox.on('afterInit', () => {
-    lightbox.pswp.element.setAttribute('aria-label',interfaceMode?text('项目图像预览','Project image preview'):text('作品图像','Project images'));
-    lightbox.pswp.element.classList.toggle('pswp--interface',interfaceMode);
-    bindTouchControls(lightbox.pswp);
+  mountedLightbox.on('afterInit', () => {
+    mountedLightbox.pswp.element.setAttribute('aria-label',bookMode?text('评图册细节','Review book details'):interfaceMode?text('项目图像预览','Project image preview'):text('作品图像','Project images'));
+    mountedLightbox.pswp.element.classList.toggle('pswp--interface',interfaceMode);
+    mountedLightbox.pswp.element.classList.toggle('pswp--book',bookMode);
+    bindTouchControls(mountedLightbox.pswp);
+    if(bookMode){
+      bookReader.dataset.bookZoomOpen='true';
+      mountedLightbox.pswp.updateSize(true);
+      mountedLightbox.pswp.zoomTo(1,undefined,0);
+    }
   });
-  lightbox.on('uiRegister', () => {
-    const pswp=lightbox.pswp;
+  mountedLightbox.on('close',()=>{
+    if(!bookMode)return;
+    bookReader.dataset.bookZoomOpen='false';
+    bookReader.dispatchEvent(new CustomEvent('sbd:book-page',{detail:{index:mountedLightbox.pswp.currIndex}}));
+  });
+  mountedLightbox.on('destroy',()=>{if(bookMode){bookReader.dataset.bookZoomOpen='false';document.body.classList.remove('book-detail-open');}});
+  mountedLightbox.on('uiRegister', () => {
+    const pswp=mountedLightbox.pswp;
     pswp.ui.registerElement({
       name: 'sbd-caption',
       order: 9,
@@ -90,13 +107,13 @@ function mount() {
         el.setAttribute('aria-atomic','true');
         pswp.on('change', () => {
           const item = pswp.currSlide?.data?.element;
-          const caption = item?.closest('figure')?.querySelector('figcaption')?.textContent || item?.querySelector('img')?.alt || '';
+          const caption = bookMode?text(`第 ${pswp.currIndex+1} / ${book.completeBoard.images.length} 页 · 拖动查看细节`,`Page ${pswp.currIndex+1} / ${book.completeBoard.images.length} · Drag to inspect`):item?.closest('figure')?.querySelector('figcaption')?.textContent || item?.querySelector('img')?.alt || '';
           el.textContent = caption;
           el.hidden = !caption;
         });
       },
     });
-    if(!interfaceMode)pswp.ui.registerElement({
+    if(!interfaceMode&&!bookMode)pswp.ui.registerElement({
       name:'work-thumbs',order:10,isButton:false,appendTo:'root',
       onInit:(el) => {
         el.setAttribute('role','group');
@@ -121,7 +138,7 @@ function mount() {
       },
     });
   });
-  lightbox.init();
+  mountedLightbox.init();
 }
 
 new MutationObserver(mount).observe(document.getElementById('main'), {childList: true, subtree: true});
@@ -130,4 +147,6 @@ mount();
 
 document.addEventListener('click',event=>{
   if(event.target.closest('[data-open-work-gallery]'))lightbox?.loadAndOpen(0);
+  const zoom=event.target.closest('[data-book-zoom]');
+  if(zoom)lightbox?.loadAndOpen(Number(zoom.closest('[data-work-reader]').dataset.bookPage)||0);
 });

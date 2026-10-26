@@ -15,7 +15,7 @@
 .book-modes{padding-right:14px;margin-right:10px;border-right:1px solid #444}
 .book-tools button{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .book-modes button[aria-pressed=true]{background:#303030;color:#fff}
-.book-expand{gap:8px;font-size:11px!important;white-space:nowrap;padding:0 6px}
+.book-expand,.book-zoom{gap:8px;font-size:11px!important;white-space:nowrap;padding:0 6px}
 .book-stage{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:10px;padding:28px 12px 30px;overflow:hidden}
 .book-arrow{width:44px;height:64px;display:grid;place-items:center;opacity:.8}
 .book-arrow svg{width:23px;height:23px}
@@ -56,7 +56,7 @@ body.work-reader-open{overflow:hidden}
  .work-book-heading h2{font-size:26px}.work-book-heading>p{font-size:9px}
  .book-topbar{padding:5px 9px;min-height:54px}.book-instruction{display:none}
  .book-tools{justify-content:space-between;width:100%}.book-modes{padding-right:8px;margin-right:8px}
- .book-expand{font-size:10px!important;gap:6px}.book-tools button{min-width:40px}
+ .book-expand,.book-zoom{font-size:10px!important;gap:6px}.book-tools button{min-width:40px}
  .book-stage{display:block;padding:14px 5px 18px}.book-arrow{display:none}
  .book-controls{display:flex;justify-content:center;min-height:62px;padding:6px 10px}
  .book-reading-hint,.book-source{display:none}.book-mobile-arrow{display:flex}
@@ -64,6 +64,12 @@ body.work-reader-open{overflow:hidden}
  .book-reader.is-expanded .book-stage{display:flex;align-items:center;justify-content:center;padding:8px 5px 16px}
  .book-reader.is-expanded .book-topbar{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
 }
+body.book-detail-open{overflow:hidden}
+.pswp.pswp--book .pswp__top-bar{background:#171717f5}
+.pswp.pswp--book .pswp__button--arrow{width:44px;height:56px;margin-top:-28px;background:#171717d9;visibility:visible}
+.pswp.pswp--book .pswp__button--arrow .pswp__icn{width:32px;height:32px;margin-top:-16px;left:6px;right:auto}
+.pswp.pswp--book .pswp__sbd-caption{bottom:max(12px,env(safe-area-inset-bottom));max-height:36px;font-size:11px}
+@media(max-width:360px){.book-expand span{display:none}}
 @media(max-height:550px) and (orientation:landscape){
  .book-reader.is-expanded .book-topbar{min-height:44px;padding-top:0;padding-bottom:0}
  .book-reader.is-expanded .book-controls{min-height:50px;padding-top:2px;padding-bottom:max(2px,env(safe-area-inset-bottom))}
