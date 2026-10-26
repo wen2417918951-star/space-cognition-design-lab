@@ -68,6 +68,7 @@
   .paper-detail-actions{gap:17px;margin-top:22px}
   .paper-detail-grid{display:flex;flex-direction:column;gap:35px;margin:32px 6% 46px}
   .paper-detail-meta{order:2;border-top:1px solid var(--line);padding-top:25px}
+  .paper-detail-meta .paper-return{display:none}
   .paper-detail-meta dl{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px 17px;margin:20px 0}
   .paper-detail-meta dt,.paper-detail-meta dd{margin:0;font-size:11px}
   .paper-reading h2{font-size:21px;margin-bottom:18px}

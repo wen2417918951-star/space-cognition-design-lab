@@ -237,7 +237,8 @@
   function researchPublications(theme){
     const matching=theme?papers.filter(p=>matchesResearchTheme(p,theme)):papers;
     const archive=theme?'#/publications?theme='+theme.id:'#/publications';
-    return `<section class="merged-archive-section research-publications" id="research-publications" aria-labelledby="research-publications-title"><div class="section-header"><div>${eye(theme?'相关成果':'论文档案',theme?'RELATED PUBLICATIONS':'PUBLICATIONS')}<h2 id="research-publications-title">${t(['团队论文','Lab publications'])}<small>${theme?t([`${matching.length} 篇相关论文`,`${matching.length} RELATED PAPERS`]):'PUBLICATIONS'}</small></h2></div><div class="merged-links">${link(archive,theme?'查看本方向论文':'查看完整论文档案',theme?'View papers in this theme':'View full publication archive')}${link('#/research/figures','浏览图集','Explore the atlas')}</div></div><div class="research-paper-preview">${matching.slice(0,4).map(p=>`<a href="${esc(paperHref(p,archive))}"><span>${p.year} / ${esc(t([p.journal,p.journalEn]))}</span>${paperLanguageNote(p)}<h3>${esc(p.title)}</h3><p>${esc(p.authors.join(' · '))}</p>${arrow}</a>`).join('')}</div>${!matching.length?`<p class="research-empty">${t(['本方向的团队论文尚在整理，可先浏览完整论文档案。','Publications for this theme are being organized. Browse the full archive in the meantime.'])}</p>`:''}</section>`;
+    const from=theme?'#/research/'+theme.id:'#/research';
+    return `<section class="merged-archive-section research-publications" id="research-publications" aria-labelledby="research-publications-title"><div class="section-header"><div>${eye(theme?'相关成果':'论文档案',theme?'RELATED PUBLICATIONS':'PUBLICATIONS')}<h2 id="research-publications-title">${t(['团队论文','Lab publications'])}<small>${theme?t([`${matching.length} 篇相关论文`,`${matching.length} RELATED PAPERS`]):t(['PUBLICATIONS',`${papers.length} PAPERS`])}</small></h2></div><div class="merged-links">${link(archive,theme?'查看本方向论文':'查看完整论文档案',theme?'View papers in this theme':'View full publication archive')}${link('#/research/figures','浏览图集','Explore the atlas')}</div></div><div class="research-paper-preview">${matching.slice(0,4).map(p=>`<a id="research-paper-${esc(p.id)}" href="${esc(paperHref(p,from))}"><span>${p.year} / ${esc(t([p.journal,p.journalEn]))}</span>${paperLanguageNote(p)}<h3>${esc(p.title)}</h3><p>${esc(p.authors.join(' · '))}</p>${arrow}</a>`).join('')}</div>${!matching.length?`<p class="research-empty">${t(['本方向的团队论文尚在整理，可先浏览完整论文档案。','Publications for this theme are being organized. Browse the full archive in the meantime.'])}</p>`:''}</section>`;
   }
 
   function atlasCategoryName(value){
@@ -574,7 +575,7 @@
   };
 
   const paperHref = (p,from='#/publications') => `#/publications/${encodeURIComponent(p.id)}${from!=='#/publications'?'?from='+encodeURIComponent(from):''}`;
-  const paperReturn = params => params.get('from')==='#/'?'#/':/^#\/publications(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):'#/publications';
+  const paperReturn = params => params.get('from')==='#/'?'#/':/^#\/research(?:\/(?:space|cognition|design))?$/.test(params.get('from')||'')?params.get('from'):/^#\/publications(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):'#/publications';
   function downloadCitations(items){
     if(!items.length)return;
     const content=items.map(risRecord).join('\r\n');
@@ -629,16 +630,19 @@
     if(!p)return `<section class="not-found">${eye('PUBLICATION / NOT FOUND','PUBLICATION / NOT FOUND')}<h1>${t(['未找到这篇论文。','Publication not found.'])}</h1><p>${t(['可以返回论文列表，继续按题名、作者或年份查找。','Return to the archive to search by title, author, or year.'])}</p>${link('#/publications','返回论文列表','Back to publications')}</section>`;
     const from=paperReturn(params);
     const fromHome=from==='#/';
-    const back=from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent((fromHome?'home-paper-':'')+p.id);
-    const originTheme=themes.find(th=>th.id===new URLSearchParams(from.split('?')[1]||'').get('theme'));
+    const fromResearch=/^#\/research(?:\/|$)/.test(from);
+    const back=from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent((fromHome?'home-paper-':fromResearch?'research-paper-':'')+p.id);
+    const originTheme=themes.find(th=>fromResearch?from==='#/research/'+th.id:th.id===new URLSearchParams(from.split('?')[1]||'').get('theme'));
+    const originLabel=fromHome?['首页','Home']:fromResearch?(originTheme?.name||['研究方向','Research themes']):['团队论文','Lab publications'];
+    const returnLabel=t(fromHome?['返回首页','Back to home']:fromResearch?['返回'+t(originLabel),'Back to '+t(originLabel)]:['返回论文列表','Back to publications']);
     const related=papers.filter(x=>x.id!==id&&matchesResearchTheme(x,originTheme)&&x.topics.some(topic=>p.topics.includes(topic))).slice(0,3);
-    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome?`<a href="#/research">${t(['研究','Research'])}</a><span>/</span>`:''}<a href="${esc(back)}">${t(fromHome?['首页','Home']:['团队论文','Lab publications'])}</a><span>/</span><span>${p.year}</span></nav>
+    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome&&(!fromResearch||originTheme)?`<a href="#/research">${t(['研究','Research'])}</a><span>/</span>`:''}<a href="${esc(back)}">${esc(t(originLabel))}</a><span>/</span><span>${p.year}</span></nav>
       <section class="page-heading paper-detail-heading"><p class="eyebrow section-mark">PUBLICATION / ${p.year}</p>${paperLanguageNote(p)}<h1>${esc(p.title)}</h1><p class="paper-detail-authors">${esc(p.authors.join(' · '))}</p><div class="paper-detail-journal"><span>${esc(t([p.journal,p.journalEn]))}</span><span>${esc(paperImprint(p))}</span></div><div class="paper-detail-actions"><a class="tool-launch" href="${esc(p.pdfUrl||p.sourceUrl)}" target="_blank" rel="noopener noreferrer">${p.pdfUrl?paperPdfLabel(p):t(['前往来源页面','Open article source'])}${arrow}</a><a class="text-link" href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer">DOI ${arrow}</a></div></section>
-      <div class="paper-detail-grid"><aside class="paper-detail-meta"><p class="eyebrow">${t(['论文信息','PUBLICATION DETAILS'])}</p><dl><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd><dt>${t(['期刊','Journal'])}</dt><dd>${esc(t([p.journal,p.journalEn]))}</dd><dt>${p.publicationStatus==='online-first'?t(['出版状态','Publication status']):t(['卷期与页码','Volume, issue & pages'])}</dt><dd>${p.publicationStatus==='online-first'?`${t(['网络首发','Online first'])} · ${esc(p.publishedDate)}`:`${p.volume?esc(p.volume):''}${p.issue?'('+esc(p.issue)+')':''}${p.volume||p.issue?' · ':''}${esc(p.pages)}`}</dd><dt>DOI</dt><dd><a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer">${esc(p.doi)}</a></dd></dl><div class="paper-detail-topics">${p.topics.map(topic=>`<a href="#/publications?topic=${esc(topic)}">${esc(paperTopicName(topic))} ${directionIcon('right')}</a>`).join('')}</div><a class="paper-return" href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:['返回论文列表','Back to publications'])}</a></aside>
+      <div class="paper-detail-grid"><aside class="paper-detail-meta"><p class="eyebrow">${t(['论文信息','PUBLICATION DETAILS'])}</p><dl><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd><dt>${t(['期刊','Journal'])}</dt><dd>${esc(t([p.journal,p.journalEn]))}</dd><dt>${p.publicationStatus==='online-first'?t(['出版状态','Publication status']):t(['卷期与页码','Volume, issue & pages'])}</dt><dd>${p.publicationStatus==='online-first'?`${t(['网络首发','Online first'])} · ${esc(p.publishedDate)}`:`${p.volume?esc(p.volume):''}${p.issue?'('+esc(p.issue)+')':''}${p.volume||p.issue?' · ':''}${esc(p.pages)}`}</dd><dt>DOI</dt><dd><a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer">${esc(p.doi)}</a></dd></dl><div class="paper-detail-topics">${p.topics.map(topic=>`<a href="#/publications?topic=${esc(topic)}">${esc(paperTopicName(topic))} ${directionIcon('right')}</a>`).join('')}</div><a class="paper-return" href="${esc(back)}">${directionIcon('left')} ${esc(returnLabel)}</a></aside>
       <div class="paper-reading"><section class="paper-detail-abstract"><h2>${t([p.language==='en'?'摘要（英文）':'摘要',p.language==='en'?'Abstract':'Abstract · Chinese'])}</h2>${p.abstract?`<p lang="${p.language==='en'?'en':'zh-CN'}">${esc(p.abstract)}</p>`:`<p>${t(['请通过来源页面阅读摘要与全文。','Visit the source page for the abstract and full text.'])}</p>`}</section>
       <section class="paper-citation-block" aria-labelledby="paper-citation-heading"><div><h2 id="paper-citation-heading">${t(['引用这篇论文','Cite this paper'])}</h2><button class="copy-button" id="paper-copy-citation">${t(['复制引用','Copy citation'])}</button></div><textarea id="paper-citation-text" readonly rows="5" aria-label="${t(['论文引用文字','Citation text'])}">${esc(citation(p))}</textarea><div class="paper-citation-actions"><button class="copy-button" id="paper-export-citation">${t(['导出题录 .RIS','Export citation .RIS'])} ${directionIcon('down')}</button><a href="${esc(p.sourceUrl)}" target="_blank" rel="noopener noreferrer">${t(['来源页面','Article source'])} ${directionIcon('ne')}</a></div></section>
       ${related.length?`<section class="paper-related"><p class="eyebrow section-mark">${t(['继续阅读','CONTINUE READING'])}</p><h2>${t(['相关论文','Related publications'])}</h2>${related.map(x=>`<a href="${esc(paperHref(x,from))}"><span>${x.year} / ${esc(t([x.journal,x.journalEn]))}</span><h3>${esc(x.title)} <span aria-hidden="true">${directionIcon('right')}</span></h3></a>`).join('')}</section>`:''}</div></div>
-      <nav class="paper-detail-bottom"><a href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:['返回论文列表','Back to publications'])}</a><a href="#/research/figures">${t(['探索文献图集','Explore the figure atlas'])} ${directionIcon('right')}</a></nav>`;
+      <nav class="paper-detail-bottom"><a href="${esc(back)}">${directionIcon('left')} ${esc(returnLabel)}</a><a href="#/research/figures">${t(['探索文献图集','Explore the figure atlas'])} ${directionIcon('right')}</a></nav>`;
   }
 
   function bindPublicationDetail(id){
@@ -819,9 +823,13 @@
     if(page==='about'&&!keepScroll&&!restoredView)jumpToAboutSection(params);
     if(['about','research'].includes(page)&&params.get('focus')&&!keepScroll&&!restoredView){
       const selected=document.getElementById(params.get('focus'));
-      if(selected?.matches('a[id^="project-"]')){
+      if(selected?.matches('a[id^="project-"],.research-paper-preview>a')){
         selected.scrollIntoView({block:'center',behavior:'instant'});
         selected.focus({preventScroll:true});
+      }else if(page==='research'&&params.get('focus').startsWith('research-paper-')){
+        const section=document.getElementById('research-publications');
+        section?.scrollIntoView({block:'start',behavior:'instant'});
+        if(section){section.tabIndex=-1;section.focus({preventScroll:true});}
       }
     }
   }

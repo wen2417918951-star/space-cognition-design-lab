@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261026-visitor-flow-1
+Version: 20261026-reading-context-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -31,3 +31,5 @@ English publication views identify Chinese-language records with the compact lab
 Online product entry points: Lab — https://vrjm-experiment-online.onrender.com/login; Focus — https://mindscape-focus.onrender.com/habitat; Studio — https://mindscape-spatial.onrender.com/.
 
 Project details return to their originating About or research theme section. English atlas controls use translated category labels while original paper titles, figures, and collection notes retain their source language. Product descriptions state their purpose and current capabilities directly.
+
+Paper previews on research pages retain their research theme as the return destination. Paper detail breadcrumbs, related-paper navigation, reloads and return focus preserve that context. Archive searches and home previews retain their existing destinations.
