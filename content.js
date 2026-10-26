@@ -140,8 +140,8 @@ window.LAB_CONTENT = {
         "Write down a task, choose a digital setting, and start a timer. When a break is needed, view a fixed distant scene for 3–10 minutes, then return to the task and record the next step. Breaks can end at any time; feedback is optional."
       ],
       "status": [
-        "已有本地浏览器原型，支持生成空间的3D浏览、学习计时、短休息与任务回顾。当前验证集中在软件流程，真实用户效果研究尚未开展。",
-        "A local browser prototype supports 3D viewing of generated spaces, study timing, short breaks, and task reflection. Current checks cover software workflows; effectiveness with real users has not yet been studied."
+        "已开放在线体验，支持生成空间的3D浏览、学习计时、短休息与任务回顾。当前验证集中在软件流程，真实用户效果研究尚未开展。",
+        "Online access is available for 3D viewing of generated spaces, study timing, short breaks, and task reflection. Current checks cover software workflows; effectiveness with real users has not yet been studied."
       ],
       "next": [
         "比较空间休息与普通安静休息，观察主观疲劳、再次使用意愿与返回任务的情况。",
@@ -156,7 +156,7 @@ window.LAB_CONTENT = {
         "Mindscape Focus 实际界面：任务入口与数字休息空间（2026.10）。",
         "Mindscape Focus interface: task entry and a digital rest space (October 2026)."
       ],
-      "publicPreviewOnly": true
+      "externalUrl": "https://mindscape-focus.onrender.com/habitat"
     },
     {
       "id": "figure-atlas",
@@ -279,7 +279,7 @@ window.LAB_CONTENT = {
         "Mindscape Studio 实际界面：空间方案与下一版修改要求（2026.10）。效果图用于设计探索。",
         "Mindscape Studio interface: a spatial proposal and revision brief (October 2026). Visualizations are for design exploration."
       ],
-      "publicPreviewOnly": true
+      "externalUrl": "https://mindscape-spatial.onrender.com/"
     },
     {
       "id": "mindscape-lab",

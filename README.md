@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261022-language-mark-1
+Version: 20261026-product-links-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -10,7 +10,7 @@ The interface uses black, white and gray; research images retain their original 
 The site includes research, projects, student work, publications and the Research Figure Atlas.
 Home selections return to the selected image or paper. In-page browser history preserves reading position and archive filters. Each student work detail has a paginated review book exported from the original PPT/PDF pages, with previous/next controls, page selection, keyboard and touch navigation, full-screen reading and session reading-position recovery. Repeated image galleries and their lightbox entry have been removed from student work details. Source page order and content are preserved.
 Photographic hero captions retain light text when hovered, with a magenta arrow as the interaction cue.
-Focus and Studio currently provide prototype introductions and previews. Mindscape Lab links to its existing online research platform.
+Mindscape Lab, Focus and Studio link to their online sites from the home product cards, project cards and project details. Project introductions and previews remain available.
 
 This repository contains only public website files. Image, publication, font and bundled-library rights remain with their respective owners; bundled license notices are retained.
 
@@ -27,3 +27,5 @@ Mobile theme navigation keeps the four peer routes on one horizontal tab row, wi
 Mobile research theme detail pages keep the active theme tab in view when the horizontal tab row opens, including the English narrow-screen layout.
 
 English publication views identify Chinese-language records with the compact label “Original title · Chinese”; Chinese views keep the publication layout unchanged. The label appears in the English home preview, publication archive and publication detail so readers can distinguish an original Chinese title from an untranslated interface string.
+
+Online product entry points: Lab — https://vrjm-experiment-online.onrender.com/login; Focus — https://mindscape-focus.onrender.com/habitat; Studio — https://mindscape-spatial.onrender.com/.
