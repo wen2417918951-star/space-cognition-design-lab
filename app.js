@@ -1031,7 +1031,17 @@
     update();
     cleanupHero=()=>{clearTimeout(timer);observer.disconnect();controller.abort();};
   }
-  function closeMenu(){document.getElementById('navigation').classList.remove('open');document.getElementById('menu').setAttribute('aria-expanded','false');document.getElementById('menu').setAttribute('aria-label',t(['打开导航','Open navigation']));}
+  const menuButton=document.getElementById('menu');
+  const menuNavigation=document.getElementById('navigation');
+  const compactNavigation=window.matchMedia('(max-width: 1050px)');
+  let navigationFocus=null;
+  function closeMenu(restoreFocus=false){
+    const returnToButton=restoreFocus===true&&compactNavigation.matches&&menuNavigation.contains(document.activeElement);
+    menuNavigation.classList.remove('open');
+    menuButton.setAttribute('aria-expanded','false');
+    menuButton.setAttribute('aria-label',t(['打开导航','Open navigation']));
+    if(returnToButton)menuButton.focus({preventScroll:true});
+  }
   function jumpToAboutSection(params){
     const section=params.has('contact')?'contact':params.get('section');
     if(!['team','practice','contact'].includes(section))return;
@@ -1064,10 +1074,18 @@
   });
   document.querySelector('.brand').addEventListener('click',closeMenu);
   document.getElementById('language').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';try{localStorage.setItem('sbd-language',lang);}catch{}render(true);});
-  document.getElementById('menu').addEventListener('click',()=>{const menu=document.getElementById('menu');const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));document.getElementById('navigation').classList.toggle('open',open);menu.setAttribute('aria-label',open?t(['关闭导航','Close navigation']):t(['打开导航','Open navigation']));});
+  menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));menuNavigation.classList.toggle('open',open);menuButton.setAttribute('aria-label',open?t(['关闭导航','Close navigation']):t(['打开导航','Open navigation']));});
   document.querySelectorAll('.main-nav a').forEach(a=>a.addEventListener('click',()=>{closeMenu();if(a.hash===location.hash)main.focus({preventScroll:true});}));
   document.querySelector('.skip-link').addEventListener('click',e=>{e.preventDefault();main.focus({preventScroll:true});main.scrollIntoView();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.defaultPrevented&&menuButton.getAttribute('aria-expanded')==='true'){e.preventDefault();closeMenu(true);}});
+  document.addEventListener('pointerdown',e=>{if(!menuButton.contains(e.target)&&!menuNavigation.contains(e.target)){closeMenu(true);navigationFocus=null;}});
+  document.addEventListener('focusin',e=>{navigationFocus=menuButton.contains(e.target)||menuNavigation.contains(e.target)?e.target:null;if(!navigationFocus)closeMenu();});
+  compactNavigation.addEventListener('change',()=>{
+    const active=document.activeElement===document.body?navigationFocus:document.activeElement;
+    closeMenu();
+    if(compactNavigation.matches&&menuNavigation.contains(active))menuButton.focus({preventScroll:true});
+    else if(!compactNavigation.matches&&active===menuButton)(menuNavigation.querySelector('[aria-current="page"]')||menuNavigation.querySelector('a')).focus({preventScroll:true});
+  });
   document.getElementById('citation-dialog-close').addEventListener('click',()=>document.getElementById('citation-dialog').close());
   window.addEventListener('hashchange',navigateHistory);
   render();

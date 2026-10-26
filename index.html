@@ -9,7 +9,7 @@
   <link rel="icon" href="assets/space-cognition-design-favicon-32-20261017.png?v=2-padding" type="image/png" sizes="32x32">
   <link rel="icon" href="assets/space-cognition-design-favicon-20261017.svg?v=2-padding" type="image/svg+xml" sizes="any">
   <link rel="preload" href="assets/fonts/instrument-sans/instrument-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261022-language-mark-1">
+  <link rel="stylesheet" href="styles.css?v=20261027-navigation-1">
   <link rel="stylesheet" href="work-reader.css?v=20261026-book-detail-1">
   <link rel="stylesheet" href="theme.css?v=20261022-theme-nav-2&amp;brand=responsive-8">
   <link rel="stylesheet" href="motion.css?v=20261022-theme-nav-2">
@@ -27,7 +27,7 @@
   <script defer src="resources.js?v=20261018-context-return-1"></script>
   <script defer src="vendor/page-flip/page-flip.browser.js?v=2.0.7-local1"></script>
   <script defer src="work-reader.js?v=20261026-book-detail-1"></script>
-  <script defer src="app.js?v=20261027-atlas-history-1"></script>
+  <script defer src="app.js?v=20261027-navigation-1"></script>
   <script type="module" src="gallery.js?v=20261026-book-detail-1"></script>
 </head>
 <body>
@@ -40,6 +40,7 @@
       </picture>
     </a>
     <div class="header-right">
+      <button class="menu-button" id="menu" aria-expanded="false" aria-controls="navigation" aria-label="打开导航"><span></span><span></span></button>
       <nav class="main-nav" id="navigation" aria-label="主导航">
         <a href="#/" data-nav="home" data-zh="探索" data-en="Explore">探索</a>
         <a href="#/research" data-nav="research" data-zh="研究" data-en="Research">研究</a>
@@ -47,7 +48,6 @@
         <a href="#/about" data-nav="about" data-zh="关于" data-en="About">关于</a>
       </nav>
       <button class="lang-button" id="language" aria-label="Switch to English">EN <span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></span></button>
-      <button class="menu-button" id="menu" aria-expanded="false" aria-controls="navigation" aria-label="打开导航"><span></span><span></span></button>
     </div>
   </header>
   <main id="main" tabindex="-1"></main>
