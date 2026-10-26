@@ -12,6 +12,7 @@
   let toastTimer;
   let cleanupPointerMotion = () => {};
   let cleanupAtlasLayout = () => {};
+  let syncAtlasHistory = () => false;
   let cleanupHero = () => {};
   let cleanupWorkReader = () => {};
   // A history entry owns its viewport, including when filters replace its URL.
@@ -22,6 +23,7 @@
   history.replaceState({...history.state,sbdEntry:entryKey},'');
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function navigateHistory(){
+    if(syncAtlasHistory())return;
     const active=document.activeElement;
     viewports.set(entryKey,{y:window.scrollY,href:main.contains(active)?active.closest('a')?.getAttribute('href'):null});
     const incoming=history.state?.sbdEntry;
@@ -336,14 +338,25 @@
     let loaded=false,returnTarget=null,siblings=[],siblingKey=null,requestedFigure=params.get('figure');
     const byId=new Map(),byPaper=new Map();
     const paperKey=r=>r.doi?'doi:'+r.doi.trim().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'').toLowerCase():r.sourceId?'source:'+r.sourceId:r.articleUrl?'url:'+r.articleUrl:'figure:'+r.id;
-    const updateUrl=()=>{
+    const listQuery=()=>{
       const query=new URLSearchParams();
       if(search.value.trim())query.set('q',search.value.trim());
       if(category.value)query.set('category',category.value);
       if(recommended.checked)query.set('recommended','1');
       if(limit>24)query.set('shown',String(limit));
+      return query;
+    };
+    const listHash=()=>{const query=listQuery();return `#/research/figures${query.size?'?'+query:''}`;};
+    const updateUrl=(push=false)=>{
+      const query=listQuery(),background=listHash();
       if(current)query.set('figure',current.id);
-      history.replaceState(history.state,'',`#/research/figures${query.size?'?'+query:''}`);
+      const url=`#/research/figures${query.size?'?'+query:''}`;
+      if(push){
+        const parent=entryKey;
+        viewports.set(parent,{y:window.scrollY,href:null});
+        entryKey=newEntryKey();
+        history.pushState({...history.state,sbdEntry:entryKey,sbdAtlasParent:parent,sbdAtlasBase:background,sbdAtlasTrigger:returnTarget?.dataset.atlasId},'',url);
+      }else history.replaceState(history.state,'',url);
     };
     const loadImage=()=>{
       document.getElementById('atlas-image-error').hidden=true;image.hidden=false;
@@ -354,7 +367,7 @@
     const showFigure=(record,trigger)=>{
       if(!record||!search.isConnected)return;
       const opening=!dialog.open;
-      if(opening)returnTarget=trigger||grid.querySelector(`[data-atlas-id="${record.id}"]`)||search;
+      if(opening)returnTarget=trigger||grid.querySelector(`[data-atlas-id="${history.state?.sbdAtlasTrigger||record.id}"]`)||search;
       current=record;
       image.alt=record.caption||record.shortTitle||record.title;loadImage();
       document.getElementById('atlas-viewer-meta').textContent=`${record.id} · ${record.figureNumber||t(['文献图像','Figure'])}`;
@@ -381,9 +394,25 @@
       document.getElementById('atlas-paper-next').disabled=index>=siblings.length-1;
       thumbs.querySelectorAll('button').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.paperFigure===record.id)));
       document.querySelector('.atlas-viewer-copy').scrollTop=0;
-      updateUrl();document.title=`${record.id} · ${record.title} — ${t(['文献图集','Research Figure Atlas'])}`;
+      updateUrl(opening&&!!trigger);document.title=`${record.id} · ${record.title} — ${t(['文献图集','Research Figure Atlas'])}`;
       if(opening){dialog.showModal();dialog.scrollTop=0;document.getElementById('atlas-viewer-close').focus({preventScroll:true});}
       requestAnimationFrame(()=>{if(dialog.open&&current===record)thumbs.querySelector('[aria-pressed="true"]')?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});});
+    };
+    // Browser history changes the open figure without rebuilding the loaded grid.
+    syncAtlasHistory=()=>{
+      if(!search.isConnected)return false;
+      const {parts,params:incoming}=routeInfo();
+      if(parts.join('/')!=='research/figures')return false;
+      const id=incoming.get('figure');incoming.delete('figure');incoming.sort();
+      const existing=listQuery();existing.sort();
+      if(incoming.toString()!==existing.toString()||(id&&loaded&&!byId.has(id)))return false;
+      entryKey=history.state?.sbdEntry||newEntryKey();
+      history.replaceState({...history.state,sbdEntry:entryKey},'');
+      requestedFigure=id;
+      if(id){if(loaded)showFigure(byId.get(id));}
+      else if(dialog.open)dialog.close();
+      else{current=null;document.title=baseTitle;}
+      return true;
     };
     const searchTerms=()=>search.value.trim().normalize('NFKC').toLocaleLowerCase().split(/\s+/).filter(Boolean);
     const matchesTerms=(record,terms)=>{
@@ -483,8 +512,11 @@
     document.getElementById('atlas-image-retry').addEventListener('click',loadImage);
     document.getElementById('atlas-viewer-close').addEventListener('click',()=>dialog.close());
     dialog.addEventListener('close',()=>{
-      if(!search.isConnected)return;
-      current=null;updateUrl();document.title=baseTitle;
+      if(!search.isConnected||dialog.open)return;
+      const owned=history.state?.sbdAtlasParent&&history.state.sbdAtlasBase===listHash()&&routeInfo().params.get('figure')===current?.id;
+      current=null;
+      if(owned)history.back();else updateUrl();
+      document.title=baseTitle;
       const target=returnTarget?.isConnected?returnTarget:search;
       target.focus({preventScroll:true});target.scrollIntoView({block:'nearest',behavior:'instant'});
     });
@@ -749,6 +781,7 @@
     document.getElementById('menu').setAttribute('aria-label',t(['打开导航','Open navigation']));
   }
   function render(keepScroll=false,restoredView){
+    syncAtlasHistory=()=>false;
     cleanupAtlasLayout();
     cleanupHero();
     cleanupWorkReader();

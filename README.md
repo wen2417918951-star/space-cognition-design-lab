@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261026-book-detail-1
+Version: 20261027-atlas-history-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -35,3 +35,5 @@ Project details return to their originating About or research theme section. Eng
 Paper previews on research pages retain their research theme as the return destination. Paper detail breadcrumbs, related-paper navigation, reloads and return focus preserve that context. Archive searches and home previews retain their existing destinations.
 
 The review book toolbar opens its current page in a zoomable detail viewer. Pan, pinch and zoom use the existing PhotoSwipe library. Closing returns to the book at the viewed page, without a second image gallery below the book.
+
+Opening a figure adds one browser history entry. Back closes it to the existing filtered grid; Forward restores the viewed figure. Same-paper browsing replaces that entry, and direct shared links close within the atlas.
