@@ -116,8 +116,8 @@ window.LAB_CONTENT = {
         "Mindscape Focus"
       ],
       "subtitle": [
-        "为专注、休息与返回，设计一段空间体验。",
-        "A spatial experience for focus, rest, and return."
+        "专注计时、短时休息与任务回顾。",
+        "Task timing, short breaks, and reflection."
       ],
       "type": [
         "交互原型",
@@ -128,20 +128,20 @@ window.LAB_CONTENT = {
         "Browser prototype"
       ],
       "summary": [
-        "将专注启动、短时休息和任务回顾串联起来，让数字空间参与一段具体任务的开始与继续。",
-        "Connect task initiation, short breaks, and reflection, bringing digital space into the rhythm of starting and returning to a task."
+        "写下要做的事，开始计时；需要休息时进入数字空间，结束后回到原任务。",
+        "Write down a task and start a timer. Take a break in a digital space when needed, then return to the task."
       ],
       "question": [
-        "当学习被疲劳或中断打断，数字空间能怎样支持一次短休息，以及之后的任务继续？",
-        "When fatigue or interruption breaks a study session, how might a digital space support a short break and the return to a task?"
+        "短暂休息后，人怎样回到学习任务？数字空间能在其中起什么作用？",
+        "How do people return to studying after a short break, and what role might digital spaces play?"
       ],
       "process": [
         "用户写下当前任务，选择数字空间并启动计时；需要休息时进入3–10分钟的固定远景，之后回到原任务，记录下一步。休息可随时结束，感受反馈可以跳过。",
         "Write down a task, choose a digital setting, and start a timer. When a break is needed, view a fixed distant scene for 3–10 minutes, then return to the task and record the next step. Breaks can end at any time; feedback is optional."
       ],
       "status": [
-        "已开放在线体验，支持生成空间的3D浏览、学习计时、短休息与任务回顾。当前验证集中在软件流程，真实用户效果研究尚未开展。",
-        "Online access is available for 3D viewing of generated spaces, study timing, short breaks, and task reflection. Current checks cover software workflows; effectiveness with real users has not yet been studied."
+        "已开放在线体验，包括空间浏览、专注计时、短休息和任务回顾。对疲劳与专注的实际影响仍需用户研究。",
+        "The online prototype offers spatial viewing, task timing, short breaks, and reflection. Its effects on fatigue and attention still require user studies."
       ],
       "next": [
         "比较空间休息与普通安静休息，观察主观疲劳、再次使用意愿与返回任务的情况。",
@@ -178,8 +178,8 @@ window.LAB_CONTENT = {
         "figure search"
       ],
       "subtitle": [
-        "空间、脑认知与设计的视觉文献索引。",
-        "A visual index to research on space, cognition and design."
+        "检索文献图像，查看图注与来源。",
+        "Find research figures with captions and source papers."
       ],
       "type": [
         "研究资源",
@@ -190,8 +190,8 @@ window.LAB_CONTENT = {
         "Integrated collection"
       ],
       "summary": [
-        "以图像为线索，阅读空间、脑认知与设计研究。汇集研究框架、实验方法、空间分析与设计表达，连接图像、图注与原始文献。",
-        "Read research on space, cognition and design through its images. Explore conceptual frameworks, experimental methods, spatial analysis and design proposals, with captions and links to the original papers."
+        "按研究用途或关键词查找文献图像，阅读图注，再前往来源论文核对方法与上下文。",
+        "Find figures by research use or keyword, read their captions, and open the source papers to check methods and context."
       ],
       "question": [
         "如何借助文献图像，理解研究问题、方法与表达？",
@@ -202,8 +202,8 @@ window.LAB_CONTENT = {
         "Browse figures by research use or keyword. Read their captions, check sources and license records, and follow the links to the original papers."
       ],
       "status": [
-        "当前图库收录2,070幅文献图像、658篇来源论文、135个出版来源和373幅优先参考图。可浏览图像预览、阅读图注并追溯原始文献；这些文献不等同于实验室发表成果。",
-        "The collection includes 2,070 figures from 658 papers and 135 publication sources, with 373 priority references. Browse previews, read captions and follow links to the original papers. These references are not lab publications."
+        "当前收录2,070幅图像，来自658篇论文和135个出版来源，其中373幅列为优先参考。网站提供图像预览、图注和来源链接；完整图像可前往原文查看。这些是领域参考文献，与团队论文分开收录。",
+        "The collection contains 2,070 figures from 658 papers and 135 publication sources, including 373 priority references. Browse previews, captions, and source links; open the original paper for full figures. Field references are listed separately from Lab publications."
       ],
       "next": [
         "继续核对许可与来源信息，逐步补充与实验室研究问题直接相关的图像。",
@@ -239,8 +239,8 @@ window.LAB_CONTENT = {
         "Mindscape Studio"
       ],
       "subtitle": [
-        "从现场与需求出发，比较方案，逐版推敲空间。",
-        "Start with a place and a brief. Compare designs and refine them version by version."
+        "从现场照片到空间方案，逐版比较和修改。",
+        "Develop spatial designs from site photos, comparing and revising each version."
       ],
       "type": [
         "空间设计工作台",
@@ -251,24 +251,24 @@ window.LAB_CONTENT = {
         "Browser prototype"
       ],
       "summary": [
-        "面向室内与小型室外空间的设计工作台。从现场照片或文字需求出发，比较改造方向、查看效果，并在既有版本上提出修改。",
-        "A design workbench for interiors and small outdoor spaces. Start with site photos or a written brief, compare renovation directions, inspect visualizations, and request changes to an existing version."
+        "用现场照片和文字说明提出空间需求，比较方案效果图，并在选定版本上继续修改。",
+        "Describe a space with site photos and a written brief. Compare visual proposals and revise a selected version."
       ],
       "question": [
-        "怎样让人的现场经验与使用需求，持续参与机器辅助的空间设计？",
-        "How can on-site experience and everyday needs remain part of machine-assisted spatial design?"
+        "怎样让空间方案的生成与修改，回应现场条件和使用需求？",
+        "How can design generation and revision respond to site conditions and the needs of the people using a space?"
       ],
       "process": [
         "以现场照片或文字描述建立空间需求，比较候选方向并查看效果图；在选定版本上写下修改要求，核对后生成下一版，再对照前后方案继续推敲。",
         "Frame a spatial brief with site photos or a written description, compare candidate directions, and inspect visualizations. Add changes to a selected version, review them before generating the next, and compare versions to refine the design."
       ],
       "status": [
-        "当前浏览器原型提供方案方向、效果图对照、修改要求和项目版本等界面。下图为工作台的实际界面，其中的空间图像用于方案探索；尚不据此宣称建成效果或用户研究结论。",
-        "The browser prototype includes interfaces for design directions, visualization comparison, revision requests, and project versions. The preview shows the actual workbench; its spatial images support design exploration and do not establish built outcomes or user-study findings."
+        "在线工作台提供方案方向、效果图比较、修改要求与版本记录。效果图用于方案探索，不代表建成效果。",
+        "The online workbench offers design directions, visualization comparison, revision briefs, and version records. The images are design studies rather than completed spaces."
       ],
       "next": [
-        "围绕具体场景核对需求、方案与修改之间的对应关系，结合实际使用反馈继续完善空间设计流程。",
-        "Check how briefs, designs, and revisions correspond in specific settings, and refine the design workflow through use."
+        "通过具体项目检查现场需求是否落实到方案中，并结合使用反馈改进修改流程。",
+        "Use specific projects to check whether designs meet the site brief and improve the revision workflow through feedback."
       ],
       "methods": [
         "现场需求 / Site & brief",
@@ -307,8 +307,8 @@ window.LAB_CONTENT = {
         "实验工作台"
       ],
       "subtitle": [
-        "把生活中的问题，带进可比较的情境。",
-        "Bring everyday questions into comparable settings."
+        "配置场景与任务，记录实验过程。",
+        "Set up scenes and tasks, and record experiments."
       ],
       "type": [
         "情境研究平台",
@@ -319,24 +319,24 @@ window.LAB_CONTENT = {
         "Research platform prototype"
       ],
       "summary": [
-        "面向空间与脑认知研究，组织场景、任务与实验条件，关联行为、问卷和研究记录，让设计判断有可追溯的依据。",
-        "Organize scenes, tasks, and experimental conditions for spatial and cognition research. Connect behavior, questionnaires, and study records to trace the evidence behind design decisions."
+        "为情境研究配置场景、任务和比较条件，收集行为与问卷记录，并回看、导出研究数据。",
+        "Configure scenes, tasks, and comparison conditions for situated studies. Collect, review, and export behavioral and questionnaire records."
       ],
       "question": [
         "空间线索与提示方式怎样影响任务体验？如何在可控条件下比较，并保留完整的研究过程？",
         "How do spatial cues and prompts shape task experience? How can we compare them under controlled conditions and preserve the research process?"
       ],
       "process": [
-        "从具体活动与环境出发，核对任务目标、空间线索与完成标准，配置场景及比较条件。通过参与入口组织体验，关联会话、任务版本、行为和问卷记录，再回看与导出。",
-        "Start from an activity and its environment. Review task goals, spatial cues, and completion criteria, then configure scenes and comparison conditions. Organize experiences through a participant entry, associate sessions, task versions, behavior and questionnaires, and review or export the records."
+        "确定研究问题和任务后，配置场景、线索与比较条件。通过参与入口开展体验，保存任务版本、行为与问卷记录，供研究者回看和导出。",
+        "Define the research question and task, then set up scenes, cues, and comparison conditions. Run sessions through the participant entry and save task versions, behavior, and questionnaire responses for review and export."
       ],
       "status": [
-        "已有场景任务配置、参与流程、问卷与记录保存等原型链路；可结合具体研究方案开展软件流程核验。当前功能与流程验证不等同于实验效度或脑认知改善效果。",
-        "Prototype workflows cover scene-task configuration, participation, questionnaires, and saved records, with software checks tied to specific study protocols. Workflow verification does not establish experimental validity or cognitive benefits."
+        "原型已提供任务配置、参与流程、问卷与记录保存功能。具体实验的效度与认知效果仍需按研究方案验证。",
+        "The prototype provides task configuration, participant sessions, questionnaires, and saved records. Experimental validity and cognitive effects require evaluation within each study."
       ],
       "next": [
-        "围绕明确的研究问题核对条件、记录与结果。在与 Mindscape I 协作时，先比较候选支持方案，再回到实际情境复测；规则迁移仍需单独验证。",
-        "Check conditions, records, and outcomes against an explicit research question. In collaboration with Mindscape I, compare candidate support strategies before testing them in real settings; transfer requires separate validation."
+        "比较不同空间线索和提示方式，检查任务表现与体验。在与 Mindscape I 协作时，先在受控场景中比较提示方案，再到日常环境中复测。",
+        "Compare spatial cues and prompts using task performance and experience. Work with Mindscape I to compare prompts in controlled settings before testing them in everyday environments."
       ],
       "methods": [
         "场景任务 / Scene tasks",
@@ -370,8 +370,8 @@ window.LAB_CONTENT = {
         "Mindscape I"
       ],
       "subtitle": [
-        "让日常任务支持，发生在需要的时刻。",
-        "Everyday task support, at the moment it is needed."
+        "可穿戴的日常任务提醒原型。",
+        "A wearable prototype for everyday task reminders."
       ],
       "type": [
         "认知支持原型",
@@ -394,12 +394,12 @@ window.LAB_CONTENT = {
         "Organize voice and button feedback around concrete tasks. Record reminder delivery, responses, and self-reported completion separately. Bring difficulties into controlled settings to compare candidate prompts, then test them in everyday contexts."
       ],
       "status": [
-        "已形成提醒反馈逻辑与软件原型材料。整机联调、可靠后台提醒及正式用户研究仍在后续计划中，尚不据此宣称实际认知改善效果。",
-        "Reminder-feedback logic and software prototype materials have been developed. Integrated device testing, reliable background reminders, and formal user research remain planned; cognitive benefits have not been established."
+        "已有提醒与反馈的软件原型。整机联调、后台提醒和正式用户研究仍在计划中，认知改善效果尚未得到验证。",
+        "A software prototype covers reminders and feedback. Device integration, background reminders, and formal user studies remain planned; cognitive benefits have not been established."
       ],
       "next": [
-        "围绕一项真实任务核对提示、响应与结果，再按授权与研究计划开展使用验证。",
-        "Check prompts, responses, and outcomes for a real task, then conduct use studies within the agreed research plan."
+        "先围绕一项日常任务检查提醒、回应和完成情况，再按研究计划开展使用测试。",
+        "Start with one everyday task to check reminders, responses, and completion, then conduct use tests under the study plan."
       ],
       "methods": [
         "日常任务 / Everyday tasks",

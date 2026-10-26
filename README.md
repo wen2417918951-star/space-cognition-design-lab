@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261026-product-links-1
+Version: 20261026-visitor-flow-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -29,3 +29,5 @@ Mobile research theme detail pages keep the active theme tab in view when the ho
 English publication views identify Chinese-language records with the compact label “Original title · Chinese”; Chinese views keep the publication layout unchanged. The label appears in the English home preview, publication archive and publication detail so readers can distinguish an original Chinese title from an untranslated interface string.
 
 Online product entry points: Lab — https://vrjm-experiment-online.onrender.com/login; Focus — https://mindscape-focus.onrender.com/habitat; Studio — https://mindscape-spatial.onrender.com/.
+
+Project details return to their originating About or research theme section. English atlas controls use translated category labels while original paper titles, figures, and collection notes retain their source language. Product descriptions state their purpose and current capabilities directly.
