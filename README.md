@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261027-contact-name-1
+Version: 20261027-editorial-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -40,3 +40,4 @@ Opening a figure adds one browser history entry. Back closes it to the existing 
 
 Compact navigation follows its toggle in keyboard order, closes on outside interaction or focus leaving, restores focus on Escape, and resets when switching between compact and desktop layouts.
 
+The homepage combines its existing student-work imagery with the research introduction in one desktop composition. A lead work and two supporting works establish visual hierarchy; tools form one compact row on wide screens and reflow for tablets and phones. Original images, archive links and review-book content are retained.
