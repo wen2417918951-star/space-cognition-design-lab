@@ -15,6 +15,19 @@
 .about-graphic .eyebrow{left:18px;bottom:14px;font-size:8px}
 .about-facts{gap:9%;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);padding:32px 0}
 .about-team-links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 26px}
+.team-profile{display:grid;grid-template-columns:168px minmax(0,1fr);gap:28px;align-items:start}
+.team-portrait{margin:0}
+.team-portrait img{display:block;width:100%;height:auto;aspect-ratio:4/5}
+.team-bio{min-width:0}
+@media(min-width:761px) and (max-width:1050px){.team-profile{grid-template-columns:140px minmax(0,1fr);gap:22px}}
+@media(max-width:760px){
+ .team-profile{grid-template-columns:112px minmax(0,1fr);gap:20px}
+ .team-bio{display:contents}
+ .team-bio>.team-person{align-self:center}
+ .team-profile .team-role{margin-bottom:0}
+ .team-bio>p,.team-bio>.about-team-links{grid-column:1/-1}
+ .team-bio>p{margin:0}
+}
 .lab-team .about-team-links .text-link{margin:0;min-height:44px}
 .about-team-links .team-email{min-height:44px;display:inline-flex;align-items:center}
 .lab-team+.slogan-strip{margin-top:12px;margin-bottom:48px}
