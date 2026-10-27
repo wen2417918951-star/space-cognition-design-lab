@@ -149,8 +149,6 @@
 .footer-contact-actions{display:flex;align-items:center;gap:10px 24px;flex-wrap:wrap}
 .footer-contact .footer-email{font-size:16px;line-height:1.7;min-width:0;color:var(--ink)}
 .footer-contact .footer-email>span{min-width:0;overflow-wrap:anywhere}
-.footer-contact .copy-button{min-height:44px;padding:8px 0;font-size:12px;border-bottom-color:var(--line)}
-.footer-copy-note{font-size:12px;line-height:1.8;color:var(--muted);margin:12px 0 0;max-width:36em}
 .footer-related{min-width:0;max-width:360px;justify-self:end;width:100%}
 .footer-related h2{font-size:12px;font-weight:400;color:var(--muted);margin:0 0 8px;line-height:1.8}
 .footer-related a{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:44px;font-size:13px;line-height:1.7;border-bottom:1px solid var(--line);padding:9px 0}

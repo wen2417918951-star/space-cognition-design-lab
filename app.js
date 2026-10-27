@@ -1041,26 +1041,6 @@
     target.focus({preventScroll:true});
     target.scrollIntoView({block:'start',behavior:'instant'});
   }
-  async function copyEmail(event){
-    const button=event.currentTarget;
-    const address=document.getElementById('contact-email-text');
-    const note=document.getElementById('contact-copy-note');
-    try {
-      await navigator.clipboard.writeText(address.textContent.trim());
-      if(!button.isConnected)return;
-      note.hidden=true;
-      showToast(t(['邮箱已复制','Email copied']));
-    } catch {
-      if(!button.isConnected)return;
-      note.hidden=false;
-      const email=document.getElementById('contact-email');
-      email.focus({preventScroll:true});
-      const selection=window.getSelection(),range=document.createRange();
-      range.selectNodeContents(address);selection.removeAllRanges();selection.addRange(range);
-      email.scrollIntoView({block:'nearest',behavior:'instant'});
-      showToast(t(['请手动复制已选中的邮箱地址','Copy the selected email address manually.']));
-    }
-  }
   function showToast(message){const toast=document.getElementById('toast');clearTimeout(toastTimer);toast.textContent=message;toast.classList.add('visible');toastTimer=setTimeout(()=>toast.classList.remove('visible'),2600);}
   document.addEventListener('click',event=>{
     const anchor=event.target.closest('a.about-jump,a[href="#/about?contact=1"]');
@@ -1068,7 +1048,6 @@
     event.preventDefault();jumpToAboutSection(routeInfo().params);
   });
   document.querySelector('.brand').addEventListener('click',closeMenu);
-  document.getElementById('copy-email').addEventListener('click',copyEmail);
   document.getElementById('language').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';try{localStorage.setItem('sbd-language',lang);}catch{}render(true);});
   menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));menuNavigation.classList.toggle('open',open);menuButton.setAttribute('aria-label',open?t(['关闭导航','Close navigation']):t(['打开导航','Open navigation']));});
   document.querySelectorAll('.main-nav a').forEach(a=>a.addEventListener('click',()=>{closeMenu();if(a.hash===location.hash)main.focus({preventScroll:true});}));
