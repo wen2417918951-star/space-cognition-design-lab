@@ -26,13 +26,13 @@ a:focus-visible>.arrow,a:focus-visible>.ui-icon,.about-practice-links>a:focus-vi
   .main-nav a:hover:after,.home-index>a:hover:after,.theme-card:hover:after{background:var(--interaction-accent)}
   .home-index>a:hover .arrow,.theme-card:hover .arrow,
   .project-card-overview:hover .arrow,.work-card>a:hover .arrow,
-  .archive-tool-shortcuts>a:hover>.ui-icon,.research-tool-links a:hover .arrow,
+  .research-tool-links a:hover .arrow,
   .about-practice-links>a:hover .about-practice-name .arrow,.footer-title:hover>span:last-child,
   .research-row h2 a:hover .arrow{color:var(--interaction-accent)}
   .home-index>a:hover strong,.home-paper-grid a:hover h3,
   .project-card-overview:hover h3,.work-card>a:hover h2,.work-card>a:hover h3,
-  .archive-tool-shortcuts>a:hover strong,.paper-related>a:hover h3{ text-decoration-color:var(--interaction-accent) }
-  .archive-tool-shortcuts>a:hover,.research-tool-links a:hover,.work-open-images:hover,
+  .paper-related>a:hover h3{ text-decoration-color:var(--interaction-accent) }
+  .research-tool-links a:hover,.work-open-images:hover,
   .project-remove-filter:hover,.paper-filter-summary button:hover,.paper-detail-topics a:hover,
   .atlas-active-filters button:hover,.atlas-empty-actions button:hover,.contact-block .copy-button:hover{border-color:var(--interaction-accent)}
   .solid-button:hover,.tool-launch:hover,.filter[aria-pressed=true]:hover{
