@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261027-slogan-1
+Version: 20261027-contact-name-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -39,3 +39,4 @@ The review book toolbar opens its current page in a zoomable detail viewer. Pan,
 Opening a figure adds one browser history entry. Back closes it to the existing filtered grid; Forward restores the viewed figure. Same-paper browsing replaces that entry, and direct shared links close within the atlas.
 
 Compact navigation follows its toggle in keyboard order, closes on outside interaction or focus leaving, restores focus on Escape, and resets when switching between compact and desktop layouts.
+

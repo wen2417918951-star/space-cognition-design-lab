@@ -145,7 +145,6 @@
 .footer-contact{min-width:0;scroll-margin-top:24px}
 .footer-contact:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
 .footer-contact h2{font-size:24px;line-height:1.5;font-weight:500;margin:0 0 14px}
-.footer-contact-person{font-size:13px;line-height:1.8;color:var(--muted);margin:0 0 8px}
 .footer-contact-actions{display:flex;align-items:center;gap:10px 24px;flex-wrap:wrap}
 .footer-contact .footer-email{font-size:16px;line-height:1.7;min-width:0;color:var(--ink)}
 .footer-contact .footer-email>span{min-width:0;overflow-wrap:anywhere}
