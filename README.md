@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261027-footer-simple-1
+Version: 20261027-about-index-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 

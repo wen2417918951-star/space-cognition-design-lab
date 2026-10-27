@@ -1,10 +1,6 @@
 /* About: research identity, people, practice, and contact in reading order. */
 .about-heading{padding-bottom:24px}
 .about-heading>p:not(.eyebrow){font-size:15px;line-height:1.9;color:var(--muted);max-width:700px;margin:22px 0 0}
-.about-index{display:flex;flex-wrap:wrap;gap:8px 30px;margin-top:22px}
-.about-index a{display:inline-flex;align-items:center;justify-content:space-between;gap:22px;min-height:44px;font-size:12px;color:var(--muted)}
-.about-index a span{color:var(--accent)}
-.about-index a:hover{color:var(--ink)}
 .about-intro{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:9%;align-items:center;margin-top:38px;margin-bottom:48px}
 .about-copy .about-affiliation{font-size:12px;line-height:1.7;margin:0 0 14px}
 .about-affiliation a{display:inline-flex;align-items:center;gap:12px;min-height:28px}
@@ -51,9 +47,7 @@
 @media(max-width:760px){
  .about-heading{padding-bottom:18px}
  .about-heading>p:not(.eyebrow){font-size:13px;line-height:1.9;margin:18px 0 0}
- .about-index{gap:6px 20px;margin-top:16px}
- .about-index a{font-size:11px;gap:14px}
- .about-intro{margin-top:24px;margin-bottom:28px;gap:24px}
+   .about-intro{margin-top:24px;margin-bottom:28px;gap:24px}
  .about-copy .about-affiliation{font-size:11px;margin-bottom:10px}
  .about-copy h2{font-size:26px;line-height:1.5;margin-bottom:16px}
  .about-copy p{font-size:13px;line-height:1.9;margin-bottom:14px}
@@ -74,7 +68,5 @@
  .contact-email{font-size:13px}
 }
 @media(max-width:360px){
- .about-index{gap:4px 15px}
- .about-index a{gap:9px}
- .about-practice-links{grid-template-columns:minmax(0,1fr)}
+   .about-practice-links{grid-template-columns:minmax(0,1fr)}
 }
