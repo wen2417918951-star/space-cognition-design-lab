@@ -289,3 +289,31 @@
  .home-about .home-position{font-size:17px;line-height:1.95}
  .home-about-copy{font-size:14px;line-height:1.95}
 }
+
+/* A single featured tool establishes a visual entry point; the remaining
+   tools read as a compact working set beneath it. Papers stay an editorial
+   index with visible column rhythm instead of another card grid. */
+@media(min-width:1101px){
+ .home-tool-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:52px 26px}
+ .home-tool-grid .home-product-card:first-child{grid-column:1/-1;padding-bottom:38px;border-bottom:1px solid var(--line)}
+ .home-tool-grid .home-product-card:first-child .home-card-link{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;align-items:center}
+ .home-tool-grid .home-product-card:first-child .home-card-media{aspect-ratio:4/3}
+ .home-tool-grid .home-product-card:first-child .home-card-caption{padding-top:0}
+ .home-tool-grid .home-product-card:first-child .home-card-caption h3{font-size:30px;line-height:1.4}
+ .home-tool-grid .home-product-card:first-child .home-card-description{font-size:15px;max-width:28em}
+ .home-paper-grid{column-gap:0}
+ .home-paper-grid .home-result-row{border-bottom:1px solid var(--line);padding:26px 30px 30px 0}
+ .home-paper-grid .home-result-row+.home-result-row{border-left:1px solid var(--line);padding-left:30px}
+}
+@media(min-width:761px) and (max-width:1100px){
+ .home-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:42px 26px}
+ .home-tool-grid .home-product-card:first-child{grid-column:1/-1;padding-bottom:32px;border-bottom:1px solid var(--line)}
+ .home-tool-grid .home-product-card:first-child .home-card-link{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
+ .home-tool-grid .home-product-card:first-child .home-card-caption{padding-top:0}
+ .home-tool-grid .home-product-card:first-child .home-card-caption h3{font-size:26px}
+}
+@media(max-width:760px){
+ .home-tool-grid{gap:42px}
+ .home-tool-grid .home-product-card:first-child{padding-bottom:30px;border-bottom:1px solid var(--line)}
+ .home-paper-grid .home-result-row{border-bottom:1px solid var(--line)}
+}
