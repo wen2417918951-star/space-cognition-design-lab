@@ -171,9 +171,9 @@
 }
 
 /* Editorial hierarchy: an immersive opening, a lead work, compact tools. */
-.home-hero{display:grid;grid-template-columns:minmax(0,1fr);min-height:640px;position:relative;border-bottom:0;isolation:isolate}
+.home-hero{display:grid;grid-template-columns:minmax(0,1fr);min-height:640px;position:relative;border-bottom:0;isolation:isolate;margin-left:0;margin-right:0}
 .home-hero>.hero-copy,.home-hero>.hero-carousel{grid-area:1/1;min-width:0}
-.home-hero>.hero-copy{z-index:2;padding:78px 48px 130px;align-self:start;width:min(100%,700px);pointer-events:none}
+.home-hero>.hero-copy{z-index:2;padding:78px 6% 130px;align-self:start;width:min(100%,700px);pointer-events:none}
 .home-hero .hero-copy>*{pointer-events:auto}
 .home-hero .hero-actions{width:max-content;max-width:100%}
 .home-hero .hero-index{font-size:11px;letter-spacing:.08em;color:#fff}
@@ -183,7 +183,7 @@
 .home-hero .hero-actions{margin:32px 0 0;gap:28px}
 .home-hero .hero-actions .text-link{font-size:14px;min-height:44px;font-weight:400;color:#fff;border-color:#ffffff80;gap:28px}
 .home-hero .hero-carousel{border:0;background:#171717;height:auto;min-height:640px}
-.home-hero .hero-work-link::after{background:linear-gradient(90deg,#080808ed 0%,#080808d9 31%,#0808088c 53%,#08080814 80%),linear-gradient(0deg,#000e 0%,#0009 25%,transparent 55%)}
+.home-hero .hero-work-link::after{background:linear-gradient(90deg,#080808d8 0%,#080808aa 31%,#0808085c 53%,#08080808 80%),linear-gradient(0deg,#000b 0%,#0007 25%,transparent 55%)}
 .home-hero .hero-work-link>img{object-position:62% center}
 .home-hero .hero-work-caption{left:auto;right:32px;bottom:100px;width:360px;max-width:36%;text-align:right}
 .home-hero .hero-work-caption>span{justify-content:flex-end;font-size:22px;line-height:1.5}
@@ -233,7 +233,7 @@
  .home-hero>.hero-copy{padding:64px 32px 150px}
  .home-hero h1{font-size:44px}
  .home-hero .hero-desc{max-width:29em;font-size:14px}
- .home-hero .hero-work-link::after{background:linear-gradient(90deg,#080808ed 0%,#080808cc 45%,#08080880 72%,#08080814 100%),linear-gradient(0deg,#000e 0%,#0009 25%,transparent 55%)}
+ .home-hero .hero-work-link::after{background:linear-gradient(90deg,#080808d8 0%,#080808b0 45%,#0808085e 72%,#0808080a 100%),linear-gradient(0deg,#000b 0%,#0007 25%,transparent 55%)}
  .home-work-grid{gap:30px;grid-template-columns:repeat(2,minmax(0,1fr))}
  .home-work-grid>.home-image-card:first-child{grid-column:1/-1;grid-row:auto}
  .home-work-grid>.home-image-card:first-child .home-card-media{aspect-ratio:16/9}
