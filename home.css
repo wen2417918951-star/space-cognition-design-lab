@@ -139,3 +139,33 @@
 /* Returning to a home image keeps the browsing context visible. */
 .home-image-card.home-returned>.home-card-link{outline:1px solid var(--interaction-accent);outline-offset:6px}
 .home-result-row.home-returned{box-shadow:inset 0 2px var(--interaction-accent)}
+
+/* One shared contact area for the whole site. */
+.footer-content{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:60px;padding:30px 0 32px}
+.footer-contact{min-width:0;scroll-margin-top:24px}
+.footer-contact:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
+.footer-contact h2{font-size:24px;line-height:1.5;font-weight:500;margin:0 0 14px}
+.footer-contact-person{font-size:13px;line-height:1.8;color:var(--muted);margin:0 0 8px}
+.footer-contact-actions{display:flex;align-items:center;gap:10px 24px;flex-wrap:wrap}
+.footer-contact .footer-email{font-size:16px;line-height:1.7;min-width:0;color:var(--ink)}
+.footer-contact .footer-email>span{min-width:0;overflow-wrap:anywhere}
+.footer-contact .copy-button{min-height:44px;padding:8px 0;font-size:12px;border-bottom-color:var(--line)}
+.footer-copy-note{font-size:12px;line-height:1.8;color:var(--muted);margin:12px 0 0;max-width:36em}
+.footer-related{min-width:0;max-width:360px;justify-self:end;width:100%}
+.footer-related h2{font-size:12px;font-weight:400;color:var(--muted);margin:0 0 8px;line-height:1.8}
+.footer-related a{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:44px;font-size:13px;line-height:1.7;border-bottom:1px solid var(--line);padding:9px 0}
+.footer-related a>span:first-child{min-width:0}
+.footer-related a>span:last-child{flex:none}
+.footer-related a:hover,.footer-contact a:hover{color:var(--interaction-text)}
+.site-footer>.footer-line{border-top:1px solid var(--line);min-height:72px}
+.site-footer>.footer-line>.footer-identity{width:100%;justify-content:space-between}
+@media(max-width:760px){
+ .footer-content{grid-template-columns:minmax(0,1fr);gap:28px;padding:24px 0 28px}
+ .footer-contact h2{font-size:21px;margin-bottom:12px}
+ .footer-contact .footer-email{font-size:14px;gap:10px}
+ .footer-contact-actions{gap:4px 20px}
+ .footer-related{max-width:none;justify-self:stretch}
+ .site-footer>.footer-line{min-height:0;padding:20px 0}
+ .site-footer>.footer-line>.footer-identity{align-items:flex-start}
+ .footer-identity>a{max-width:calc(100% - 65px);line-height:1.8}
+}
