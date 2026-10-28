@@ -1,17 +1,28 @@
-/* Project archive: visible tool actions and a stable path back to the work. */
-.projects-heading{display:block;padding:24px 0 18px}
-.projects-heading>div{min-width:0;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);column-gap:7%}
-.projects-heading>div>.eyebrow{grid-column:1;margin:0 0 14px}
-.projects-heading h1{grid-column:1;font-size:clamp(42px,4vw,60px);margin:0;line-height:1.2}
-.projects-heading h1 small{margin:8px 0 0 18px;font-size:11px;letter-spacing:.3px}
-.projects-heading>div>p:last-child{grid-column:2;grid-row:1 / span 2;align-self:end;max-width:39em;font-size:14px;line-height:1.9;margin:0}
-.projects-heading~.results-caption{line-height:1.8;margin-bottom:18px}
-.projects-heading~.unified-toolbar{margin-top:18px;margin-bottom:20px;padding-bottom:18px}
-.unified-work-grid .work-cover{height:clamp(160px,15vw,210px);aspect-ratio:auto}
+/* Keep archive controls secondary to the work, with one shared baseline. */
+.projects-heading{display:block;padding:32px 0 16px;border-bottom:0}
+.projects-heading>div{min-width:0}
+.projects-heading>div>.eyebrow{margin:0 0 14px}
+.projects-heading h1{font-size:clamp(42px,4vw,60px);margin:0;line-height:1.2}
+.project-browser{margin:12px 4.4% 36px;display:flex;align-items:end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line)}
+.project-browser .archive-collections{flex:0 1 auto;gap:24px;margin:0;border:0}
+.project-browser .archive-collections button{font-size:14px;gap:9px;min-height:52px;padding:14px 0;white-space:nowrap}
+.project-browser .unified-toolbar{flex:0 1 470px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr);gap:24px;margin:0;padding:0;border:0;align-items:end}
+.project-browser .archive-select,.project-browser .search-box{width:100%;min-height:52px;border:0;margin:0;padding:8px 0}
+.project-browser .archive-select select{min-height:36px;font-size:12px}
+.project-browser .search-box input{font-size:12px}
+.projects-heading~.results-caption{line-height:1.8;margin-bottom:20px}
+#archive-grid>.archive-result-group:first-child>.archive-group-heading{padding-top:0;border-top:0}
+#archive-grid .archive-group-heading{margin-bottom:22px}
+#archive-grid .archive-group-heading h2{font-size:24px}
+#archive-grid .archive-group-heading>span{font-size:11px;font-variant-numeric:tabular-nums}
+.unified-work-grid .work-cover{height:auto;aspect-ratio:16/10}
+.unified-work-grid .work-card h3{font-size:22px;line-height:1.6;letter-spacing:0;margin:10px 0 8px}
+.unified-work-grid .work-card .project-meta{padding-top:18px;margin-top:0}
+.unified-work-grid .work-cover>.arrow{width:34px;height:34px;right:14px;bottom:14px}
 
 .archive-result-group .project-grid{margin-bottom:0}
 .archive-returned>a:first-child{outline:1px solid var(--accent);outline-offset:8px}
-.project-filter-summary{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:-10px 4.4% 26px}
+.project-filter-summary{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:-16px 4.4% 16px}
 .project-remove-filter{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;min-width:0;max-width:100%;padding:9px 12px;background:var(--surface);border:1px solid var(--line);font-size:12px;line-height:1.6;text-align:left}
 .project-remove-filter>span:first-child{min-width:0;overflow-wrap:anywhere}
 .project-remove-filter>span:last-child{flex:none;font-size:18px;line-height:1;color:var(--muted)}
@@ -31,26 +42,29 @@
 .research-tool-links strong{display:block;font-size:22px;font-weight:500;line-height:1.5}
 .research-tool-links a>span:first-child>span{display:block;font-size:13px;line-height:1.8;color:var(--muted);margin-top:7px}
 .research-tool-links a:hover,.research-tool-links a:focus-visible{border-bottom-color:var(--accent)}
-@media(min-width:761px) and (max-width:1050px){
-  .projects-heading h1 small{display:block;margin:10px 0 0}
+@media(min-width:761px) and (max-width:1199px){
+  .project-browser{display:block;margin-bottom:28px}
+  .project-browser .archive-collections{gap:30px}
+  .project-browser .unified-toolbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12%;margin:6px 0}
 }
 @media(max-width:760px){
   .research-tool-entries{margin:48px 6%;grid-template-columns:minmax(0,1fr);gap:8px}
   .detail-art .project-art[data-art=lab]{aspect-ratio:1.3;padding:16px;gap:12px}
-  .project-filter-summary{margin:-10px 6% 24px}
+  .project-filter-summary{margin:-12px 6% 16px}
   .project-remove-filter,.project-clear-filters{font-size:11px}
-  .projects-heading{padding:24px 0 20px}
-  .projects-heading>div{display:block}
+  .projects-heading{padding:28px 0 12px}
   .projects-heading h1{font-size:40px;margin:0}
-  .projects-heading h1 small{display:none}
-  .projects-heading>div>p:last-child{font-size:13px;line-height:1.8;margin:16px 0 0}
-  .projects-heading~.archive-collections{grid-template-columns:repeat(4,minmax(0,1fr));gap:0 12px}
-  .projects-heading~.archive-collections button{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;min-height:64px;font-size:11px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;text-align:left}
-  .projects-heading~.unified-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;margin-top:18px;margin-bottom:18px;padding-bottom:16px}
-  .projects-heading~.unified-toolbar .archive-select{flex-direction:column;align-items:stretch;gap:0}
-  .projects-heading~.unified-toolbar .archive-select>span{align-self:flex-start}
-  .projects-heading~.unified-toolbar .search-box{align-self:end;min-width:0}
-  .unified-work-grid .work-cover{height:190px}
+  .project-browser{display:block;margin:6px 6% 28px}
+  .project-browser .archive-collections{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .project-browser .archive-collections button{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;min-height:64px;font-size:12px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;text-align:left;padding:10px 0}
+  .project-browser .archive-collections button>span{font-size:9px}
+  .project-browser .unified-toolbar{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;margin:8px 0}
+  .project-browser .archive-select,.project-browser .search-box{min-height:44px;padding:2px 0}
+  .project-browser .archive-select select,.project-browser .search-box input{font-size:12px}
+  #archive-grid .archive-group-heading{flex-direction:row;align-items:baseline;margin-bottom:18px;gap:16px}
+  #archive-grid .archive-group-heading h2{font-size:22px}
+  .unified-work-grid .work-card h3{font-size:20px;line-height:1.65}
+  .unified-work-grid .work-card .project-meta{padding-top:16px}
   .archive-returned>a:first-child{outline-offset:5px}
 }
 @media(max-width:480px){
