@@ -2,7 +2,7 @@
 
 Public static website for Space, Cognition & Design Lab.
 
-Version: 20261028-archive-visual-1
+Version: 20261028-detail-breadcrumb-1
 
 Site: https://wen2417918951-star.github.io/space-cognition-design-lab/
 
@@ -45,3 +45,4 @@ The homepage combines its existing student-work imagery with the research introd
 
 Project archive refinement: project filters are kept in one compact row, redundant count copy is reduced, and student work covers use a 16:10 image-led ratio so visitors reach original review books sooner. The filtering, search, context return and page-turning review-book flow remain available.
 
+Student work detail breadcrumbs now keep only the collection label (Student work / 学生作品) so the full title appears once as the page heading.
