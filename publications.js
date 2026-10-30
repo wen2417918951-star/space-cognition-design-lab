@@ -159,6 +159,153 @@ window.LAB_PUBLICATIONS = {
       "publishedDate": "2025-07-22",
       "abstract": "随着人类大脑活动机制研究的深入，脑科学这项前沿研究的内容方法可以为建筑城市学科的创新探索提供参考。大脑如何形成空间感知的机制是建筑城市学科的一项基础问题，同时基于脑空间感知的情绪与健康、脑机交互等问题也亟待探索。针对上述问题与趋势，脑科学与建筑城市交叉融合可形成城市与建筑空间脑科学研究领域，该领域通过建立“空间－脑－机”研究系统，探索空间认知基础机制发现支撑下的设计理论、技术与应用场景。",
       "pdfUrl": "downloads/papers/upi-2025-spatial-brain-science.pdf"
+    },
+    {
+      "type": "journal",
+      "collection": "faculty",
+      "language": "en",
+      "pdfAccess": "external",
+      "id": "jaabe-2025-human-machine-walkway",
+      "title": "A human-machine integrated optimization method for long walkway space",
+      "authors": [
+        "Yating Wang",
+        "Zijun Wang",
+        "Hui Wang"
+      ],
+      "year": 2025,
+      "volume": "25",
+      "issue": "1",
+      "pages": "58-81",
+      "journal": "Journal of Asian Architecture and Building Engineering",
+      "journalEn": "Journal of Asian Architecture and Building Engineering",
+      "topics": [
+        "cognition",
+        "theory"
+      ],
+      "doi": "10.1080/13467581.2025.2454611",
+      "sourceUrl": "https://www.tandfonline.com/doi/full/10.1080/13467581.2025.2454611",
+      "abstract": "With the development of cities, the design of long walkway spaces has exposed a series of issues. These spaces suffer from layout inefficiencies due to the complex interaction of multiple factors, affecting walking experiences. This article explores a human-machine collaboration approach that combines genetic-algorithm-based generative technology with expert judgment for multi-objective optimization of long walkway spaces. The results indicate that the process can improve the efficiency and quality of layout optimization, while manual comparison and refinement further improve the rationality of the results.",
+      "pdfUrl": null
+    },
+    {
+      "type": "journal",
+      "collection": "faculty",
+      "language": "en",
+      "pdfAccess": "external",
+      "id": "land-2025-green-campus-perception",
+      "title": "Evaluating Green Campus Environments in Chinese Universities from Subjective Perceptions: A Textual Semantic and Importance–Performance Analysis Through a Satisfaction Survey",
+      "authors": [
+        "Lutong Sun",
+        "Rubin Lian",
+        "Wei Gao",
+        "Mei Zhao",
+        "Hui Wang"
+      ],
+      "year": 2025,
+      "volume": "14",
+      "issue": "4",
+      "pages": "878",
+      "journal": "Land",
+      "journalEn": "Land",
+      "topics": [
+        "cognition",
+        "urban"
+      ],
+      "doi": "10.3390/land14040878",
+      "sourceUrl": "https://www.mdpi.com/2073-445X/14/4/878",
+      "abstract": "University campuses play a crucial role in sustainable development, yet green-campus evaluation often overlooks user perception. This study derives indicators of campus subjective perceptions, collects satisfaction questionnaires and text data from nine representative Chinese universities, and combines factor analysis, importance–performance analysis, and textual semantic analysis. The findings show that subjective feedback should be combined with quantitative indicators, with users especially attentive to details of learning, living, entertainment, and recreation. The study supports a human-centered approach to campus planning and design.",
+      "pdfUrl": null
+    },
+    {
+      "type": "journal",
+      "collection": "faculty",
+      "language": "en",
+      "pdfAccess": "external",
+      "id": "plosone-2023-covid-intervention-models",
+      "title": "Comparing modelling approaches for the estimation of government intervention effects in COVID-19: Impact of voluntary behavior changes",
+      "authors": [
+        "Lun Liu",
+        "Zhu Zhang",
+        "Hui Wang",
+        "Shenhao Wang",
+        "Shengsheng Zhuang",
+        "Jishan Duan"
+      ],
+      "year": 2023,
+      "volume": "18",
+      "issue": "2",
+      "pages": "e0276906",
+      "journal": "PLOS ONE",
+      "journalEn": "PLOS ONE",
+      "topics": [
+        "urban"
+      ],
+      "doi": "10.1371/journal.pone.0276906",
+      "sourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0276906",
+      "abstract": "This paper compares Bayesian hierarchical and difference-in-differences approaches for estimating government intervention effects during COVID-19, using data from the 500 most infected U.S. counties. It examines how voluntary behavior changes affect estimates and finds that models which omit such changes can overestimate intervention effects. The results inform methodological choices for epidemic-response research and the interpretation of public-health evidence.",
+      "pdfUrl": null
+    },
+    {
+      "type": "journal",
+      "collection": "faculty",
+      "language": "en",
+      "pdfAccess": "external",
+      "id": "npj-urban-sustainability-2022-infectiousness-places",
+      "title": "Infectiousness of places – Impact of multiscale human activity places in the transmission of COVID-19",
+      "authors": [
+        "Lun Liu",
+        "Hui Wang",
+        "Zhu Zhang",
+        "Weiyi Zhang",
+        "Shengsheng Zhuang",
+        "Shenhao Wang",
+        "Elisabete A. Silva",
+        "Tingmiao Lv",
+        "Chi On Chio",
+        "Yifan Wang",
+        "Rina Dao",
+        "Chuchang Tang",
+        "On Ieng Ao-Ieong"
+      ],
+      "year": 2022,
+      "volume": "2",
+      "issue": "1",
+      "pages": "28",
+      "journal": "npj Urban Sustainability",
+      "journalEn": "npj Urban Sustainability",
+      "topics": [
+        "urban"
+      ],
+      "doi": "10.1038/s42949-022-00074-w",
+      "sourceUrl": "https://www.nature.com/articles/s42949-022-00074-w",
+      "abstract": "This study analyzes transmission risks associated with human activity places at multiple scales, using COVID-19 data from 906 urban areas across four continents. It identifies causal effects of activities at different establishments and settlement scales, showing that sports, entertainment, and catering establishments are generally more infectious at the micro-scale, while transmission does not consistently increase with settlement size and density. The findings contribute to understanding the linkage between places, human activities, and disease transmission.",
+      "pdfUrl": null
+    },
+    {
+      "type": "journal",
+      "collection": "faculty",
+      "language": "en",
+      "pdfAccess": "external",
+      "id": "sustainability-2021-chengdu-mobility-traces",
+      "title": "Profiling Residents’ Mobility with Grid-Aggregated Mobile Phone Trace Data Using Chengdu as the Case",
+      "authors": [
+        "Xuesong Gao",
+        "Hui Wang",
+        "Lun Liu"
+      ],
+      "year": 2021,
+      "volume": "13",
+      "issue": "24",
+      "pages": "13713",
+      "journal": "Sustainability",
+      "journalEn": "Sustainability",
+      "topics": [
+        "urban"
+      ],
+      "doi": "10.3390/su132413713",
+      "sourceUrl": "https://www.mdpi.com/2071-1050/13/24/13713",
+      "abstract": "This paper examines how mobility metrics based on individual data can be transformed for grid-aggregated mobile-phone data. Fifteen candidate metrics covering five mobility indicators are proposed and evaluated, with the most suitable metric selected for each indicator. The work supports future analysis of urban movement and human behavior while responding to the privacy constraints of aggregated mobility data.",
+      "pdfUrl": null
     }
   ]
 };
