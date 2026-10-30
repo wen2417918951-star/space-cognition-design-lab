@@ -147,6 +147,4 @@ mount();
 
 document.addEventListener('click',event=>{
   if(event.target.closest('[data-open-work-gallery]'))lightbox?.loadAndOpen(0);
-  const zoom=event.target.closest('[data-book-zoom]');
-  if(zoom)lightbox?.loadAndOpen(Number(zoom.closest('[data-work-reader]').dataset.bookPage)||0);
 });
