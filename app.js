@@ -6,7 +6,7 @@
   const main = document.getElementById('main');
   let lang = 'zh';
   try {lang = localStorage.getItem('sbd-language') === 'en' ? 'en' : 'zh';} catch {}
-  let lastArchive = '#/projects';
+  let lastArchive = '#/applications';
   let lastWorks = '#/works';
   let lastPublications = '#/publications';
   let toastTimer;
@@ -115,16 +115,15 @@
     return `<a class="${cls}" href="${esc(atlas?'#/research/figures':p.externalUrl)}"${atlas?'':' target="_blank" rel="noopener noreferrer"'}>${t(label)}${arrow}${atlas?'':`<span class="sr-only">${t(['（新窗口）',' (new window)'])}</span>`}</a>`;
   }
 
-  function archiveSource(value,fallback='#/projects'){
+  function archiveSource(value,fallback='#/applications'){
     if(value==='#/'||value==='#/?focus=hero-title')return value;
-    if(/^#\/research(?:\/(?:space|cognition|design))?$/.test(value||''))return value;
+    if(/^#\/research(?:\/(?:space|cognition|design))?(?:\?[^#]*)?$/.test(value||''))return value;
     if(/^#\/about(?:\?section=(?:team|practice|contact))?$/.test(value||''))return value;
-    if(!/^#\/(?:projects|works)(?:\?[^#]*)?$/.test(value||''))return fallback;
+    if(!/^#\/(?:projects|applications|works)(?:\?[^#]*)?$/.test(value||''))return fallback;
     const [path,query='']=value.split('?');
-    const source=new URLSearchParams(query),clean=new URLSearchParams();
-    const keys=path==='#/projects'?['collection','theme','q']:['category','q'];
-    keys.forEach(key=>{if(source.get(key))clean.set(key,source.get(key));});
-    return path+(clean.size?'?'+clean:'');
+    const source=new URLSearchParams(query);
+    if(path==='#/works'||(path==='#/projects'&&source.get('collection')==='works'))return '#/research?section=design';
+    return '#/applications';
   }
   const archiveItemHref=(type,id,from='')=>`#/${type}/${encodeURIComponent(id)}${from?'?from='+encodeURIComponent(archiveSource(from)):''}`;
   const archiveReturn=(params,fallback,id)=>{
@@ -135,7 +134,7 @@
 
   function projectCard(p,from=''){
     const usable=['figure-atlas','mindscape-lab','mindscape-studio','focus'].includes(p.id);
-    return `<article class="project-card" id="project-${esc(p.id)}" data-project="${p.id}"><a class="project-card-overview" href="${esc(archiveItemHref('projects',p.id,from))}" aria-label="${esc(t(p.title))} — ${esc(t(p.subtitle))}">${projectMedia(p)}<div class="project-meta"><span>${p.year} / ${esc(t(p.type))}</span><span>${esc(t(p.stage))}</span></div><h3>${esc(t(p.title))}</h3><p class="project-subtitle">${esc(t(p.subtitle))}</p><div class="project-tags">${p.themes.map(id=>`<span>${themeName(id)}</span>`).join('')}</div></a>${usable?`<div class="project-card-actions">${toolAction(p)}<a class="tool-overview" href="${esc(archiveItemHref('projects',p.id,from))}" aria-label="${esc(t(p.title))} · ${t(['项目介绍','Project overview'])}">${t(['项目介绍','Project overview'])}<span aria-hidden="true">${directionIcon('right')}</span></a></div>`:''}</article>`;
+    return `<article class="project-card" id="project-${esc(p.id)}" data-project="${p.id}"><a class="project-card-overview" href="${esc(archiveItemHref('applications',p.id,from))}" aria-label="${esc(t(p.title))} — ${esc(t(p.subtitle))}">${projectMedia(p)}<div class="project-meta"><span>${p.year} / ${esc(t(p.type))}</span><span>${esc(t(p.stage))}</span></div><h3>${esc(t(p.title))}</h3><p class="project-subtitle">${esc(t(p.subtitle))}</p></a>${usable?`<div class="project-card-actions">${toolAction(p)}<a class="tool-overview" href="${esc(archiveItemHref('applications',p.id,from))}" aria-label="${esc(t(p.title))} · ${t(['应用介绍','Application overview'])}">${t(['应用介绍','Application overview'])}<span aria-hidden="true">${directionIcon('right')}</span></a></div>`:''}</article>`;
   }
 
   function labSlogan(){return `<section class="slogan-strip" aria-labelledby="lab-slogan"><div>${eye('实验室主张','LAB POSITION')}<p class="slogan-note">${t(['在人的经验与机器能力之间，建立可感知、可检验的联系。','Build perceptible, testable connections between human experience and machine capability.'])}</p></div><div><blockquote id="lab-slogan">${t(['让机器的能力进入人的生活与认知。<br>让人的经验融入机器的计算与理解。','Bring machine capabilities into human life and cognition.<br>Bring human experience into how machines compute and understand.'])}</blockquote></div></section>`;}
@@ -151,10 +150,11 @@
   }
 
   function home(){
-    return `<section class="hero home-hero" aria-labelledby="hero-title"><div class="hero-copy"><p class="eyebrow hero-index"><span class="status-dot"></span>${t(['空间 · 脑认知 · 设计','SPACE, COGNITION & DESIGN'])}</p><h1 id="hero-title">${t(['<span class="hero-line">从<span class="accent">脑认知</span>出发，</span><span class="hero-line">理解与设计空间。</span>','<span class="hero-line">From <span class="accent">brain science</span></span><span class="hero-line">to spatial design.</span>'])}</h1><p class="hero-desc">${t(['连接空间研究、脑科学与设计实践，探索环境如何影响人的感知、认知与行为。','Connecting spatial research, brain science, and design to explore how environments shape perception, cognition, and behavior.'])}</p><div class="hero-actions">${link('#/research','走进研究','Explore research')}${link('#/projects?collection=works','学生作品','Student work')}</div></div>${homeHeroWorks()}</section>
+    return `<section class="hero home-hero" aria-labelledby="hero-title"><div class="hero-copy"><p class="eyebrow hero-index"><span class="status-dot"></span>${t(['空间 · 脑认知 · 设计','SPACE, COGNITION & DESIGN'])}</p><h1 id="hero-title">${t(['<span class="hero-line">从<span class="accent">脑认知</span>出发，</span><span class="hero-line">理解与设计空间。</span>','<span class="hero-line">From <span class="accent">brain science</span></span><span class="hero-line">to spatial design.</span>'])}</h1><p class="hero-desc">${t(['连接空间研究、脑科学与设计实践，探索环境如何影响人的感知、认知与行为。','Connecting spatial research, brain science, and design to explore how environments shape perception, cognition, and behavior.'])}</p><div class="hero-actions">${link('#/research','走进研究','Explore research')}${link('#/research?section=design','设计研究','Design research')}</div></div>${homeHeroWorks()}</section>
     ${homeWorkGallery()}
     ${homeToolGallery()}
     ${homeSelection()}
+    ${homeAcademicSharing()}
     <section class="home-section home-about" aria-labelledby="home-about-title"><div><h2 id="home-about-title">${t(['关于实验室','About the Lab'])}</h2><p class="home-position">${t(['让机器的能力进入人的生活与认知。<br>让人的经验融入机器的计算与理解。','Bring machine capabilities into human life and cognition.<br>Bring human experience into how machines compute and understand.'])}</p></div><div><p class="home-about-copy">${t(['空间·脑·设计实验室关注建筑与城市环境中的感知、认知与行为，通过数字环境、研究工具与设计实验，探索人与空间之间的关系。','Space, Cognition & Design Lab investigates perception, cognition, and behavior in built environments through digital settings, research tools, and design experiments.'])}</p>${link('#/about','了解实验室','About the Lab')}</div></section>`;
   }
 
@@ -164,60 +164,37 @@
       {id:'polar-visual-perception',image:'assets/works/polar-visual-perception/immersive-session.webp',width:2048,height:1152,alt:['参与者在极地沉浸投影中体验场景并进行脑电记录','A participant in an immersive polar scene during EEG recording'],title:['在沉浸环境中研究视觉感知','Visual perception in immersive settings'],label:['虚拟现实 · 脑电','Virtual reality · EEG']},
       {id:'classroom-eeg',image:'assets/works/classroom-eeg/eeg-analysis.webp',width:2400,height:1695,alt:['王彦楷学生作品中的脑电地形图、信号与空间体验分析','EEG topographies, signals and spatial-experience analysis from Wang Yankai’s student work'],title:['从教室空间体验到脑电分析','From classroom experience to EEG analysis'],label:['建筑空间 · 脑电','Architecture · EEG'],contain:true}
     ];
-    return `<section class="home-section home-work-gallery" aria-labelledby="home-work-title"><div class="home-section-heading"><h2 id="home-work-title">${t(['研究与作品','Research & student work'])}</h2>${link('#/projects?collection=works','全部作品','All student work')}</div><nav class="home-research-links" aria-label="${t(['研究方向','Research themes'])}">${themes.map(th=>`<a href="#/research/${th.id}">${esc(t(th.name))}${arrow}</a>`).join('')}</nav><div class="home-work-grid">${selected.map(item=>{const w=works.find(w=>w.id===item.id);return `<article class="home-image-card" id="work-${esc(w.id)}"><a class="home-card-link" href="${esc(archiveItemHref('works',w.id,'#/'))}" aria-label="${esc(t(w.title))}"><div class="home-card-media${item.contain?' home-media-contain':''}"><img src="${item.image}" alt="${esc(t(item.alt))}" width="${item.width}" height="${item.height}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(item.label))}</p><h3>${esc(t(item.title))}${arrow}</h3><p class="home-card-credit">${t(['学生作品','Student work'])} / ${esc(w.authors.join(' · '))}</p></div></a></article>`;}).join('')}</div></section>`;
+    return `<section class="home-section home-work-gallery" aria-labelledby="home-work-title"><div class="home-section-heading"><h2 id="home-work-title">${t(['设计研究','Design research'])}</h2>${link('#/research?section=design','全部设计研究','All design research')}</div><div class="home-work-grid">${selected.map(item=>{const w=works.find(w=>w.id===item.id);return `<article class="home-image-card" id="work-${esc(w.id)}"><a class="home-card-link" href="${esc(archiveItemHref('works',w.id,'#/'))}" aria-label="${esc(t(w.title))}"><div class="home-card-media${item.contain?' home-media-contain':''}"><img src="${item.image}" alt="${esc(t(item.alt))}" width="${item.width}" height="${item.height}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(item.label))}</p><h3>${esc(t(item.title))}${arrow}</h3><p class="home-card-credit">${t(['学生作品','Student work'])} / ${esc(w.authors.join(' · '))}</p></div></a></article>`;}).join('')}</div></section>`;
   }
 
   function homeToolGallery(){
     const selected=['mindscape-i','focus','mindscape-lab','mindscape-studio'].map(id=>projects.find(p=>p.id===id));
-    return `<section class="home-section home-tools" aria-labelledby="home-tools-title"><div class="home-section-heading"><h2 id="home-tools-title">${t(['工具与原型','Tools & prototypes'])}</h2>${link('#/projects','全部项目','All projects')}</div><div class="home-tool-grid">${selected.map(p=>`<article class="home-image-card home-product-card" id="project-${esc(p.id)}"><a class="home-card-link" href="${esc(archiveItemHref('projects',p.id,'#/'))}"><div class="home-card-media${p.id==='mindscape-i'?' home-device-media':' home-interface-media'}"><img src="${esc(p.cover)}" alt="${esc(t(p.coverAlt))}" width="${p.coverWidth||1440}" height="${p.coverHeight||960}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(p.type))} · ${esc(t(p.stage))}</p><h3>${esc(t(p.title))}${arrow}</h3><p class="home-card-description">${esc(t(p.subtitle))}</p></div></a>${['mindscape-lab','focus','mindscape-studio'].includes(p.id)?toolAction(p,'home-tool-launch'):''}</article>`).join('')}</div><a class="home-atlas-card" href="#/research/figures"><div class="home-atlas-images" aria-hidden="true">${['M006','M008','M001'].map(id=>`<img src="assets/atlas-preview-${id}.webp" alt="" width="640" height="${id==='M006'?408:id==='M008'?415:248}" loading="lazy" decoding="async">`).join('')}</div><div class="home-atlas-copy"><p class="home-card-kicker">${t(['研究资源 · 外部文献','Research resource · external literature'])}</p><h3>${t(['从图像进入研究。','A visual entry into research.'])}${arrow}</h3><p>${t(['文献图集 · 2,070幅图像，连接图注与原始论文。','Research Figure Atlas · 2,070 figures linked to captions and source papers.'])}</p></div></a></section>`;
+    return `<section class="home-section home-tools" aria-labelledby="home-tools-title"><div class="home-section-heading"><h2 id="home-tools-title">${t(['应用','Applications'])}</h2>${link('#/applications','全部应用','All applications')}</div><div class="home-tool-grid">${selected.map(p=>`<article class="home-image-card home-product-card" id="project-${esc(p.id)}"><a class="home-card-link" href="${esc(archiveItemHref('applications',p.id,'#/'))}"><div class="home-card-media${p.id==='mindscape-i'?' home-device-media':' home-interface-media'}"><img src="${esc(p.cover)}" alt="${esc(t(p.coverAlt))}" width="${p.coverWidth||1440}" height="${p.coverHeight||960}" loading="lazy" decoding="async"></div><div class="home-card-caption"><p class="home-card-kicker">${esc(t(p.type))} · ${esc(t(p.stage))}</p><h3>${esc(t(p.title))}${arrow}</h3><p class="home-card-description">${esc(t(p.subtitle))}</p></div></a>${['mindscape-lab','focus','mindscape-studio'].includes(p.id)?toolAction(p,'home-tool-launch'):''}</article>`).join('')}</div></section>`;
+  }
+
+
+  function homeAcademicSharing(){
+    return `<section class="home-section home-sharing" aria-labelledby="home-sharing-title"><div class="home-section-heading"><h2 id="home-sharing-title">${t(['学术分享','Academic sharing'])}</h2>${link('#/research?section=sharing','查看学术分享','View academic resources')}</div><a class="home-atlas-card" href="#/research/figures"><div class="home-atlas-images" aria-hidden="true">${['M006','M008','M001'].map(id=>`<img src="assets/atlas-preview-${id}.webp" alt="" width="640" height="${id==='M006'?408:id==='M008'?415:248}" loading="lazy" decoding="async">`).join('')}</div><div class="home-atlas-copy"><p class="home-card-kicker">${t(['文献图集与找图工具','Research Figure Atlas'])}</p><h3>${t(['从图像进入研究。','A visual entry into research.'])}${arrow}</h3><p>${t(['文献图集 · 2,070幅图像，连接图注与原始论文。','Research Figure Atlas · 2,070 figures linked to captions and source papers.'])}</p></div></a></section>`;
+  }
+
+  function researchHeading(){
+    return `<section class="page-heading research-page-heading">${eye('RESEARCH / 01','RESEARCH / 01')}<h1>${t(['研究','Research'])}</h1><p>${t(['围绕空间、脑认知与设计，收录课题组论文、课程设计和学术资料。','Publications, course design studies, and shared academic resources on space, cognition, and design.'])}</p></section>`;
   }
 
   function researchNavigation(active){
     const items=[
-      ['themes','#/research',['研究方向','Themes'],themes.length],
-      ['papers','#/publications',['团队论文','Publications'],papers.length],
-      ['figures','#/research/figures',['文献图集','Figure atlas'],window.LAB_RESOURCES?.summary.figures||2070]
+      ['papers','#/research',['论文发表','Publications']],
+      ['design','#/research?section=design',['设计研究','Design research']],
+      ['sharing','#/research?section=sharing',['学术分享','Academic sharing']]
     ];
-    return `<nav class="research-section-nav" aria-label="${t(['研究栏目导航','Research section navigation'])}"><ul>${items.map(([id,url,label,count])=>`<li><a href="${url}"${id===active?' aria-current="page"':''}>${esc(t(label))}<span>${count.toLocaleString('en-US')}</span></a></li>`).join('')}</ul></nav>`;
+    return `<nav class="research-section-nav" aria-label="${t(['研究栏目','Research sections'])}"><ul>${items.map(([id,url,label])=>`<li><a href="${url}"${id===active?' aria-current="page"':''}>${esc(t(label))}</a></li>`).join('')}</ul></nav>`;
   }
 
-  function researchToolLinks(theme){
-    const entries=[
-      ['mindscape-lab','Mindscape Lab',['场景任务、条件比较与研究记录','Scene tasks, condition comparisons, and study records']],
-      ['mindscape-studio','Mindscape Studio',['从现场需求到空间方案与逐版修改','From site briefs to spatial designs and versioned refinement']],
-      ['focus','Mindscape Focus',['专注、休息与返回任务的空间体验','Spatial experiences for focus, rest, and return']],
-      ['mindscape-i','Mindscape I',['日常任务中的认知支持原型','A cognitive support prototype for everyday tasks']]
-    ];
-    const matching=entries.filter(([id])=>!theme||projects.find(p=>p.id===id)?.themes.includes(theme.id));
-    const from=theme?'#/research/'+theme.id:'#/research';
-    return `<section class="research-tool-entries" aria-labelledby="research-tools-title"><div>${eye('研究工具与原型','RESEARCH TOOLS & PROTOTYPES')}<h2 id="research-tools-title">${t(['用于研究与设计的工具','Tools for research and design'])}</h2></div><div class="research-tool-links">${matching.map(([id,title])=>`<a id="project-${id}" href="${esc(archiveItemHref('projects',id,from))}"><span><strong>${title}</strong><span>${esc(t(projects.find(p=>p.id===id).subtitle))}</span></span>${arrow}</a>`).join('')}</div></section>`;
-  }
-
-  function researchThemeVisualData(theme){
-    const visuals={
-      space:{src:'assets/works/exhibition-perception/route-guidance-sm.webp',width:1000,height:563,alt:['展陈空间中的流线与引导场景','Wayfinding and circulation in an exhibition setting'],label:['学生作品 / 展陈引导','STUDENT WORK / EXHIBITION WAYFINDING']},
-      cognition:{src:'assets/works/classroom-eeg/eeg-analysis-sm.webp',width:1000,height:706,alt:['教室空间体验中的脑电地形图与信号分析','EEG topographies and signal analysis from a classroom spatial-experience study'],label:['学生作品 / 脑电分析','STUDENT WORK / EEG ANALYSIS']},
-      design:{src:'assets/tools/mindscape-studio-interface.webp',width:1440,height:960,alt:['Mindscape Studio 空间方案与修改工作台界面','Mindscape Studio spatial proposal and revision workbench'],label:['研究工具 / 空间设计工作台','RESEARCH TOOL / SPATIAL DESIGN WORKBENCH']}
-    };
-    return visuals[theme.id]||visuals.space;
-  }
-
-  function researchThemeVisual(theme){
-    const visual=researchThemeVisualData(theme);
-    return `<a class="theme-card-media-link" href="#/research/${theme.id}" aria-label="${esc(t(theme.name))}"><figure class="theme-card-media"><img src="${visual.src}" alt="${esc(t(visual.alt))}" width="${visual.width}" height="${visual.height}" loading="lazy" decoding="async">${themeSymbol(theme.id)}<figcaption>${esc(t(visual.label))}</figcaption></figure></a>`;
-  }
-
-  function researchThemeIntro(theme){
-    const visual=researchThemeVisualData(theme);
-    return `<section class="research-theme-intro" aria-labelledby="research-question-title"><figure class="research-theme-intro-media"><img src="${visual.src}" alt="${esc(t(visual.alt))}" width="${visual.width}" height="${visual.height}" decoding="async">${themeSymbol(theme.id)}<figcaption><span>${esc(theme.n)} / ${esc(t(theme.name))}</span>${esc(t(visual.label))}</figcaption></figure><div class="research-theme-intro-copy"><div class="research-theme-intro-label"><p class="eyebrow">${t(['研究问题','RESEARCH QUESTION'])}</p><div class="project-tags">${theme.tags.map(a=>`<span>${esc(a.split(' / ')[lang==='zh'?0:1])}</span>`).join('')}</div></div><h2 id="research-question-title">${esc(t(theme.question))}</h2><p>${esc(t(theme.approach))}</p>${link('#/projects?theme='+theme.id,'探索相关项目','Explore related projects')}</div></section>`;
-  }
-
-  function research(selected){
-    const selectedTheme=themes.find(th=>th.id===selected);
-    const shown=selectedTheme?[selectedTheme]:themes;
-    const themeNavigation=selectedTheme?`<nav class="research-theme-nav" aria-label="${t(['切换研究方向','Research themes'])}"><a href="#/research">${t(['全部方向','All themes'])}</a>${themes.map(th=>`<a href="#/research/${th.id}"${th===selectedTheme?' aria-current="page"':''}>${esc(t(th.name))}</a>`).join('')}</nav>`:'';
-    const introduction=selectedTheme?researchThemeIntro(selectedTheme):`<div class="research-list research-list-cards">${shown.map(th=>`<section class="research-row research-card"><span class="theme-n">${th.n}</span>${researchThemeVisual(th)}<div><h2><a href="#/research/${th.id}">${esc(t(th.name))}${arrow}</a></h2>${lang==='zh'?`<p class="en-label">${esc(th.name[1])}</p>`:''}<div class="project-tags">${th.tags.map(a=>`<span>${esc(a.split(' / ')[lang==='zh'?0:1])}</span>`).join('')}</div></div><div><h3>${esc(t(th.question))}</h3><p>${esc(t(th.approach))}</p>${link('#/research/'+th.id,'探索研究方向','Explore this theme')}</div></section>`).join('')}</div>`;
-    return `<section class="page-heading research-page-heading${selectedTheme?' research-theme-heading':''}">${eye(selectedTheme?'RESEARCH THEME / '+selectedTheme.n:'RESEARCH / 01',selectedTheme?'RESEARCH THEME / '+selectedTheme.n:'RESEARCH / 01')}<h1>${selectedTheme?esc(t(selectedTheme.name)):t(['研究方向','Research themes'])}</h1><p>${selectedTheme?esc(t(selectedTheme.text)):t(['研究分为空间体验、认知行为与设计工具三个方向。可查看各方向的研究问题、相关论文和项目。','Our research covers spatial experience, cognition and behavior, and design tools. Explore the questions, publications, and projects in each theme.'])}</p></section>${researchNavigation('themes')}${themeNavigation}${introduction}${researchPublications(selectedTheme)}${researchToolLinks(selectedTheme)}${researchAtlas()}`;
+  function research(params){
+    const section=params.get('section');
+    if(section==='design')return `${researchHeading()}${researchNavigation('design')}<section class="research-design" aria-label="${t(['设计研究','Design research'])}"><div class="work-grid unified-work-grid">${works.map(w=>workCard(w,2,'#/research?section=design')).join('')}</div></section>`;
+    if(section==='sharing')return `${researchHeading()}${researchNavigation('sharing')}${researchAtlas()}`;
+    return publications(params);
   }
 
   function researchAtlas(){
@@ -227,16 +204,10 @@
       ['M006',['界面截图与实验场景','Interfaces and experiments'],'assets/atlas-preview-M006.webp'],
       ['M001',['空间地图与区位分析','Maps and site analysis'],'assets/atlas-preview-M001.webp']
     ];
-    return `<section class="atlas-portal" aria-labelledby="atlas-portal-title"><div class="atlas-portal-copy"><div>${eye('研究资源 / 文献图集','RESEARCH RESOURCE / FIGURE ATLAS')}<h2 id="atlas-portal-title">${t(['从图像进入研究。','A visual entry into research.'])}</h2><p>${t(['以图像为线索，阅读空间、脑认知与设计研究。汇集研究框架、实验方法、空间分析与设计表达，连接图像、图注与原始文献。','Read research on space, cognition and design through its images. Explore conceptual frameworks, experimental methods, spatial analysis and design proposals, with captions and links to the original papers.'])}</p><div class="atlas-stats"><span><b>${resource.summary.figures}</b>${t(['幅图像','FIGURES'])}</span><span><b>${resource.summary.articles}</b>${t(['篇来源论文','PAPERS'])}</span><span><b>${resource.summary.recommended}</b>${t(['幅优先参考','PRIORITY'])}</span></div><a class="portal-link" href="#/research/figures">${t(['浏览图集','Explore the atlas'])}${arrow}</a></div></div><div class="atlas-portal-preview" aria-label="${t(['论文图像预览','Figure atlas preview'])}">${previews.map(([id,label,src])=>`<a href="#/research/figures?q=${id}" class="atlas-preview"><img src="${src}" alt="${esc(t(label))}"><span>${id} / ${esc(t(label))}</span></a>`).join('')}</div></section>`;
+    return `<section class="atlas-portal sharing-portal" id="project-figure-atlas" aria-labelledby="atlas-portal-title"><div class="atlas-portal-copy"><div><h2 id="atlas-portal-title">${t(['文献图集','Research Figure Atlas'])}</h2><p>${t(['汇集空间、脑认知与设计研究中的图像，按研究用途查找论文，查看图注和原始出处。','Explore images from research on space, cognition, and design. Find papers by research use, read captions, and visit the original sources.'])}</p><div class="atlas-stats"><span><b>${resource.summary.figures.toLocaleString('en-US')}</b>${t(['幅图像','FIGURES'])}</span><span><b>${resource.summary.articles}</b>${t(['篇来源论文','PAPERS'])}</span></div><a class="portal-link" href="#/research/figures">${t(['打开找图工具','Find figures & papers'])}${arrow}</a></div></div><div class="atlas-portal-preview" aria-label="${t(['文献图像预览','Research figure previews'])}">${previews.map(([id,label,src])=>`<a href="#/research/figures?q=${id}" class="atlas-preview"><img src="${src}" alt="${esc(t(label))}" width="640" height="${id==='M008'?415:id==='M006'?408:248}"><span>${id} / ${esc(t(label))}</span></a>`).join('')}</div></section>`;
   }
 
   const matchesResearchTheme = (paper,theme) => !theme||(theme.paperTopics||[]).some(topic=>paper.topics.includes(topic));
-  function researchPublications(theme){
-    const matching=theme?papers.filter(p=>matchesResearchTheme(p,theme)):papers;
-    const archive=theme?'#/publications?theme='+theme.id:'#/publications';
-    const from=theme?'#/research/'+theme.id:'#/research';
-    return `<section class="merged-archive-section research-publications" id="research-publications" aria-labelledby="research-publications-title"><div class="section-header"><div>${eye(theme?'相关成果':'论文档案',theme?'RELATED PUBLICATIONS':'PUBLICATIONS')}<h2 id="research-publications-title">${t(['团队论文','Lab publications'])}${theme?`<small>${t([`${matching.length} 篇相关论文`,`${matching.length} RELATED PAPERS`])}</small>`:''}</h2></div><div class="merged-links">${link(archive,theme?'查看本方向论文':'查看完整论文档案',theme?'View papers in this theme':'View full publication archive')}${link('#/research/figures','浏览图集','Explore the atlas')}</div></div><div class="research-paper-preview">${matching.slice(0,4).map(p=>`<a id="research-paper-${esc(p.id)}" href="${esc(paperHref(p,from))}"><span>${p.year} / ${esc(t([p.journal,p.journalEn]))}</span>${paperLanguageNote(p)}<h3>${esc(p.title)}</h3><p>${esc(p.authors.join(' · '))}</p>${arrow}</a>`).join('')}</div>${!matching.length?`<p class="research-empty">${t(['本方向的团队论文尚在整理，可先浏览完整论文档案。','Publications for this theme are being organized. Browse the full archive in the meantime.'])}</p>`:''}</section>`;
-  }
 
   function atlasCategoryName(value){
     const name=String(value||'').replace(/^\d+[_\s]+/,'');
@@ -257,7 +228,7 @@
   function figureAtlasPage(params){
     const resource=window.LAB_RESOURCES || {summary:{figures:2070,articles:658,journals:135,recommended:373},categories:[]};
     const categories=resource.categories || [];
-    return `<section class="page-heading atlas-heading">${eye('RESEARCH / COLLECTION','RESEARCH / COLLECTION')}<h1>${t(['文献图集','Research Figure Atlas'])}</h1><p>${t(['以图像为线索，阅读空间、脑认知与设计研究。汇集研究框架、实验方法、空间分析与设计表达，连接图像、图注与原始文献。','Read research on space, cognition and design through its images. Explore conceptual frameworks, experimental methods, spatial analysis and design proposals, with captions and links to the original papers.'])}</p><nav class="breadcrumbs atlas-breadcrumbs"><a href="#/research">${t(['研究','Research'])}</a><span>/</span><span>${t(['文献图集','Research Figure Atlas'])}</span></nav></section>${researchNavigation('figures')}<section class="atlas-workbench" id="atlas-workbench" aria-labelledby="atlas-workbench-title"><div class="atlas-workbench-head"><div><p class="eyebrow">${t(['图像与文献','FIGURES & PAPERS'])}</p><h2 id="atlas-workbench-title">${t(['从图像进入研究。','A visual entry into research.'])}</h2></div><div class="atlas-stats atlas-stats-dark"><span><b>${resource.summary.figures}</b>${t(['幅图像','FIGURES'])}</span><span><b>${resource.summary.articles}</b>${t(['篇来源论文','PAPERS'])}</span><span><b>${resource.summary.journals}</b>${t(['个出版来源','SOURCES'])}</span><span><b>${resource.summary.recommended}</b>${t(['幅优先参考','PRIORITY'])}</span></div></div><div class="atlas-provenance"><span>${t(['领域参考文献','FIELD LITERATURE'])}</span><p>${t(['本图集收录领域文献的研究图像。','Research images collected from the wider field.'])}<a href="#/publications">${t(['查看团队论文','View Lab publications'])} ${directionIcon('right')}</a></p></div><div class="atlas-controls"><label class="search-box"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><input id="atlas-search" type="search" aria-label="${t(['搜索文献图像','Search figures'])}" placeholder="${t(['搜索题名、图注、期刊、DOI…','Search title, caption, journal, DOI…'])}" value="${esc(params.get('q')||'')}" autocomplete="off"></label><label class="archive-select"><span>${t(['用途','Use'])}</span><select id="atlas-category" aria-label="${t(['按研究用途筛选','Filter by research use'])}"><option value="">${t(['全部用途','All uses'])}</option>${categories.map(c=>`<option value="${esc(c.id)}">${esc(atlasCategoryName(c.name))}</option>`).join('')}</select></label><label class="atlas-check"><input id="atlas-recommended" type="checkbox" ${params.get('recommended')==='1'?'checked':''}>${t(['优先参考','Priority references'])}</label><button class="atlas-clear" id="atlas-clear" type="button" aria-label="${t(['清除全部筛选','Clear all filters'])}">${t(['清除全部','Clear all'])}<span aria-hidden="true">${directionIcon('reset')}</span></button></div><div class="atlas-active-filters" id="atlas-active-filters" aria-label="${t(['当前筛选','Active filters'])}" hidden></div><div class="atlas-status"><span id="atlas-result-count" role="status" aria-live="polite">${t(['正在载入图像…','Loading figures…'])}</span><span id="atlas-paper-count"></span></div><div class="atlas-error" id="atlas-error" hidden><p>${t(['图像资料暂时未连接。当前页面保留研究入口，稍后可重试。','The figure catalog is temporarily unavailable. The research entry remains available; try again later.'])}</p><button id="atlas-retry" type="button">${t(['重新载入','Retry'])}</button></div><p id="atlas-link-status" class="atlas-link-status" role="status" hidden></p><div class="atlas-grid" id="atlas-grid"></div><div class="atlas-more"><button class="solid-button" id="atlas-more" type="button" hidden>${t(['加载更多图像','Load more figures'])}${arrow}</button></div></section><section class="atlas-note"><p>${t(['图像版权归原作者及出版方；使用条件以各条许可记录为准。外部文献不等同于实验室发表成果。','Images remain subject to their authors and publishers. Check each license before reuse. External references are not Lab publications.'])}</p><a href="tools/figure-atlas/NOTICE.md" target="_blank" rel="noopener noreferrer">${(t(['来源与使用说明','Sources & use notes'])+directionIcon('ne'))}</a></section><dialog id="atlas-viewer" class="atlas-viewer" aria-labelledby="atlas-viewer-title"><div class="atlas-viewer-top"><span id="atlas-viewer-meta"></span><div class="atlas-viewer-actions"><button id="atlas-share" type="button">${t(['复制图像链接','Copy figure link'])}</button><button id="atlas-viewer-close" class="icon" type="button" aria-label="${t(['关闭图像','Close figure'])}">×</button></div></div><div class="atlas-viewer-body"><div class="atlas-image-column"><div class="atlas-viewer-image"><img id="atlas-viewer-image" alt=""><div id="atlas-image-error" class="atlas-image-error" hidden><p>${t(['预览暂时无法载入，仍可阅读图注或查看论文原文。','The preview could not load. You can still read the caption or open the paper.'])}</p><button id="atlas-image-retry" type="button">${t(['重新载入图像','Retry image'])}</button></div></div><div class="atlas-preview-label">${t(['图像预览 · 完整图像见来源原图','Collection preview · full image at source'])}</div><section class="atlas-paper-figures" aria-labelledby="atlas-paper-position"><div class="atlas-paper-heading"><h3 id="atlas-paper-position" aria-live="polite"></h3><div><button id="atlas-paper-prev" type="button" aria-label="${t(['同篇上一幅','Previous figure from this paper'])}">${directionIcon('left')}</button><button id="atlas-paper-next" type="button" aria-label="${t(['同篇下一幅','Next figure from this paper'])}">${directionIcon('right')}</button></div></div><div id="atlas-paper-thumbs" class="atlas-paper-thumbs"></div></section></div><div class="atlas-viewer-copy"><p class="eyebrow atlas-source-label">${t(['来源论文 / 领域文献','SOURCE PAPER / FIELD LITERATURE'])}</p><h2 id="atlas-viewer-title"></h2><p class="muted" id="atlas-viewer-journal"></p><p id="atlas-viewer-doi"></p><div class="atlas-viewer-links"><a id="atlas-viewer-article" target="_blank" rel="noopener noreferrer">${(t(['论文原文','Paper'])+directionIcon('ne'))}</a><a id="atlas-viewer-source" target="_blank" rel="noopener noreferrer">${(t(['来源原图','Source image'])+directionIcon('ne'))}</a></div><p id="atlas-share-status" class="atlas-share-status" role="status" aria-live="polite"></p><label id="atlas-share-fallback" class="atlas-share-fallback" hidden><span>${t(['图像链接','Figure link'])}</span><input id="atlas-share-url" type="text" readonly></label><h3>${t(['阅读提示','Collection notes · Chinese'])}</h3><p id="atlas-viewer-note" lang="zh-CN"></p><p class="eyebrow" id="atlas-viewer-category"></p><h3>${t(['原文图注','Original caption'])}</h3><p id="atlas-viewer-caption"></p><h3>${t(['出处与许可','Source & license'])}</h3><p id="atlas-viewer-license"></p></div></div></dialog>`;
+    return `<section class="page-heading atlas-heading">${eye('RESEARCH / COLLECTION','RESEARCH / COLLECTION')}<h1>${t(['文献图集','Research Figure Atlas'])}</h1><p>${t(['以图像为线索，阅读空间、脑认知与设计研究。汇集研究框架、实验方法、空间分析与设计表达，连接图像、图注与原始文献。','Read research on space, cognition and design through its images. Explore conceptual frameworks, experimental methods, spatial analysis and design proposals, with captions and links to the original papers.'])}</p><nav class="breadcrumbs atlas-breadcrumbs"><a href="#/research">${t(['研究','Research'])}</a><span>/</span><a href="#/research?section=sharing">${t(['学术分享','Academic sharing'])}</a></nav></section>${researchNavigation('sharing')}<section class="atlas-workbench" id="atlas-workbench" aria-labelledby="atlas-workbench-title"><div class="atlas-workbench-head"><div><p class="eyebrow">${t(['图像与文献','FIGURES & PAPERS'])}</p><h2 id="atlas-workbench-title">${t(['从图像进入研究。','A visual entry into research.'])}</h2></div><div class="atlas-stats atlas-stats-dark"><span><b>${resource.summary.figures}</b>${t(['幅图像','FIGURES'])}</span><span><b>${resource.summary.articles}</b>${t(['篇来源论文','PAPERS'])}</span><span><b>${resource.summary.journals}</b>${t(['个出版来源','SOURCES'])}</span><span><b>${resource.summary.recommended}</b>${t(['幅优先参考','PRIORITY'])}</span></div></div><div class="atlas-provenance"><span>${t(['领域参考文献','FIELD LITERATURE'])}</span><p>${t(['本图集收录领域文献的研究图像。','Research images collected from the wider field.'])}<a href="#/publications">${t(['查看论文发表','View Lab publications'])} ${directionIcon('right')}</a></p></div><div class="atlas-controls"><label class="search-box"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><input id="atlas-search" type="search" aria-label="${t(['搜索文献图像','Search figures'])}" placeholder="${t(['搜索题名、图注、期刊、DOI…','Search title, caption, journal, DOI…'])}" value="${esc(params.get('q')||'')}" autocomplete="off"></label><label class="archive-select"><span>${t(['用途','Use'])}</span><select id="atlas-category" aria-label="${t(['按研究用途筛选','Filter by research use'])}"><option value="">${t(['全部用途','All uses'])}</option>${categories.map(c=>`<option value="${esc(c.id)}">${esc(atlasCategoryName(c.name))}</option>`).join('')}</select></label><label class="atlas-check"><input id="atlas-recommended" type="checkbox" ${params.get('recommended')==='1'?'checked':''}>${t(['优先参考','Priority references'])}</label><button class="atlas-clear" id="atlas-clear" type="button" aria-label="${t(['清除全部筛选','Clear all filters'])}">${t(['清除全部','Clear all'])}<span aria-hidden="true">${directionIcon('reset')}</span></button></div><div class="atlas-active-filters" id="atlas-active-filters" aria-label="${t(['当前筛选','Active filters'])}" hidden></div><div class="atlas-status"><span id="atlas-result-count" role="status" aria-live="polite">${t(['正在载入图像…','Loading figures…'])}</span><span id="atlas-paper-count"></span></div><div class="atlas-error" id="atlas-error" hidden><p>${t(['图像资料暂时未连接。当前页面保留研究入口，稍后可重试。','The figure catalog is temporarily unavailable. The research entry remains available; try again later.'])}</p><button id="atlas-retry" type="button">${t(['重新载入','Retry'])}</button></div><p id="atlas-link-status" class="atlas-link-status" role="status" hidden></p><div class="atlas-grid" id="atlas-grid"></div><div class="atlas-more"><button class="solid-button" id="atlas-more" type="button" hidden>${t(['加载更多图像','Load more figures'])}${arrow}</button></div></section><section class="atlas-note"><p>${t(['图像版权归原作者及出版方；使用条件以各条许可记录为准。外部文献不等同于实验室发表成果。','Images remain subject to their authors and publishers. Check each license before reuse. External references are not Lab publications.'])}</p><a href="tools/figure-atlas/NOTICE.md" target="_blank" rel="noopener noreferrer">${(t(['来源与使用说明','Sources & use notes'])+directionIcon('ne'))}</a></section><dialog id="atlas-viewer" class="atlas-viewer" aria-labelledby="atlas-viewer-title"><div class="atlas-viewer-top"><span id="atlas-viewer-meta"></span><div class="atlas-viewer-actions"><button id="atlas-share" type="button">${t(['复制图像链接','Copy figure link'])}</button><button id="atlas-viewer-close" class="icon" type="button" aria-label="${t(['关闭图像','Close figure'])}">×</button></div></div><div class="atlas-viewer-body"><div class="atlas-image-column"><div class="atlas-viewer-image"><img id="atlas-viewer-image" alt=""><div id="atlas-image-error" class="atlas-image-error" hidden><p>${t(['预览暂时无法载入，仍可阅读图注或查看论文原文。','The preview could not load. You can still read the caption or open the paper.'])}</p><button id="atlas-image-retry" type="button">${t(['重新载入图像','Retry image'])}</button></div></div><div class="atlas-preview-label">${t(['图像预览 · 完整图像见来源原图','Collection preview · full image at source'])}</div><section class="atlas-paper-figures" aria-labelledby="atlas-paper-position"><div class="atlas-paper-heading"><h3 id="atlas-paper-position" aria-live="polite"></h3><div><button id="atlas-paper-prev" type="button" aria-label="${t(['同篇上一幅','Previous figure from this paper'])}">${directionIcon('left')}</button><button id="atlas-paper-next" type="button" aria-label="${t(['同篇下一幅','Next figure from this paper'])}">${directionIcon('right')}</button></div></div><div id="atlas-paper-thumbs" class="atlas-paper-thumbs"></div></section></div><div class="atlas-viewer-copy"><p class="eyebrow atlas-source-label">${t(['来源论文 / 领域文献','SOURCE PAPER / FIELD LITERATURE'])}</p><h2 id="atlas-viewer-title"></h2><p class="muted" id="atlas-viewer-journal"></p><p id="atlas-viewer-doi"></p><div class="atlas-viewer-links"><a id="atlas-viewer-article" target="_blank" rel="noopener noreferrer">${(t(['论文原文','Paper'])+directionIcon('ne'))}</a><a id="atlas-viewer-source" target="_blank" rel="noopener noreferrer">${(t(['来源原图','Source image'])+directionIcon('ne'))}</a></div><p id="atlas-share-status" class="atlas-share-status" role="status" aria-live="polite"></p><label id="atlas-share-fallback" class="atlas-share-fallback" hidden><span>${t(['图像链接','Figure link'])}</span><input id="atlas-share-url" type="text" readonly></label><h3>${t(['阅读提示','Collection notes · Chinese'])}</h3><p id="atlas-viewer-note" lang="zh-CN"></p><p class="eyebrow" id="atlas-viewer-category"></p><h3>${t(['原文图注','Original caption'])}</h3><p id="atlas-viewer-caption"></p><h3>${t(['出处与许可','Source & license'])}</h3><p id="atlas-viewer-license"></p></div></div></dialog>`;
   }
 
   function atlasAsset(value){
@@ -529,18 +500,9 @@
     load();
   }
 
-  const isResearchTool = p => ['figure-atlas','mindscape-lab','mindscape-studio'].includes(p.id);
-  const archiveCollections = [
-    {id:'all',name:['全部内容','All'],count:()=>works.length+projects.length},
-    {id:'works',name:['学生作品','Student work'],count:()=>works.length},
-    {id:'tools',name:['研究工具','Research tools'],count:()=>projects.filter(isResearchTool).length},
-    {id:'prototypes',name:['交互原型','Prototypes'],count:()=>projects.filter(p=>!isResearchTool(p)).length}
-  ];
-
-  function archive(params){
-    const collection=archiveCollections.some(c=>c.id===params.get('collection'))?params.get('collection'):'all';
-    const theme=themes.some(th=>th.id===params.get('theme'))?params.get('theme'):'all';
-    return `<section class="page-heading projects-heading"><div><p class="eyebrow section-mark">PROJECT ARCHIVE / 02</p><h1>${t(['项目','Projects'])}</h1></div></section><div class="project-browser"><div class="archive-collections" role="group" aria-label="${t(['按内容类型筛选','Filter by content type'])}">${archiveCollections.map(c=>`<button type="button" data-collection="${c.id}" aria-pressed="${collection===c.id}">${esc(t(c.name))}<span>${String(c.count()).padStart(2,'0')}</span></button>`).join('')}</div><div class="archive-toolbar unified-toolbar"><label class="archive-select"><select id="project-theme" aria-label="${t(['按研究方向筛选','Filter by research theme'])}"><option value="all">${t(['全部方向','All themes'])}</option>${themes.map(th=>`<option value="${th.id}" ${theme===th.id?'selected':''}>${esc(t(th.name))}</option>`).join('')}</select></label><label class="search-box"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><input id="project-search" type="search" aria-label="${t(['搜索项目与作品','Search projects and work'])}" placeholder="${t(['搜索项目、作者…','Search projects or authors…'])}" value="${esc(params.get('q')||'')}" autocomplete="off"></label></div></div><div class="project-filter-summary" id="project-active-filters" role="group" aria-label="${t(['当前筛选，可逐项移除','Active filters, remove individually'])}" hidden></div><p class="results-caption sr-only" id="result-count" role="status" aria-live="polite"></p><div id="archive-grid"></div>`;
+  const applicationItems = projects.filter(p=>p.id!=='figure-atlas');
+  function archive(){
+    return `<section class="page-heading applications-heading">${eye('APPLICATIONS / 02','APPLICATIONS / 02')}<h1>${t(['应用','Applications'])}</h1><p>${t(['课题组开发的平台、网站与交互原型。','Platforms, websites, and interactive prototypes developed by the group.'])}</p></section><div class="project-grid applications-grid">${applicationItems.map(p=>projectCard(p,'#/applications')).join('')}</div>`;
   }
 
   function projectFigure(p){
@@ -552,17 +514,17 @@
   function detail(id,params){
     const p=projects.find(x=>x.id===id);
     if(!p)return missing();
-    const back=archiveReturn(params,'#/projects','project-'+id);
+    const back=archiveReturn(params,'#/applications','project-'+id);
     const fromHome=back.startsWith('#/?');
     const fromAbout=back.startsWith('#/about');
     const fromResearch=back.startsWith('#/research');
     const originTheme=fromResearch?themes.find(th=>back.split('?')[0]==='#/research/'+th.id):null;
-    const originLabel=fromHome?['首页','Home']:fromAbout?['关于','About']:fromResearch?(originTheme?originTheme.name:['研究','Research']):['项目','Projects'];
-    const returnLabel=fromHome?['返回首页','Back to home']:fromAbout?['返回关于','Back to About']:fromResearch?['返回'+t(originLabel),'Back to '+t(originLabel)]:['返回项目','Back to projects'];
-    const next=projects[(projects.indexOf(p)+1)%projects.length];
+    const originLabel=fromHome?['首页','Home']:fromAbout?['关于','About']:fromResearch?(p.id==='figure-atlas'?['学术分享','Academic sharing']:['研究','Research']):['应用','Applications'];
+    const returnLabel=fromHome?['返回首页','Back to home']:fromAbout?['返回关于','Back to About']:fromResearch?['返回'+t(originLabel),'Back to '+t(originLabel)]:['返回应用','Back to applications'];
+    const next=applicationItems[(applicationItems.indexOf(p)+1)%applicationItems.length];
     const block=(zh,en,key)=>`<section class="detail-section"><h2>${t([zh,en])}</h2><p>${esc(t(p[key]))}</p></section>`;
     const toolLink=p.id==='figure-atlas'?'#/research/figures':p.externalUrl;
-    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome?`<a href="#/">${t(['探索','Explore'])}</a><span>/</span>`:''}<a href="${esc(back)}">${esc(t(originLabel))}</a><span>/</span><span>${esc(t(p.title))}</span></nav><section class="page-heading detail-heading">${eye(`${p.year} / ${t(p.type)}`,`${p.year} / ${t(p.type)}`)}<h1>${esc(t(p.title))}</h1><p>${esc(t(p.subtitle))}</p>${toolLink||p.publicPreviewOnly?`<div class="detail-tool-actions">${toolAction(p)}${['mindscape-studio','focus'].includes(p.id)&&!p.publicPreviewOnly?`<span class="tool-destination">${t(['在线体验 · 新窗口打开','Online access · opens in a new window'])}</span>`:p.id==='mindscape-lab'?`<span class="tool-destination">${t(['研究平台原型 · 登录使用 · 首次访问可能需要等待服务唤醒','Research prototype · sign-in required · the service may need time to wake'])}</span>`:''}</div>`:''}</section>${projectFigure(p)}<div class="detail-layout"><aside class="detail-sidebar"><dl><div><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd></div><div><dt>${t(['类型','Type'])}</dt><dd>${esc(t(p.type))}</dd></div><div><dt>${t(['当前阶段','Stage'])}</dt><dd>${esc(t(p.stage))}</dd></div></dl><div class="project-tags">${p.methods.map(m=>`<span>${esc(m.split(' / ')[lang==='zh'?0:1])}</span>`).join('')}</div>${link('#/about?contact=1', '项目咨询','Project enquiries')}</aside><div>${block('研究问题','Question','question')}${block('如何使用','How it works','process')}${block('当前进展','Current stage','status')}${block('后续研究','Next steps','next')}</div></div><nav class="detail-next" aria-label="${t(['项目导航','Project navigation'])}"><a href="${esc(back)}"><span aria-hidden="true">${directionIcon('left')}</span>${esc(t(returnLabel))}</a><div><p class="eyebrow">${t(['下一个项目','NEXT PROJECT'])}</p><a href="${esc(archiveItemHref('projects',next.id,archiveSource(params.get('from'))))}">${esc(t(next.title))}${arrow}</a></div></nav>`;
+    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome?`<a href="#/">${t(['探索','Explore'])}</a><span>/</span>`:''}<a href="${esc(back)}">${esc(t(originLabel))}</a><span>/</span><span>${esc(t(p.title))}</span></nav><section class="page-heading detail-heading">${eye(`${p.year} / ${t(p.type)}`,`${p.year} / ${t(p.type)}`)}<h1>${esc(t(p.title))}</h1><p>${esc(t(p.subtitle))}</p>${toolLink||p.publicPreviewOnly?`<div class="detail-tool-actions">${toolAction(p)}${['mindscape-studio','focus'].includes(p.id)&&!p.publicPreviewOnly?`<span class="tool-destination">${t(['在线体验 · 新窗口打开','Online access · opens in a new window'])}</span>`:p.id==='mindscape-lab'?`<span class="tool-destination">${t(['研究平台原型 · 登录使用 · 首次访问可能需要等待服务唤醒','Research prototype · sign-in required · the service may need time to wake'])}</span>`:''}</div>`:''}</section>${projectFigure(p)}<div class="detail-layout"><aside class="detail-sidebar"><dl><div><dt>${t(['年份','Year'])}</dt><dd>${p.year}</dd></div><div><dt>${t(['类型','Type'])}</dt><dd>${esc(t(p.type))}</dd></div><div><dt>${t(['当前阶段','Stage'])}</dt><dd>${esc(t(p.stage))}</dd></div></dl><div class="project-tags">${p.methods.map(m=>`<span>${esc(m.split(' / ')[lang==='zh'?0:1])}</span>`).join('')}</div></aside><div>${block('研究问题','Question','question')}${block('如何使用','How it works','process')}${block('当前进展','Current stage','status')}${block('后续研究','Next steps','next')}</div></div><nav class="detail-next" aria-label="${t(['应用导航','Application navigation'])}"><a href="${esc(back)}"><span aria-hidden="true">${directionIcon('left')}</span>${esc(t(returnLabel))}</a><div><p class="eyebrow">${t(['下一个应用','NEXT APPLICATION'])}</p><a href="${esc(archiveItemHref('applications',next.id,archiveSource(params.get('from'))))}">${esc(t(next.title))}${arrow}</a></div></nav>`;
   }
 
   function about(){
@@ -573,10 +535,10 @@
       ['mindscape-i','Mindscape I',['日常任务中的认知支持原型','Prototyping cognitive support for everyday tasks']]
     ];
     return `<section class="page-heading about-heading">${eye('ABOUT THE LAB / 03','ABOUT THE LAB / 03')}<h1>${t(['关于','About'])}</h1><p>${t(['研究建筑与城市环境怎样影响人的感知、注意与行为。','We study how buildings and urban environments affect perception, attention, and behavior.'])}</p></section>
-    <section class="about-intro"><div class="about-copy"><h2>${t(['空间·脑·设计实验室','Space, Cognition & Design Lab'])}</h2><p>${t(['我们关注人在空间中如何辨认方向、分配注意、完成任务。通过行为观察、虚拟场景和脑电等研究方法，研究环境与体验之间的关系，并将发现用于设计。','We study how people find their way, direct their attention, and carry out tasks in space. We use behavioral observation, virtual environments, and EEG to examine how environments shape experience and inform design.'])}</p><p>${t(['实验室是 Mindscape 的科研与学术交流平台。这里收录团队论文、学生作品和研究工具。','The Lab is Mindscape’s platform for research and academic exchange. Here you can find our publications, student work, and research tools.'])}</p>${link('#/research','了解研究方向','Explore research themes')}</div><div class="about-graphic">${svg('<g fill="none" stroke="#191919" stroke-width="1"><rect x="115" y="100" width="315" height="315"/><circle cx="403" cy="256" r="165"/><path d="m280 90 200 330H80Z"/><path d="M80 420H590 M115 100 565 100" stroke-dasharray="4 5"/></g><circle cx="310" cy="263" r="11" fill="#f2f2f2"/><g font-family="Instrument Sans, Helvetica Neue, Arial, sans-serif" font-size="11" fill="#191919"><text x="118" y="80">SPACE</text><text x="500" y="80">COGNITION</text><text x="460" y="449">DESIGN</text></g>','0 0 650 500')}<p class="eyebrow">THINK ACROSS. MAKE CONNECTIONS.</p></div></section>
-    <section class="about-facts lab-team" id="team" tabindex="-1" aria-labelledby="about-team-title"><h2 id="about-team-title">${t(['研究团队','Research team'])}</h2><div class="team-profile"><figure class="team-portrait"><img src="assets/wang-hui-portrait-20261027.webp?v=20261027-portrait-2" alt="${t(['王辉老师','Professor Hui Wang'])}" width="680" height="850" loading="eager" decoding="async"></figure><div class="team-bio"><div class="team-person"><h3>${t(['王辉','Hui Wang'])}</h3><p class="team-role">${t(['教授 · 清华大学建筑学院','Professor · School of Architecture, Tsinghua University'])}</p></div><p>${t(['实验室由王辉老师发起，关注空间研究、脑认知与设计的交叉。王辉老师的学术方向包括中国建筑与城市美学、城市更新设计、空间脑科学与设计交互。','The Lab was initiated by Professor Hui Wang to explore the intersection of spatial research, cognition, and design. His academic interests include Chinese architectural and urban aesthetics, urban regeneration design, and spatial neuroscience and design interaction.'])}</p><div class="about-team-links"><a class="text-link" href="https://www.arch.tsinghua.edu.cn/info/rw_jzx/1389" target="_blank" rel="noopener noreferrer">${t(['个人学术主页','Academic profile'])}${arrow}</a>${link('#/publications','团队论文','Team publications')}</div></div></div></section>
+    <section class="about-intro"><div class="about-copy"><h2>${t(['空间·脑·设计实验室','Space, Cognition & Design Lab'])}</h2><p>${t(['我们关注人在空间中如何辨认方向、分配注意、完成任务。通过行为观察、虚拟场景和脑电等研究方法，研究环境与体验之间的关系，并将发现用于设计。','We study how people find their way, direct their attention, and carry out tasks in space. We use behavioral observation, virtual environments, and EEG to examine how environments shape experience and inform design.'])}</p><p>${t(['实验室是 Mindscape 的科研与学术交流平台。这里收录论文发表、学生作品和研究工具。','The Lab is Mindscape’s platform for research and academic exchange. Here you can find our publications, student work, and research tools.'])}</p>${link('#/research','了解研究','Explore research')}</div><div class="about-graphic">${svg('<g fill="none" stroke="#191919" stroke-width="1"><rect x="115" y="100" width="315" height="315"/><circle cx="403" cy="256" r="165"/><path d="m280 90 200 330H80Z"/><path d="M80 420H590 M115 100 565 100" stroke-dasharray="4 5"/></g><circle cx="310" cy="263" r="11" fill="#f2f2f2"/><g font-family="Instrument Sans, Helvetica Neue, Arial, sans-serif" font-size="11" fill="#191919"><text x="118" y="80">SPACE</text><text x="500" y="80">COGNITION</text><text x="460" y="449">DESIGN</text></g>','0 0 650 500')}<p class="eyebrow">THINK ACROSS. MAKE CONNECTIONS.</p></div></section>
+    <section class="about-facts lab-team" id="team" tabindex="-1" aria-labelledby="about-team-title"><h2 id="about-team-title">${t(['研究团队','Research team'])}</h2><div class="team-profile"><figure class="team-portrait"><img src="assets/wang-hui-portrait-20261027.webp?v=20261027-portrait-2" alt="${t(['王辉老师','Professor Hui Wang'])}" width="680" height="850" loading="eager" decoding="async"></figure><div class="team-bio"><div class="team-person"><h3>${t(['王辉','Hui Wang'])}</h3><p class="team-role">${t(['教授 · 清华大学建筑学院','Professor · School of Architecture, Tsinghua University'])}</p></div><p>${t(['实验室由王辉老师发起，关注空间研究、脑认知与设计的交叉。王辉老师的学术方向包括中国建筑与城市美学、城市更新设计、空间脑科学与设计交互。','The Lab was initiated by Professor Hui Wang to explore the intersection of spatial research, cognition, and design. His academic interests include Chinese architectural and urban aesthetics, urban regeneration design, and spatial neuroscience and design interaction.'])}</p><div class="about-team-links"><a class="text-link" href="https://www.arch.tsinghua.edu.cn/info/rw_jzx/1389" target="_blank" rel="noopener noreferrer">${t(['个人学术主页','Academic profile'])}${arrow}</a>${link('#/publications','论文发表','Team publications')}</div></div></div></section>
     ${labSlogan()}
-    <section class="about-facts about-practice" id="practice" tabindex="-1" aria-labelledby="about-practice-title"><h2 id="about-practice-title">${t(['研究实践','Research practice'])}</h2><div><p>${t(['Lab 用于组织情境实验，Studio 用于推敲空间方案，Focus 用于专注计时与短休息。Mindscape I 是正在开发的可穿戴认知支持原型。','Lab organizes situated experiments, Studio supports spatial design, and Focus combines task timing with short breaks. Mindscape I is a wearable cognitive support prototype in development.'])}</p><div class="about-practice-links">${practice.map(([id,title,description])=>`<a id="project-${id}" href="${esc(archiveItemHref('projects',id,'#/about?section=practice'))}"><span class="about-practice-name">${title}${arrow}</span><span class="about-practice-description">${esc(t(projects.find(p=>p.id===id).subtitle))}</span></a>`).join('')}</div>${link('#/projects','浏览全部项目','Browse all projects')}</div></section>
+    <section class="about-facts about-practice" id="practice" tabindex="-1" aria-labelledby="about-practice-title"><h2 id="about-practice-title">${t(['研究实践','Research practice'])}</h2><div><p>${t(['Lab 用于组织情境实验，Studio 用于推敲空间方案，Focus 用于专注计时与短休息。Mindscape I 是正在开发的可穿戴认知支持原型。','Lab organizes situated experiments, Studio supports spatial design, and Focus combines task timing with short breaks. Mindscape I is a wearable cognitive support prototype in development.'])}</p><div class="about-practice-links">${practice.map(([id,title,description])=>`<a id="project-${id}" href="${esc(archiveItemHref('applications',id,'#/about?section=practice'))}"><span class="about-practice-name">${title}${arrow}</span><span class="about-practice-description">${esc(t(projects.find(p=>p.id===id).subtitle))}</span></a>`).join('')}</div>${link('#/applications','浏览全部应用','Browse all applications')}</div></section>
     `;
   }
 
@@ -598,7 +560,7 @@
   };
 
   const paperHref = (p,from='#/publications') => `#/publications/${encodeURIComponent(p.id)}${from!=='#/publications'?'?from='+encodeURIComponent(from):''}`;
-  const paperReturn = params => params.get('from')==='#/'?'#/':/^#\/research(?:\/(?:space|cognition|design))?$/.test(params.get('from')||'')?params.get('from'):/^#\/publications(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):'#/publications';
+  const paperReturn = params => params.get('from')==='#/'?'#/':/^#\/research(?:\/(?:space|cognition|design))?(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):/^#\/publications(?:\?[^#]*)?$/.test(params.get('from')||'')?params.get('from'):'#/publications';
   function downloadCitations(items){
     if(!items.length)return;
     const content=items.map(risRecord).join('\r\n');
@@ -628,12 +590,12 @@
 
   function homeSelection(){
     const ordered=[...papers].sort((a,b)=>b.year-a.year).slice(0,3);
-    return `<section class="home-section home-results" aria-labelledby="home-results-title"><div class="home-section-heading"><h2 id="home-results-title">${t(['团队论文','Publications'])}</h2>${link('#/publications','全部论文','All publications')}</div><div class="home-paper-grid">${ordered.map(p=>`<a class="home-result-row" id="home-paper-${esc(p.id)}" href="${esc(paperHref(p,'#/'))}"><div><p class="home-result-meta">${p.year} · ${esc(t([p.journal,p.journalEn]))}</p>${paperLanguageNote(p)}<h3>${esc(p.title)}</h3><p class="home-result-author">${esc(p.authors.join(' · '))}</p></div>${arrow}</a>`).join('')}</div></section>`;
+    return `<section class="home-section home-results" aria-labelledby="home-results-title"><div class="home-section-heading"><h2 id="home-results-title">${t(['论文发表','Publications'])}</h2>${link('#/publications','全部论文','All publications')}</div><div class="home-paper-grid">${ordered.map(p=>`<a class="home-result-row" id="home-paper-${esc(p.id)}" href="${esc(paperHref(p,'#/'))}"><div><p class="home-result-meta">${p.year} · ${esc(t([p.journal,p.journalEn]))}</p>${paperLanguageNote(p)}<h3>${esc(p.title)}</h3><p class="home-result-author">${esc(p.authors.join(' · '))}</p></div>${arrow}</a>`).join('')}</div></section>`;
   }
 
   function references(){
     const resource=window.LAB_RESOURCES || {summary:{figures:2070,articles:658,journals:135,recommended:373},categories:[]};
-    return `<section class="page-heading">${eye('PUBLICATIONS / REFERENCE ATLAS','PUBLICATIONS / REFERENCE ATLAS')}<h1>${t(['文献图集','Research Figure Atlas'])}<small>OUTSIDE SOURCES / RESEARCH TOOL</small></h1><p>${t(['这是面向研究过程的外部文献与图像资料库。每幅图像都保留原论文、图号、图注、图像来源与许可记录，不代表实验室发表成果。','An external literature and figure library for the research process. Each record keeps its source paper, figure number, caption, image source, and license; it does not represent Lab publications.'])}</p></section><section class="reference-intro"><div><p class="eyebrow">${t(['文献图集','RESEARCH FIGURE ATLAS'])}</p><h2>${t(['从图像进入研究。','A visual entry into research.'])}</h2><p>${t([`当前快照：${resource.summary.figures} 幅图像 · ${resource.summary.articles} 篇来源论文 · ${resource.summary.journals} 个出版来源。`,`Snapshot: ${resource.summary.figures} figures · ${resource.summary.articles} source papers · ${resource.summary.journals} publication sources.`])}</p>${link('#/projects/figure-atlas','了解研究工具','About the research tool')}</div><a class="reference-launch" href="#/research/figures"><span>${t(['浏览图集','Explore the atlas'])}</span><strong>${directionIcon('ne')}</strong></a></section><section class="reference-categories"><div class="section-header"><div>${eye('按研究用途','BY RESEARCH USE')}<h2>${t(['九类图像，服务不同阶段。','Nine figure families for different stages.'])}</h2></div></div><div class="reference-category-grid">${resource.categories.map(c=>`<div><span>${esc(c.id)}</span><h3>${esc(c.name)}</h3><b>${c.count}</b></div>`).join('')}</div></section><nav class="collection-switch"><a href="#/publications">${t(['团队论文','Lab publications'])}</a><a class="active" href="#/publications?collection=references">${t(['文献图集','Research Figure Atlas'])}</a></nav>`;
+    return `<section class="page-heading">${eye('PUBLICATIONS / REFERENCE ATLAS','PUBLICATIONS / REFERENCE ATLAS')}<h1>${t(['文献图集','Research Figure Atlas'])}<small>OUTSIDE SOURCES / RESEARCH TOOL</small></h1><p>${t(['这是面向研究过程的外部文献与图像资料库。每幅图像都保留原论文、图号、图注、图像来源与许可记录，不代表实验室发表成果。','An external literature and figure library for the research process. Each record keeps its source paper, figure number, caption, image source, and license; it does not represent Lab publications.'])}</p></section><section class="reference-intro"><div><p class="eyebrow">${t(['文献图集','RESEARCH FIGURE ATLAS'])}</p><h2>${t(['从图像进入研究。','A visual entry into research.'])}</h2><p>${t([`当前快照：${resource.summary.figures} 幅图像 · ${resource.summary.articles} 篇来源论文 · ${resource.summary.journals} 个出版来源。`,`Snapshot: ${resource.summary.figures} figures · ${resource.summary.articles} source papers · ${resource.summary.journals} publication sources.`])}</p>${link('#/applications/figure-atlas','了解研究工具','About the research tool')}</div><a class="reference-launch" href="#/research/figures"><span>${t(['浏览图集','Explore the atlas'])}</span><strong>${directionIcon('ne')}</strong></a></section><section class="reference-categories"><div class="section-header"><div>${eye('按研究用途','BY RESEARCH USE')}<h2>${t(['九类图像，服务不同阶段。','Nine figure families for different stages.'])}</h2></div></div><div class="reference-category-grid">${resource.categories.map(c=>`<div><span>${esc(c.id)}</span><h3>${esc(c.name)}</h3><b>${c.count}</b></div>`).join('')}</div></section><nav class="collection-switch"><a href="#/publications">${t(['论文发表','Lab publications'])}</a><a class="active" href="#/publications?collection=references">${t(['文献图集','Research Figure Atlas'])}</a></nav>`;
   }
 
   function publications(params){
@@ -641,7 +603,7 @@
     const topic=paperTopics.some(x=>x.id===params.get('topic'))?params.get('topic'):'all';
     const years=[...new Set(papers.map(p=>p.year))].sort((a,b)=>b-a);
     const authors=[...new Set(papers.flatMap(p=>p.authors))];
-    return `<section class="page-heading">${eye('PUBLICATIONS / 04','PUBLICATIONS / 04')}<h1>${t(['论文','Publications'])}</h1><p>${t(['围绕建筑与城市、空间体验及设计方法，汇集学术论文与研究文章。','Research papers and academic writing on architecture, cities, spatial experience, and design methods.'])}</p></section>${researchNavigation('papers')}<section class="publications-archive" aria-label="${t(['论文档案','Publication archive'])}"><div class="publication-controls"><a id="paper-theme-back" class="paper-theme-back" hidden></a><div class="publication-topline"><div class="filters" role="group" aria-label="${t(['按论文主题筛选','Filter publications by topic'])}"><button class="filter" data-paper-topic="all" aria-pressed="${topic==='all'}">${t(['全部','All'])}</button>${paperTopics.map(x=>`<button class="filter" data-paper-topic="${x.id}" aria-pressed="${topic===x.id}">${esc(t(x.name))}</button>`).join('')}</div><button class="export-button" id="export-papers">${t(['导出题录 .RIS','Export citations .RIS'])}<span aria-hidden="true">${directionIcon('down')}</span></button></div><div class="publication-fields"><label class="search-box"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><input id="paper-search" type="search" aria-label="${t(['搜索论文','Search publications'])}" placeholder="${t(['题名、作者、年份或 DOI，可组合搜索…','Combine title, author, year, or DOI…'])}" value="${esc(params.get('q')||'')}" autocomplete="off"></label><label class="archive-select"><span>${t(['年份','Year'])}</span><select id="paper-year" aria-label="${t(['论文年份','Publication year'])}"><option value="all">${t(['全部年份','All years'])}</option>${years.map(y=>`<option value="${y}" ${params.get('year')===String(y)?'selected':''}>${y}</option>`).join('')}</select></label><label class="archive-select"><span>${t(['作者','Author'])}</span><select id="paper-author" aria-label="${t(['论文作者','Publication author'])}"><option value="all">${t(['全部作者','All authors'])}</option>${authors.map(a=>`<option value="${esc(a)}" ${params.get('author')===a?'selected':''}>${esc(a)}</option>`).join('')}</select></label></div><div class="paper-filter-summary" id="paper-active-filters" aria-label="${t(['当前筛选','Active filters'])}" hidden></div></div><div class="archive-results-head"><p id="paper-count" role="status" aria-live="polite"></p><span>${t([`团队成果选录 · ${Math.min(...papers.map(p=>p.year))}—${Math.max(...papers.map(p=>p.year))}`,`SELECTED PUBLICATIONS · ${Math.min(...papers.map(p=>p.year))}–${Math.max(...papers.map(p=>p.year))}`])}</span></div><div id="paper-results"></div></section>`;
+    return `${researchHeading()}${researchNavigation('papers')}<section class="publications-archive" aria-label="${t(['论文档案','Publication archive'])}"><div class="publication-controls"><a id="paper-theme-back" class="paper-theme-back" hidden></a><div class="publication-topline"><div class="filters" role="group" aria-label="${t(['按论文主题筛选','Filter publications by topic'])}"><button class="filter" data-paper-topic="all" aria-pressed="${topic==='all'}">${t(['全部','All'])}</button>${paperTopics.map(x=>`<button class="filter" data-paper-topic="${x.id}" aria-pressed="${topic===x.id}">${esc(t(x.name))}</button>`).join('')}</div><button class="export-button" id="export-papers">${t(['导出题录 .RIS','Export citations .RIS'])}<span aria-hidden="true">${directionIcon('down')}</span></button></div><div class="publication-fields"><label class="search-box"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><input id="paper-search" type="search" aria-label="${t(['搜索论文','Search publications'])}" placeholder="${t(['题名、作者、年份或 DOI，可组合搜索…','Combine title, author, year, or DOI…'])}" value="${esc(params.get('q')||'')}" autocomplete="off"></label><label class="archive-select"><span>${t(['年份','Year'])}</span><select id="paper-year" aria-label="${t(['论文年份','Publication year'])}"><option value="all">${t(['全部年份','All years'])}</option>${years.map(y=>`<option value="${y}" ${params.get('year')===String(y)?'selected':''}>${y}</option>`).join('')}</select></label><label class="archive-select"><span>${t(['作者','Author'])}</span><select id="paper-author" aria-label="${t(['论文作者','Publication author'])}"><option value="all">${t(['全部作者','All authors'])}</option>${authors.map(a=>`<option value="${esc(a)}" ${params.get('author')===a?'selected':''}>${esc(a)}</option>`).join('')}</select></label></div><div class="paper-filter-summary" id="paper-active-filters" aria-label="${t(['当前筛选','Active filters'])}" hidden></div></div><div class="archive-results-head"><p id="paper-count" role="status" aria-live="polite"></p><span>${t([`团队成果选录 · ${Math.min(...papers.map(p=>p.year))}—${Math.max(...papers.map(p=>p.year))}`,`SELECTED PUBLICATIONS · ${Math.min(...papers.map(p=>p.year))}–${Math.max(...papers.map(p=>p.year))}`])}</span></div><div id="paper-results"></div></section>`;
   }
 
   function publicationRow(p){
@@ -653,10 +615,10 @@
     if(!p)return `<section class="not-found">${eye('PUBLICATION / NOT FOUND','PUBLICATION / NOT FOUND')}<h1>${t(['未找到这篇论文。','Publication not found.'])}</h1><p>${t(['可以返回论文列表，继续按题名、作者或年份查找。','Return to the archive to search by title, author, or year.'])}</p>${link('#/publications','返回论文列表','Back to publications')}</section>`;
     const from=paperReturn(params);
     const fromHome=from==='#/';
-    const fromResearch=/^#\/research(?:\/|$)/.test(from);
-    const back=from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent((fromHome?'home-paper-':fromResearch?'research-paper-':'')+p.id);
+    const fromResearch=/^#\/research(?:\/|\?|$)/.test(from);
+    const back=from+(from.includes('?')?'&':'?')+'focus='+encodeURIComponent((fromHome?'home-paper-':'')+p.id);
     const originTheme=themes.find(th=>fromResearch?from==='#/research/'+th.id:th.id===new URLSearchParams(from.split('?')[1]||'').get('theme'));
-    const originLabel=fromHome?['首页','Home']:fromResearch?(originTheme?.name||['研究方向','Research themes']):['团队论文','Lab publications'];
+    const originLabel=fromHome?['首页','Home']:fromResearch?['论文发表','Publications']:['论文发表','Publications'];
     const returnLabel=t(fromHome?['返回首页','Back to home']:fromResearch?['返回'+t(originLabel),'Back to '+t(originLabel)]:['返回论文列表','Back to publications']);
     const related=papers.filter(x=>x.id!==id&&matchesResearchTheme(x,originTheme)&&x.topics.some(topic=>p.topics.includes(topic))).slice(0,3);
     return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}">${!fromHome&&(!fromResearch||originTheme)?`<a href="#/research">${t(['研究','Research'])}</a><span>/</span>`:''}<a href="${esc(back)}">${esc(t(originLabel))}</a><span>/</span><span>${p.year}</span></nav>
@@ -687,14 +649,14 @@
         return matchesResearchTheme(p,direction)&&(topic==='all'||p.topics.includes(topic))&&(year.value==='all'||String(p.year)===year.value)&&(author.value==='all'||p.authors.includes(author.value)||(p.authorAliases||[]).includes(author.value))&&terms.every(term=>text.includes(term));
       });
       const query=new URLSearchParams();if(direction)query.set('theme',direction.id);if(topic!=='all')query.set('topic',topic);if(search.value.trim())query.set('q',search.value.trim());if(year.value!=='all')query.set('year',year.value);if(author.value!=='all')query.set('author',author.value);
-      lastPublications=`#/publications${query.size?'?'+query:''}`;
+      lastPublications=`#/research${query.size?'?'+query:''}`;
       history.replaceState(history.state,'',lastPublications);
       document.querySelectorAll('[data-paper-topic]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.paperTopic===topic)));
       document.getElementById('paper-count').textContent=t([`${matching.length} 篇论文`,`${matching.length} PUBLICATION${matching.length===1?'':'S'}`]);
       const themeBack=document.getElementById('paper-theme-back');themeBack.hidden=!direction;
-      if(direction){themeBack.href='#/research/'+direction.id;themeBack.innerHTML=directionIcon('left')+' '+esc(t(['返回'+t(direction.name)+'方向','Back to '+t(direction.name)]));}
+      if(direction){themeBack.href='#/research';themeBack.innerHTML=directionIcon('left')+' '+esc(t(['返回论文发表','Back to publications']));}
       const active=[];
-      if(direction)active.push(['theme',t(['研究方向：','Theme: '])+t(direction.name)]);
+      if(direction)active.push(['theme',t(['主题：','Theme: '])+t(direction.name)]);
       if(topic!=='all')active.push(['topic',paperTopicName(topic)]);
       if(search.value.trim())active.push(['q',search.value.trim()]);
       if(year.value!=='all')active.push(['year',year.value]);
@@ -723,7 +685,7 @@
   }
 
   function designWorks(params){
-    return `<section class="page-heading">${eye('DESIGN ARCHIVE / 03','DESIGN ARCHIVE / 03')}<h1>${t(['设计作品','Design work'])}</h1><p>${t(['从研究、教学到空间实践，记录设计问题如何转化为可体验的空间。','From research and teaching to spatial practice: exploring how design questions become spaces to experience.'])}</p></section>${works.length?`<div class="archive-toolbar work-toolbar"><div class="filters" role="group" aria-label="${t(['按作品类型筛选','Filter design work'])}"><button class="filter" data-work-category="all">${t(['全部','All'])}</button>${workCategories.map(c=>`<button class="filter" data-work-category="${c.id}">${esc(t(c.name))}</button>`).join('')}</div><label class="search-box"><input id="work-search" type="search" aria-label="${t(['搜索设计作品','Search design work'])}" placeholder="${t(['搜索作品、作者或课程…','Search work, authors, or courses…'])}" value="${esc(params.get('q')||'')}"></label></div><p class="results-caption" id="work-count" role="status" aria-live="polite"></p><div class="work-grid" id="work-results"></div>`:`<section class="works-coming"><div class="works-coming-art">${themeSymbol('space')}${themeSymbol('design')}<span>SPACE / PROCESS / PRACTICE</span></div><div class="works-coming-copy">${eye('STUDIO ARCHIVE','STUDIO ARCHIVE')}<h2>${t(['设计，是另一种提问。','Design is another<br>way of asking.'])}</h2><p>${t(['作品正在整理。这里将呈现教学与研究中的设计探索，以及作品背后的问题、过程与空间表达。','The archive is being prepared. It will bring together design explorations from teaching and research, with the questions, processes, and spatial ideas behind each work.'])}</p><div class="work-category-labels">${workCategories.map(c=>`<span>${esc(t(c.name))}</span>`).join('')}</div>${link('#/research','从研究方向开始探索','Explore our research themes')}</div></section>`}`;
+    return `<section class="page-heading">${eye('DESIGN ARCHIVE / 03','DESIGN ARCHIVE / 03')}<h1>${t(['设计研究','Design research'])}</h1><p>${t(['从研究、教学到空间实践，记录设计问题如何转化为可体验的空间。','From research and teaching to spatial practice: exploring how design questions become spaces to experience.'])}</p></section>${works.length?`<div class="archive-toolbar work-toolbar"><div class="filters" role="group" aria-label="${t(['按作品类型筛选','Filter design work'])}"><button class="filter" data-work-category="all">${t(['全部','All'])}</button>${workCategories.map(c=>`<button class="filter" data-work-category="${c.id}">${esc(t(c.name))}</button>`).join('')}</div><label class="search-box"><input id="work-search" type="search" aria-label="${t(['搜索设计作品','Search design work'])}" placeholder="${t(['搜索作品、作者或课程…','Search work, authors, or courses…'])}" value="${esc(params.get('q')||'')}"></label></div><p class="results-caption" id="work-count" role="status" aria-live="polite"></p><div class="work-grid" id="work-results"></div>`:`<section class="works-coming"><div class="works-coming-art">${themeSymbol('space')}${themeSymbol('design')}<span>SPACE / PROCESS / PRACTICE</span></div><div class="works-coming-copy">${eye('STUDIO ARCHIVE','STUDIO ARCHIVE')}<h2>${t(['设计，是另一种提问。','Design is another<br>way of asking.'])}</h2><p>${t(['作品正在整理。这里将呈现教学与研究中的设计探索，以及作品背后的问题、过程与空间表达。','The archive is being prepared. It will bring together design explorations from teaching and research, with the questions, processes, and spatial ideas behind each work.'])}</p><div class="work-category-labels">${workCategories.map(c=>`<span>${esc(t(c.name))}</span>`).join('')}</div>${link('#/research','从研究方向开始探索','Explore our research themes')}</div></section>`}`;
   }
 
   function workCard(w,level=2,from=''){
@@ -748,16 +710,16 @@
 
   function workDetail(id,params){
     const w=works.find(w=>w.id===id);if(!w)return missing();
-    const back=archiveReturn(params,'#/projects?collection=works','work-'+id);
-    const fromProjects=back.startsWith('#/projects');
+    const back=archiveReturn(params,'#/research?section=design','work-'+id);
+    const fromProjects=back.startsWith('#/research');
     const fromHome=back.startsWith('#/?');
-    const relatedFrom=archiveSource(params.get('from'),'#/projects?collection=works');
+    const relatedFrom=archiveSource(params.get('from'),'#/research?section=design');
     const facts=[['作者','Designers',w.authors.join(' · ')],['指导教师','Advisors',w.advisors.join(' · ')],...(w.year?[['年份','Year',w.year]]:[]),...(w.status?[['作品性质','Work type',t(w.status)]]:[]),['类型','Type',workCategoryName(w.category)],...(w.course?.some(Boolean)?[['课程／项目','Course / project',t(w.course)]]:[]),...(w.location?.some(Boolean)?[['地点','Location',t(w.location)]]:[])];
     const complete=w.completeBoard;
-    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}"><a href="${esc(back)}">${t(fromHome?['首页','Home']:fromProjects?['项目','Projects']:['设计作品','Design work'])}</a><span>/</span><span>${t(['学生作品','Student work'])}</span></nav><section class="page-heading detail-heading work-detail-heading">${eye(w.year?'STUDENT WORK / '+w.year:'STUDENT WORK',w.year?'STUDENT WORK / '+w.year:'STUDENT WORK')}<h1>${esc(t(w.title))}</h1><p>${esc(t(w.summary||['','']))}</p><div class="work-heading-bottom"><dl class="work-byline"><div><dt>${t(['作者','Designers'])}</dt><dd>${esc(w.authors.join(' · '))}</dd></div>${w.advisors.length?`<div><dt>${t(['指导教师','Advisors'])}</dt><dd>${esc(w.advisors.join(' · '))}</dd></div>`:''}</dl><button class="work-open-images" data-read-work-book type="button">${t(['阅读评图册','Read review book'])}<span>${String(complete?.images?.length||0).padStart(2,'0')}</span>${arrow}</button></div></section>${window.LAB_WORK_READER.render(w,lang)}<div class="detail-layout"><aside class="detail-sidebar"><dl>${facts.map(f=>`<div><dt>${t(f.slice(0,2))}</dt><dd>${esc(f[2])}</dd></div>`).join('')}</dl></aside><div>${(w.sections||[]).map(s=>`<section class="detail-section"><h2>${esc(t(s.heading))}</h2><p>${esc(t(s.text))}</p></section>`).join('')}</div></div><nav class="detail-next"><a href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:fromProjects?['返回项目档案','Back to projects']:['返回作品档案','Back to design work'])}</a></nav><section class="work-related" aria-labelledby="work-related-title"><div class="archive-group-heading"><h2 id="work-related-title">${t(['继续探索','More student work'])}</h2><span>STUDENT WORK / ${String(works.length-1).padStart(2,'0')}</span></div><div class="work-grid">${works.filter(item=>item.id!==id).map(item=>workCard(item,3,relatedFrom)).join('')}</div></section>`;
+    return `<nav class="breadcrumbs" aria-label="${t(['当前位置','Breadcrumb'])}"><a href="${esc(back)}">${t(fromHome?['首页','Home']:fromProjects?['设计研究','Design research']:['设计研究','Design research'])}</a><span>/</span><span>${t(['学生作品','Student work'])}</span></nav><section class="page-heading detail-heading work-detail-heading">${eye(w.year?'STUDENT WORK / '+w.year:'STUDENT WORK',w.year?'STUDENT WORK / '+w.year:'STUDENT WORK')}<h1>${esc(t(w.title))}</h1><p>${esc(t(w.summary||['','']))}</p><div class="work-heading-bottom"><dl class="work-byline"><div><dt>${t(['作者','Designers'])}</dt><dd>${esc(w.authors.join(' · '))}</dd></div>${w.advisors.length?`<div><dt>${t(['指导教师','Advisors'])}</dt><dd>${esc(w.advisors.join(' · '))}</dd></div>`:''}</dl><button class="work-open-images" data-read-work-book type="button">${t(['阅读评图册','Read review book'])}<span>${String(complete?.images?.length||0).padStart(2,'0')}</span>${arrow}</button></div></section>${window.LAB_WORK_READER.render(w,lang)}<div class="detail-layout"><aside class="detail-sidebar"><dl>${facts.map(f=>`<div><dt>${t(f.slice(0,2))}</dt><dd>${esc(f[2])}</dd></div>`).join('')}</dl></aside><div>${(w.sections||[]).map(s=>`<section class="detail-section"><h2>${esc(t(s.heading))}</h2><p>${esc(t(s.text))}</p></section>`).join('')}</div></div><nav class="detail-next"><a href="${esc(back)}">${directionIcon('left')} ${t(fromHome?['返回首页','Back to home']:fromProjects?['返回设计研究','Back to design research']:['返回设计研究','Back to design research'])}</a></nav><section class="work-related" aria-labelledby="work-related-title"><div class="archive-group-heading"><h2 id="work-related-title">${t(['继续探索','More student work'])}</h2><span>STUDENT WORK / ${String(works.length-1).padStart(2,'0')}</span></div><div class="work-grid">${works.filter(item=>item.id!==id).map(item=>workCard(item,3,relatedFrom)).join('')}</div></section>`;
   }
 
-  function missing(){return `<section class="not-found">${eye('404 / NOT FOUND','404 / NOT FOUND')}<h1>${t(['没有找到这个页面','Page not found'])}</h1><p>${t(['没有找到这个页面。你可以返回项目，继续探索。','This page could not be found. Return to the project archive to continue exploring.'])}</p>${link('#/projects','返回项目','Back to projects')}</section>`;}
+  function missing(){return `<section class="not-found">${eye('404 / NOT FOUND','404 / NOT FOUND')}<h1>${t(['没有找到这个页面','Page not found'])}</h1><p>${t(['没有找到这个页面。你可以返回应用，继续浏览。','This page could not be found. Return to applications to continue browsing.'])}</p>${link('#/applications','返回应用','Back to applications')}</section>`;}
 
   function routeInfo(){const raw=location.hash.startsWith('#/')?location.hash.slice(2):'';const [path,query='']=raw.split('?');return {parts:path.split('/').filter(Boolean),params:new URLSearchParams(query)};}
   function translateShell(){
@@ -778,20 +740,42 @@
     cleanupWorkReader();
     clearTimeout(toastTimer);document.getElementById('toast').classList.remove('visible');
     document.getElementById('citation-dialog').close();
-    const {parts,params}=routeInfo();const page=parts[0]||'home';
+    const route=routeInfo();
+    const {parts,params}=route;
+    let rawPage=parts[0]||'home';
+    let canonical='';
+    if((rawPage==='projects'&&!parts[1]&&params.get('collection')==='works')||(rawPage==='works'&&!parts[1])){
+      params.delete('collection');params.delete('category');params.delete('theme');params.set('section','design');
+      parts.splice(0,parts.length,'research');canonical='#/research';
+    }else if(rawPage==='publications'&&!parts[1]){
+      if(params.get('collection')==='references'){params.delete('collection');parts.splice(0,parts.length,'research','figures');canonical='#/research/figures';}
+      else{parts.splice(0,parts.length,'research');canonical='#/research';}
+    }else if(rawPage==='research'&&themes.some(th=>th.id===parts[1])){
+      params.set('theme',parts[1]);parts.splice(0,parts.length,'research');canonical='#/research';
+    }else if(['projects','applications'].includes(rawPage)&&parts[1]==='figure-atlas'){
+      params.delete('from');params.set('section','sharing');
+      parts.splice(0,parts.length,'research');canonical='#/research';
+    }else if(rawPage==='projects'){
+      params.delete('collection');params.delete('theme');params.delete('q');canonical='#/applications'+(parts[1]?'/'+encodeURIComponent(parts[1]):'');
+    }
+    if(parts[0]==='research'&&!parts[1]&&params.get('section')==='design'){
+      ['q','category','theme'].forEach(key=>params.delete(key));canonical='#/research';
+    }
+    if(canonical)history.replaceState(history.state,'',canonical+(params.size?'?'+params:''));
+    const page=parts[0]==='applications'?'projects':parts[0]||'home';
     const y=window.scrollY;
     const isAtlas=(page==='research'&&parts[1]==='figures')||(page==='publications'&&!parts[1]&&params.get('collection')==='references');
     if(page==='home')main.innerHTML=home();
     else if(isAtlas)main.innerHTML=figureAtlasPage(params);
-    else if(page==='research')main.innerHTML=research(parts[1]);
-    else if(page==='projects'&&!parts[1]){lastArchive=location.hash||'#/projects';main.innerHTML=archive(params);}
+    else if(page==='research')main.innerHTML=research(params);
+    else if(page==='projects'&&!parts[1]){lastArchive=location.hash||'#/applications';main.innerHTML=archive(params);}
     else if(page==='projects')main.innerHTML=detail(parts[1],params);
     else if(page==='works'&&!parts[1]){lastWorks=location.hash||'#/works';main.innerHTML=designWorks(params);}
     else if(page==='works')main.innerHTML=workDetail(parts[1],params);
     else if(page==='publications')main.innerHTML=parts[1]?publicationDetail(parts[1],params):publications(params);
     else if(page==='about')main.innerHTML=about();
     else main.innerHTML=missing();
-    const navPage=page==='works'?'projects':page==='publications'?'research':page;
+    const navPage=page==='works'||page==='publications'||(page==='projects'&&parts[1]==='figure-atlas')?'research':page;
     document.querySelectorAll('[data-nav]').forEach(a=>{if(a.dataset.nav===navPage)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     translateShell();
     if(page==='research'&&parts[1]&&window.matchMedia('(max-width: 760px)').matches){
@@ -799,12 +783,12 @@
       activeTheme?.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});
     }
     closeMenu();
-    const titles={home:t(['探索','Explore']),research:isAtlas?t(['文献图集','Research Figure Atlas']):t(themes.find(th=>th.id===parts[1])?.name||['研究','Research']),projects:parts[1]?t(projects.find(p=>p.id===parts[1])?.title||['项目','Project']):t(['项目','Projects']),works:parts[1]?t(works.find(w=>w.id===parts[1])?.title||['设计作品','Design work']):t(['设计作品','Design work']),publications:parts[1]?(papers.find(p=>p.id===parts[1])?.title||t(['论文','Publication'])):params.get('collection')==='references'?t(['文献图集','Research Figure Atlas']):t(['论文','Publications']),about:t(['关于','About'])};
+    const titles={home:t(['探索','Explore']),research:isAtlas?t(['文献图集','Research Figure Atlas']):t(themes.find(th=>th.id===parts[1])?.name||['研究','Research']),projects:parts[1]?t(projects.find(p=>p.id===parts[1])?.title||['应用','Application']):t(['应用','Applications']),works:parts[1]?t(works.find(w=>w.id===parts[1])?.title||['设计研究','Design research']):t(['设计研究','Design research']),publications:parts[1]?(papers.find(p=>p.id===parts[1])?.title||t(['论文','Publication'])):params.get('collection')==='references'?t(['文献图集','Research Figure Atlas']):t(['论文','Publications']),about:t(['关于','About'])};
     document.title=`${titles[page]||'404'} — ${t(['空间·脑·设计实验室','Space, Cognition & Design Lab'])}`;
-    if(page==='projects'&&!parts[1])bindArchive(params);
+
     if(page==='works'&&!parts[1])bindWorks(params);
-    if(page==='publications'&&params.get('collection')!=='references'){
-      if(parts[1])bindPublicationDetail(parts[1]);else bindPublications(params);
+    if((page==='publications'||(page==='research'&&!isAtlas&&!['design','sharing'].includes(params.get('section'))))&&params.get('collection')!=='references'){
+      if(page==='publications'&&parts[1])bindPublicationDetail(parts[1]);else bindPublications(params);
     }
     if(isAtlas)bindFigureAtlas(params);
     if(page==='home')bindHero();
@@ -828,14 +812,14 @@
         focus.focus({preventScroll:true});
       }
     }
-    if(page==='publications'&&!parts[1]&&params.get('focus')&&!restoredView){
+    if(['publications','research'].includes(page)&&!parts[1]&&params.get('focus')&&!restoredView){
       const selected=document.getElementById(params.get('focus'));
       if(selected?.classList.contains('publication-row')){
         selected.classList.add('paper-returned');selected.scrollIntoView({block:'center',behavior:'instant'});
         selected.querySelector('.paper-title-link')?.focus({preventScroll:true});
       }
     }
-    if(['projects','works'].includes(page)&&!parts[1]&&params.get('focus')&&!restoredView){
+    if(['projects','works','research'].includes(page)&&!parts[1]&&params.get('focus')&&!restoredView){
       const selected=document.getElementById(params.get('focus'));
       if(selected?.matches('.project-card,.work-card')){
         selected.classList.add('archive-returned');
@@ -857,58 +841,8 @@
       }
     }
   }
-  function bindArchive(params){
-    let collection=archiveCollections.some(c=>c.id===params.get('collection'))?params.get('collection'):'all';
-    const input=document.getElementById('project-search');
-    const theme=document.getElementById('project-theme');
-    const summary=document.getElementById('project-active-filters');
-    const resetFilters=()=>{
-      collection='all';theme.value='all';input.value='';update();
-      document.querySelector('[data-collection="all"]').focus({preventScroll:true});
-    };
-    const update=()=>{
-      const terms=input.value.trim().normalize('NFKC').toLocaleLowerCase().split(/\s+/).filter(Boolean);
-      const matches=values=>{const text=values.join(' ').normalize('NFKC').toLocaleLowerCase();return terms.every(term=>text.includes(term));};
-      const inTheme=item=>theme.value==='all'||(item.themes||[]).includes(theme.value);
-      const matchingProjects=projects.filter(p=>(collection==='all'||(collection==='tools'&&isResearchTool(p))||(collection==='prototypes'&&!isResearchTool(p)))&&inTheme(p)&&matches([...p.title,...(p.searchAliases||[]),...p.subtitle,...p.summary,...p.methods,...p.themes.flatMap(id=>themes.find(th=>th.id===id).name)]));
-      const matchingWorks=works.filter(w=>(collection==='all'||collection==='works')&&inTheme(w)&&matches([...w.title,...w.authors,...w.advisors,...(w.course||[]),...(w.summary||[]),...(w.sections||[]).flatMap(section=>[...section.heading,...section.text]),...(w.themes||[]).flatMap(id=>themes.find(th=>th.id===id)?.name||[])]));
-      document.querySelectorAll('[data-collection]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.collection===collection)));
-      const query=new URLSearchParams();if(collection!=='all')query.set('collection',collection);if(theme.value!=='all')query.set('theme',theme.value);if(input.value.trim())query.set('q',input.value.trim());
-      lastArchive=`#/projects${query.size?'?'+query:''}`;lastWorks=lastArchive;
-      history.replaceState(history.state,'',lastArchive);
-      const active=[];
-      if(collection!=='all')active.push(['collection',t(['类型','Type']),t(archiveCollections.find(c=>c.id===collection).name)]);
-      if(theme.value!=='all')active.push(['theme',t(['方向','Theme']),t(themes.find(th=>th.id===theme.value).name)]);
-      if(input.value.trim())active.push(['q',t(['关键词','Keyword']),input.value.trim()]);
-      summary.hidden=!active.length;
-      summary.innerHTML=active.length?active.map(([key,label,value])=>`<button class="project-remove-filter" type="button" data-remove-project-filter="${key}" aria-label="${esc(t([`移除${label}筛选：${value}`,`Remove ${label.toLowerCase()} filter: ${value}`]))}"><span><span class="project-filter-kind">${esc(label)}${lang==='zh'?'：':': '}</span>${esc(value)}</span><span aria-hidden="true">×</span></button>`).join('')+`<button class="project-clear-filters" type="button" id="clear-project-filters">${t(['清除全部','Clear all'])}</button>`:'';
-      const matchingTools=matchingProjects.filter(isResearchTool),matchingPrototypes=matchingProjects.filter(p=>!isResearchTool(p));
-      const count=document.getElementById('result-count');
-      count.textContent=t([`${matchingWorks.length+matchingProjects.length} 项结果`,`${matchingWorks.length+matchingProjects.length} results`]);
-      count.classList.toggle('sr-only',!active.length);
-      const group=(id,name,items,grid,cards)=>items.length?`<section class="archive-result-group" aria-labelledby="archive-${id}-title"><div class="archive-group-heading"><h2 id="archive-${id}-title">${t(name)}</h2><span>${String(items.length).padStart(2,'0')}</span></div><div class="${grid}">${items.map(cards).join('')}</div></section>`:'';
-      document.getElementById('archive-grid').innerHTML=
-        group('work',['学生作品','Student work'],matchingWorks,'work-grid unified-work-grid',w=>workCard(w,3,lastArchive))+
-        group('tools',['研究工具','Research tools'],matchingTools,'project-grid',p=>projectCard(p,lastArchive))+
-        group('prototypes',['交互原型','Prototypes'],matchingPrototypes,'project-grid',p=>projectCard(p,lastArchive))||`<div class="empty-state unified-empty"><p class="eyebrow">NO MATCHES</p><h2>${t(['没有匹配的项目或作品','No matching projects or work'])}</h2><p>${t(['试试题名、作者或其他关键词，也可以清除类型与方向筛选。','Try a title, author, or another keyword, or clear the type and theme filters.'])}</p><button class="solid-button" id="reset-search">${t(['清除全部筛选','Clear all filters'])}${arrow}</button></div>`;
-      document.getElementById('reset-search')?.addEventListener('click',resetFilters);
-      bindPointerMotion();
-    };
-    summary.addEventListener('click',event=>{
-      if(event.target.closest('#clear-project-filters')){resetFilters();return;}
-      const button=event.target.closest('[data-remove-project-filter]');
-      if(!button)return;
-      const index=[...summary.querySelectorAll('[data-remove-project-filter]')].indexOf(button);
-      const key=button.dataset.removeProjectFilter;
-      if(key==='collection')collection='all';else if(key==='theme')theme.value='all';else input.value='';
-      update();
-      const remaining=summary.querySelectorAll('[data-remove-project-filter]');
-      const fallback=key==='collection'?document.querySelector('[data-collection="all"]'):key==='theme'?theme:input;
-      (remaining[Math.min(index,remaining.length-1)]||fallback).focus({preventScroll:true});
-    });
-    document.querySelectorAll('[data-collection]').forEach(button=>button.addEventListener('click',()=>{collection=button.dataset.collection;update();}));
-    theme.addEventListener('change',update);input.addEventListener('input',update);update();
-  }
+
+
   function bindPointerMotion(){
     cleanupPointerMotion();
     const media=window.matchMedia('(min-width: 761px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
@@ -957,7 +891,7 @@
     document.querySelectorAll('.work-cover,.project-card .project-art,.atlas-card-image').forEach(cover=>{
       let cue=cover.querySelector('.cover-preview-cue');
       if(!cue){cue=document.createElement('span');cue.className='cover-preview-cue';cue.setAttribute('aria-hidden','true');cover.append(cue);}
-      cue.innerHTML=cover.matches('.work-cover')?(t(['查看作品','View work'])+directionIcon('ne')):cover.matches('.atlas-card-image')?(t(['查看图像','View figure'])+directionIcon('ne')):(t(['了解项目','View project'])+directionIcon('ne'));
+      cue.innerHTML=cover.matches('.work-cover')?(t(['查看作品','View work'])+directionIcon('ne')):cover.matches('.atlas-card-image')?(t(['查看图像','View figure'])+directionIcon('ne')):(t(['了解应用','View application'])+directionIcon('ne'));
       track(cover,event=>{
         const rect=cover.getBoundingClientRect();
         const width=cue.offsetWidth,height=cue.offsetHeight;
@@ -1037,7 +971,7 @@
   }
   function jumpToAboutSection(params){
     const section=params.has('contact')?'contact':params.get('section');
-    if(!['team','practice','contact'].includes(section))return;
+    if(!['team','practice'].includes(section))return;
     const target=document.getElementById(section);
     if(!target)return;
     target.focus({preventScroll:true});
@@ -1067,11 +1001,3 @@
   window.addEventListener('hashchange',navigateHistory);
   render();
 })();
-
-
-
-
-
-
-
-

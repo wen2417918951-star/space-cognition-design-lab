@@ -158,3 +158,12 @@
 
 /* Keep the wearable device in view when its photo is used as a wide card. */
 .project-card .project-art[data-project-cover="mindscape-i"]>img{object-position:50% 82%}
+
+/* Applications are shown as one collection without nested categories. */
+.applications-heading{padding-bottom:28px}
+.applications-grid{margin-bottom:50px}
+.applications-grid .project-card-actions{flex-wrap:wrap}
+@media(max-width:760px){
+ .applications-heading{padding-bottom:24px}
+ .applications-grid{margin-bottom:35px}
+}
