@@ -118,7 +118,7 @@
   function archiveSource(value,fallback='#/applications'){
     if(value==='#/'||value==='#/?focus=hero-title')return value;
     if(/^#\/research(?:\/(?:space|cognition|design))?(?:\?[^#]*)?$/.test(value||''))return value;
-    if(/^#\/about(?:\?section=(?:team|practice|contact))?$/.test(value||''))return value;
+    if(/^#\/about(?:\?section=team)?$/.test(value||''))return value;
     if(!/^#\/(?:projects|applications|works)(?:\?[^#]*)?$/.test(value||''))return fallback;
     const [path,query='']=value.split('?');
     const source=new URLSearchParams(query);
@@ -528,17 +528,10 @@
   }
 
   function about(){
-    const practice=[
-      ['mindscape-lab','Mindscape Lab',['场景任务、条件比较与研究记录','Scene tasks, condition comparisons, and study records']],
-      ['mindscape-studio','Mindscape Studio',['从现场与需求出发，比较并迭代空间方案','Compare and refine spatial designs from sites and briefs']],
-      ['focus','Mindscape Focus',['专注与休息的空间体验原型','Prototyping spatial experiences for concentration and rest']],
-      ['mindscape-i','Mindscape I',['日常任务中的认知支持原型','Prototyping cognitive support for everyday tasks']]
-    ];
     return `<section class="page-heading about-heading">${eye('ABOUT THE LAB / 03','ABOUT THE LAB / 03')}<h1>${t(['关于','About'])}</h1><p>${t(['研究建筑与城市环境怎样影响人的感知、注意与行为。','We study how buildings and urban environments affect perception, attention, and behavior.'])}</p></section>
     <section class="about-intro"><div class="about-copy"><h2>${t(['空间·脑·设计实验室','Space, Cognition & Design Lab'])}</h2><p>${t(['我们关注人在空间中如何辨认方向、分配注意、完成任务。通过行为观察、虚拟场景和脑电等研究方法，研究环境与体验之间的关系，并将发现用于设计。','We study how people find their way, direct their attention, and carry out tasks in space. We use behavioral observation, virtual environments, and EEG to examine how environments shape experience and inform design.'])}</p><p>${t(['实验室是 Mindscape 的科研与学术交流平台。这里收录论文发表、学生作品和研究工具。','The Lab is Mindscape’s platform for research and academic exchange. Here you can find our publications, student work, and research tools.'])}</p>${link('#/research','了解研究','Explore research')}</div><div class="about-graphic">${svg('<g fill="none" stroke="#191919" stroke-width="1"><rect x="115" y="100" width="315" height="315"/><circle cx="403" cy="256" r="165"/><path d="m280 90 200 330H80Z"/><path d="M80 420H590 M115 100 565 100" stroke-dasharray="4 5"/></g><circle cx="310" cy="263" r="11" fill="#f2f2f2"/><g font-family="Instrument Sans, Helvetica Neue, Arial, sans-serif" font-size="11" fill="#191919"><text x="118" y="80">SPACE</text><text x="500" y="80">COGNITION</text><text x="460" y="449">DESIGN</text></g>','0 0 650 500')}<p class="eyebrow">THINK ACROSS. MAKE CONNECTIONS.</p></div></section>
     <section class="about-facts lab-team" id="team" tabindex="-1" aria-labelledby="about-team-title"><h2 id="about-team-title">${t(['研究团队','Research team'])}</h2><div class="team-profile"><figure class="team-portrait"><img src="assets/wang-hui-portrait-20261027.webp?v=20261027-portrait-2" alt="${t(['王辉老师','Professor Hui Wang'])}" width="680" height="850" loading="eager" decoding="async"></figure><div class="team-bio"><div class="team-person"><h3>${t(['王辉','Hui Wang'])}</h3><p class="team-role">${t(['教授 · 清华大学建筑学院','Professor · School of Architecture, Tsinghua University'])}</p></div><p>${t(['实验室由王辉老师发起，关注空间研究、脑认知与设计的交叉。王辉老师的学术方向包括中国建筑与城市美学、城市更新设计、空间脑科学与设计交互。','The Lab was initiated by Professor Hui Wang to explore the intersection of spatial research, cognition, and design. His academic interests include Chinese architectural and urban aesthetics, urban regeneration design, and spatial neuroscience and design interaction.'])}</p><div class="about-team-links"><a class="text-link" href="https://www.arch.tsinghua.edu.cn/info/rw_jzx/1389" target="_blank" rel="noopener noreferrer">${t(['个人学术主页','Academic profile'])}${arrow}</a>${link('#/publications','论文发表','Team publications')}</div></div></div></section>
     ${labSlogan()}
-    <section class="about-facts about-practice" id="practice" tabindex="-1" aria-labelledby="about-practice-title"><h2 id="about-practice-title">${t(['研究实践','Research practice'])}</h2><div><p>${t(['Lab 用于组织情境实验，Studio 用于推敲空间方案，Focus 用于专注计时与短休息。Mindscape I 是正在开发的可穿戴认知支持原型。','Lab organizes situated experiments, Studio supports spatial design, and Focus combines task timing with short breaks. Mindscape I is a wearable cognitive support prototype in development.'])}</p><div class="about-practice-links">${practice.map(([id,title,description])=>`<a id="project-${id}" href="${esc(archiveItemHref('applications',id,'#/about?section=practice'))}"><span class="about-practice-name">${title}${arrow}</span><span class="about-practice-description">${esc(t(projects.find(p=>p.id===id).subtitle))}</span></a>`).join('')}</div>${link('#/applications','浏览全部应用','Browse all applications')}</div></section>
     `;
   }
 
@@ -971,7 +964,7 @@
   }
   function jumpToAboutSection(params){
     const section=params.has('contact')?'contact':params.get('section');
-    if(!['team','practice'].includes(section))return;
+    if(section!=='team')return;
     const target=document.getElementById(section);
     if(!target)return;
     target.focus({preventScroll:true});
